@@ -24,3 +24,92 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+html,
+body {
+  min-height: 100%;
+  background: #020617;
+}
+
+html[data-preview-mode="mobile"] .karyra-preview-frame {
+  max-width: 430px;
+  margin-left: auto;
+  margin-right: auto;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html[data-preview-mode="desktop"] .karyra-preview-frame {
+  max-width: none;
+}
+
+html,
+body {
+  min-height: 100%;
+  background: #020617;
+}
+
+body {
+  color: white;
+}
+
+.page-shell {
+  padding-bottom: 6rem;
+}
+
+@media (min-width: 768px) {
+  .page-shell {
+    padding-bottom: 0;
+  }
+}
+
+html[data-preview-mode="mobile"] body {
+  background:
+    radial-gradient(circle at top, rgba(16, 185, 129, 0.14), transparent 34rem),
+    #020617;
+}
+
+html[data-preview-mode="mobile"] .karyra-preview-frame {
+  max-width: 430px;
+  min-height: 100vh;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html[data-preview-mode="desktop"] .karyra-preview-frame {
+  max-width: none;
+  min-height: 100vh;
+  border-left: none;
+  border-right: none;
+}
+
+html[data-preview-mode="desktop"] .site-header {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+
+html[data-preview-mode="desktop"] .desktop-nav {
+  display: flex;
+}
+
+html[data-preview-mode="desktop"] .bottom-nav {
+  display: none;
+}
+
+html[data-preview-mode="desktop"] .page-shell {
+  padding-bottom: 0;
+}
+
+html[data-preview-mode="mobile"] .desktop-nav {
+  display: none;
+}
+
+html[data-preview-mode="mobile"] .bottom-nav {
+  display: block;
+}
+
+html[data-preview-mode="mobile"] .page-shell {
+  padding-bottom: 6rem;
+}
