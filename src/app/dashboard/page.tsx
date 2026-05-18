@@ -146,6 +146,30 @@ export default async function DashboardPage() {
           createdAt: true,
         },
       },
+      
+      questSubmissions: {
+         orderBy: {
+           submittedAt: "desc",
+         },
+         take: 5,
+         select: {
+           id: true,
+           status: true,
+           evidence: true,
+           submittedAt: true,
+           reviewedAt: true,
+           reviewNote: true,
+             quest: {
+               select: {
+               slug: true,
+               title: true,
+               xpReward: true,
+               chainKey: true,
+             },
+           },
+         },
+      },
+      
       workshopRegistrations: {
         orderBy: {
           createdAt: "desc",
@@ -193,6 +217,33 @@ export default async function DashboardPage() {
     activeCourse?.modules.flatMap((module) => module.lessons)[0];
 
   const activeQuest = activeCourse?.quests[0];
+  
+function getSubmissionEvidenceText(evidence: unknown) {
+  if (
+    evidence &&
+    typeof evidence === "object" &&
+    "text" in evidence &&
+    typeof evidence.text === "string"
+  ) {
+    return evidence.text;
+  }
+
+  return "-";
+}
+
+function getSubmissionBadgeClass(status: string) {
+  switch (status) {
+    case "APPROVED":
+      return "bg-emerald-400/15 text-emerald-300";
+    case "REJECTED":
+      return "bg-rose-400/15 text-rose-300";
+    case "SUBMITTED":
+    case "NEEDS_REVIEW":
+      return "bg-amber-400/15 text-amber-300";
+    default:
+      return "bg-white/10 text-slate-300";
+  }
+} 
 
   return (
     <main className="min-h-screen bg-slate-950 px-5 py-8 text-white md:px-8 md:py-16">
@@ -389,6 +440,90 @@ export default async function DashboardPage() {
               )}
             </div>
 
+            <div className="rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-6 md:p-8">
+  <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+    <div>
+      <h2 className="text-2xl font-bold">
+        {language === "id" ? "Status Submission Quest" : "Quest Submission Status"}
+      </h2>
+      <p className="mt-2 text-slate-300">
+        {language === "id"
+          ? "Pantau jawaban quest yang sudah kamu kirim dan status review admin."
+          : "Track submitted quest answers and admin review status."}
+      </p>
+    </div>
+
+    <Link
+      href="/quests?track=stellar-readiness"
+      className="rounded-2xl bg-sky-300 px-5 py-3 text-center font-bold text-slate-950"
+    >
+      {language === "id" ? "Lihat Quest Stellar" : "View Stellar Quests"}
+    </Link>
+  </div>
+
+  <div className="mt-5 grid gap-3">
+    {learner.questSubmissions.length > 0 ? (
+      learner.questSubmissions.map((submission) => {
+        const evidenceText = getSubmissionEvidenceText(submission.evidence);
+
+        return (
+          <div
+            key={submission.id}
+            className="rounded-2xl border border-white/10 bg-slate-950/50 p-4"
+          >
+            <div className="flex flex-col justify-between gap-3 md:flex-row md:items-start">
+              <div>
+                <div className="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wide">
+                  <span
+                    className={`rounded-full px-3 py-1 ${getSubmissionBadgeClass(
+                      submission.status,
+                    )}`}
+                  >
+                    {submission.status}
+                  </span>
+
+                  {submission.quest.chainKey ? (
+                    <span className="rounded-full bg-white/10 px-3 py-1 text-slate-300">
+                      {submission.quest.chainKey}
+                    </span>
+                  ) : null}
+                </div>
+
+                <h3 className="mt-3 font-bold">{submission.quest.title}</h3>
+
+                <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-300">
+                  {evidenceText}
+                </p>
+
+                {submission.reviewNote ? (
+                  <p className="mt-2 rounded-2xl bg-slate-900 p-3 text-sm text-slate-300">
+                    Review: {submission.reviewNote}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="shrink-0 text-left md:text-right">
+                  <p className="font-bold text-sky-300">
+                     {submission.quest.xpReward} XP
+                  </p>
+                  <p className="mt-1 text-xs text-slate-500">
+                     {new Date(submission.submittedAt).toLocaleString()}
+                  </p>
+              </div>
+            </div>
+          </div>
+        );
+      })
+    ) : (
+      <p className="rounded-2xl bg-slate-950/50 p-4 text-slate-300">
+        {language === "id"
+          ? "Belum ada submission quest. Mulai dari Stellar Readiness Quest."
+          : "No quest submissions yet. Start from Stellar Readiness Quest."}
+      </p>
+    )}
+  </div>
+</div>
+            
             <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 md:p-8">
               <h2 className="text-2xl font-bold">
                 {t(language, "earnedBadges")}

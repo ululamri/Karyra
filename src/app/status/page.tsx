@@ -16,6 +16,11 @@ export default async function StatusPage() {
     workshopCount,
     completedLessons,
     xpAggregate,
+    readinessProfileCount,
+    readyLearnerCount,
+    proofRecordCount,
+    archivedProofCount,
+    stellarQuestCount,
   ] = await Promise.all([
     prisma.user.count({
       where: {
@@ -60,6 +65,30 @@ export default async function StatusPage() {
         xpAmount: true,
       },
     }),
+    prisma.readinessProfile.count(),
+
+    prisma.readinessProfile.count({
+      where: {
+        level: {
+        in: ["READY", "COMMUNITY_READY"],
+        },
+      },
+    }),
+
+    prisma.proofRecord.count(),
+
+    prisma.proofRecord.count({
+      where: {
+        archivedToFilecoin: true,
+      },
+    }),
+    
+    prisma.quest.count({
+      where: {
+        status: "PUBLISHED",
+        chainKey: "stellar-readiness",
+      },
+    }),
   ]);
 
   const totalXp = xpAggregate._sum.xpAmount ?? 0;
@@ -97,6 +126,26 @@ export default async function StatusPage() {
       label: t(language, "activeWorkshops"),
       value: workshopCount,
     },
+    {
+      label: language === "id" ? "Readiness Profile" : "Readiness Profiles",
+      value: readinessProfileCount,
+    },
+    {
+      label: language === "id" ? "Learner Siap" : "Ready Learners",
+      value: readyLearnerCount,
+    },
+    {
+      label: language === "id" ? "Proof Record" : "Proof Records",
+      value: proofRecordCount,
+    },
+    {
+      label: language === "id" ? "Proof Diarsipkan" : "Archived Proofs",
+      value: archivedProofCount,
+    },
+    {
+      label: language === "id" ? "Quest Stellar" : "Stellar Quests",
+      value: stellarQuestCount,
+    },
   ];
 
   const roadmap =
@@ -119,10 +168,11 @@ export default async function StatusPage() {
             title: "Learning & Quest Expansion",
             status: "Next",
             items: [
-              "Lesson progress yang lebih detail",
-              "Quest review flow",
-              "Badge dan XP rule",
-              "Admin mini CMS",
+                   "Readiness Passport dan timeline",
+                   "Quest submission + admin review flow",
+                   "Badge, XP rule, dan reward ledger",
+                   "Filecoin Proof Archive demo",
+                   "Stellar Readiness course dan quest",
             ],
           },
           {
@@ -322,6 +372,80 @@ export default async function StatusPage() {
           </div>
         </section>
 
+        <section className="mt-8 rounded-[2rem] border border-white/10 bg-white/5 p-6 md:p-8">
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-300">
+                {language === "id" ? "Readiness Infrastructure" : "Readiness Infrastructure"}
+              </p>
+
+              <h2 className="mt-4 text-3xl font-bold">
+               {language === "id"
+                ? "Filecoin + Stellar sudah terlihat di MVP."
+                : "Filecoin + Stellar are visible in the MVP."}
+              </h2>
+
+              <p className="mt-4 max-w-3xl leading-8 text-slate-300">
+                {language === "id"
+                 ? "Karyra memakai Filecoin sebagai arah Proof Archive dan Stellar sebagai jalur kesiapan pembayaran Web3. Untuk MVP, archive masih berupa demo CID, sementara Stellar Readiness sudah tersedia sebagai stack, course, quest, badge, dan submission flow."
+                 : "Karyra positions Filecoin as the Proof Archive direction and Stellar as the Web3 payment-readiness track. For the MVP, archive uses demo CIDs, while Stellar Readiness is already available as a stack, course, quest, badge, and submission flow."}
+              </p>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Link
+                 href="/admin/proofs"
+                 className="rounded-3xl border border-white/10 bg-slate-950/50 p-5 transition hover:border-emerald-400/40"
+              >
+              <p className="text-sm text-slate-400">Filecoin</p>
+              <h3 className="mt-2 text-xl font-bold">
+                {language === "id" ? "Proof Archive" : "Proof Archive"}
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                {archivedProofCount}/{proofRecordCount} proof archived
+              </p>
+            </Link>
+
+            <Link
+               href="/stacks/stellar-readiness"
+               className="rounded-3xl border border-white/10 bg-slate-950/50 p-5 transition hover:border-sky-400/40"
+            >
+              <p className="text-sm text-slate-400">Stellar</p>
+              <h3 className="mt-2 text-xl font-bold">
+               {language === "id" ? "Payment Readiness" : "Payment Readiness"}
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+               {stellarQuestCount} readiness quests
+              </p>
+            </Link>
+
+            <Link
+                 href="/admin/learners"
+                 className="rounded-3xl border border-white/10 bg-slate-950/50 p-5 transition hover:border-emerald-400/40"
+              >
+              <p className="text-sm text-slate-400">Passport</p>
+              <h3 className="mt-2 text-xl font-bold">
+                {language === "id" ? "Learner Readiness" : "Learner Readiness"}
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                {readyLearnerCount}/{readinessProfileCount} ready
+              </p>
+            </Link>
+
+            <Link
+                 href="/passport/timeline"
+                 className="rounded-3xl border border-white/10 bg-slate-950/50 p-5 transition hover:border-amber-400/40"
+              >
+              <p className="text-sm text-slate-400">Timeline</p>
+              <h3 className="mt-2 text-xl font-bold">
+               {language === "id" ? "Learning Journey" : "Learning Journey"}
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                {language === "id"
+                ? "Riwayat proof, reward, badge, dan quest."
+                : "Proof, reward, badge, and quest history."}
+              </p>
+            </Link>
+          </div>
+        </section>        
+        
         <section className="mt-10 grid gap-6 lg:grid-cols-[1fr_0.8fr]">
           <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 md:p-8">
             <h2 className="text-2xl font-bold md:text-3xl">

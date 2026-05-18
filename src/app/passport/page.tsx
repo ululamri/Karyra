@@ -63,12 +63,21 @@ export default async function PassportPage() {
             </p>
           </div>
 
-          <Link
-            href="/dashboard"
-            className="rounded-2xl border border-zinc-800 px-4 py-3 text-sm font-medium text-zinc-200 transition hover:border-emerald-500 hover:text-emerald-300"
-          >
-            Back to Dashboard
-          </Link>
+          <div className="flex flex-wrap gap-3">
+              <Link
+                 href="/passport/timeline"
+                 className="rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-300"
+              >
+              View Timeline
+              </Link>
+
+              <Link
+                 href="/dashboard"
+                 className="rounded-2xl border border-zinc-800 px-4 py-3 text-sm font-medium text-zinc-200 transition hover:border-emerald-500 hover:text-emerald-300"
+              >
+              Back to Dashboard
+              </Link>
+          </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-[1.4fr_0.8fr]">

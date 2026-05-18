@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "../../lib/prisma";
+import { syncReadinessProfile } from "@/lib/readiness";
 
 function getFormString(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -12,6 +13,44 @@ function getFormString(formData: FormData, key: string) {
   }
 
   return value.trim();
+}
+
+function isTransientDatabaseError(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+
+  return (
+    message.includes("ECONNABORTED") ||
+    message.includes("ECONNRESET") ||
+    message.includes("ETIMEDOUT") ||
+    message.includes("P1001") ||
+    message.includes("P1002") ||
+    message.includes("P1017")
+  );
+}
+
+async function runWithDatabaseRetry<T>(
+  operation: () => Promise<T>,
+  maxRetries = 2,
+): Promise<T> {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+
+      if (!isTransientDatabaseError(error) || attempt === maxRetries) {
+        throw error;
+      }
+
+      await new Promise((resolve) =>
+        setTimeout(resolve, 500 * (attempt + 1)),
+      );
+    }
+  }
+
+  throw lastError;
 }
 
 function createSlug(value: string) {
@@ -48,6 +87,7 @@ export async function createCourseWithLessonAction(formData: FormData) {
   const status = getFormString(formData, "status");
   const lessonTitle = getFormString(formData, "lessonTitle");
   const lessonContent = getFormString(formData, "lessonContent");
+  
 
   if (!title) {
     throw new Error("Course title is required.");
@@ -219,6 +259,7 @@ export async function archiveCourseAction(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath("/courses");
 }
+
 export async function approveQuestSubmissionAction(formData: FormData) {
   const submissionId = getFormString(formData, "submissionId");
   const reviewNote = getFormString(formData, "reviewNote");
@@ -229,36 +270,39 @@ export async function approveQuestSubmissionAction(formData: FormData) {
 
   const admin = await getAdminUser();
 
-  const submission = await prisma.questSubmission.findUnique({
-    where: {
-      id: submissionId,
-    },
-    select: {
-      id: true,
-      userId: true,
-      questId: true,
-      quest: {
-        select: {
-          id: true,
-          title: true,
-          xpReward: true,
+  const submission = await runWithDatabaseRetry(() =>
+    prisma.questSubmission.findUnique({
+      where: {
+        id: submissionId,
+      },
+      select: {
+        id: true,
+        userId: true,
+        questId: true,
+        status: true,
+        quest: {
+          select: {
+            id: true,
+            title: true,
+            xpReward: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            xp: true,
+          },
         },
       },
-      user: {
-        select: {
-          id: true,
-          xp: true,
-        },
-      },
-    },
-  });
+    }),
+  );
 
   if (!submission) {
     throw new Error("Submission not found.");
   }
 
-  await prisma.$transaction(async (tx) => {
-    await tx.questSubmission.update({
+  await runWithDatabaseRetry(async () => {
+    await prisma.questSubmission.update({
       where: {
         id: submission.id,
       },
@@ -272,7 +316,7 @@ export async function approveQuestSubmissionAction(formData: FormData) {
 
     const rewardReason = `quest:${submission.questId}:approved`;
 
-    const existingReward = await tx.rewardLedger.findFirst({
+    const existingReward = await prisma.rewardLedger.findFirst({
       where: {
         userId: submission.userId,
         questId: submission.questId,
@@ -285,10 +329,20 @@ export async function approveQuestSubmissionAction(formData: FormData) {
     });
 
     if (!existingReward && submission.quest.xpReward > 0) {
-      const nextXp = submission.user.xp + submission.quest.xpReward;
+      const freshUser = await prisma.user.findUnique({
+        where: {
+          id: submission.userId,
+        },
+        select: {
+          xp: true,
+        },
+      });
+
+      const currentXp = freshUser?.xp ?? submission.user.xp;
+      const nextXp = currentXp + submission.quest.xpReward;
       const nextLevel = Math.floor(nextXp / 100) + 1;
 
-      await tx.user.update({
+      await prisma.user.update({
         where: {
           id: submission.userId,
         },
@@ -299,7 +353,7 @@ export async function approveQuestSubmissionAction(formData: FormData) {
         },
       });
 
-      await tx.rewardLedger.create({
+      await prisma.rewardLedger.create({
         data: {
           userId: submission.userId,
           questId: submission.questId,
@@ -316,10 +370,15 @@ export async function approveQuestSubmissionAction(formData: FormData) {
     }
   });
 
+  await runWithDatabaseRetry(() => syncReadinessProfile(submission.userId));
+
   revalidatePath("/admin");
   revalidatePath("/admin/submissions");
   revalidatePath("/dashboard");
   revalidatePath("/status");
+  revalidatePath("/passport");
+  revalidatePath("/admin/learners");
+  revalidatePath("/admin/proofs");
 }
 
 export async function rejectQuestSubmissionAction(formData: FormData) {
@@ -348,6 +407,8 @@ export async function rejectQuestSubmissionAction(formData: FormData) {
   revalidatePath("/admin/submissions");
   revalidatePath("/dashboard");
   revalidatePath("/status");
+  revalidatePath("/passport");
+  revalidatePath("/admin/learners");
 }
 
 export async function createWorkshopAction(formData: FormData) {

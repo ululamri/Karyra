@@ -326,11 +326,14 @@ export async function completeLessonAction(formData: FormData) {
 }
 
 export async function submitQuestAction(formData: FormData) {
+  const questId = getFormString(formData, "questId");
   const questSlug = getFormString(formData, "questSlug");
-  const evidenceText = getFormString(formData, "evidenceText");
+  const evidenceText =
+    getFormString(formData, "evidenceText") ||
+    getFormString(formData, "submissionText");
 
-  if (!questSlug) {
-    throw new Error("questSlug is required.");
+  if (!questId && !questSlug) {
+    throw new Error("questId or questSlug is required.");
   }
 
   if (evidenceText.length < 20) {
@@ -339,18 +342,27 @@ export async function submitQuestAction(formData: FormData) {
 
   const learner = await getDemoLearner();
 
-  const quest = await prisma.quest.findUnique({
+  const quest = await prisma.quest.findFirst({
     where: {
-      slug: questSlug,
+      status: "PUBLISHED",
+      ...(questId
+        ? {
+            id: questId,
+          }
+        : {
+            slug: questSlug,
+          }),
     },
     select: {
       id: true,
       slug: true,
       status: true,
+      title: true,
+      chainKey: true,
     },
   });
 
-  if (!quest || quest.status !== "PUBLISHED") {
+  if (!quest) {
     throw new Error("Quest not found.");
   }
 
@@ -365,8 +377,13 @@ export async function submitQuestAction(formData: FormData) {
       status: "SUBMITTED",
       evidence: {
         text: evidenceText,
+        questTitle: quest.title,
+        questSlug: quest.slug,
+        chainKey: quest.chainKey,
       },
       submittedAt: new Date(),
+      reviewedAt: null,
+      reviewNote: null,
     },
     create: {
       userId: learner.id,
@@ -374,14 +391,20 @@ export async function submitQuestAction(formData: FormData) {
       status: "SUBMITTED",
       evidence: {
         text: evidenceText,
+        questTitle: quest.title,
+        questSlug: quest.slug,
+        chainKey: quest.chainKey,
       },
     },
   });
 
   revalidatePath("/dashboard");
   revalidatePath("/quests");
+  revalidatePath("/admin/submissions");
+  revalidatePath("/passport");
+  revalidatePath("/stacks/stellar-readiness");
 
-  redirect("/dashboard");
+  redirect("/dashboard")
 }
 
 export async function registerWorkshopAction(formData: FormData) {

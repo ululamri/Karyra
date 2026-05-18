@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { prisma } from "../../lib/prisma";
-import { submitQuestAction } from "../actions/learner";
-import { SubmitButton } from "../../components/submit-button";
+import { QuestSubmissionForm } from "@/components/quest-submission-form";
 
 type QuestsPageProps = {
   searchParams?: Promise<{
@@ -213,21 +212,11 @@ export default async function QuestsPage({ searchParams }: QuestsPageProps) {
                   ))}
                 </div>
 
-                <form action={submitQuestAction} className="mt-5">
-                  <input type="hidden" name="questId" value={quest.id} />
-
-                  <textarea
-                    name="submissionText"
-                    required
-                    minLength={40}
-                    placeholder="Tulis jawaban atau bukti penyelesaian quest..."
-                    className="min-h-32 w-full rounded-2xl border border-white/10 bg-slate-950 p-4 text-sm text-white outline-none placeholder:text-slate-500 focus:border-emerald-400"
-                  />
-
-                  <SubmitButton pendingText="Submitting...">
-                    Submit Quest
-                  </SubmitButton>
-                </form>
+                <QuestSubmissionForm
+                  questId={quest.id}
+                  questSlug={quest.slug}
+                  minCharacters={40}
+                />
               </article>
             ))
           )}
