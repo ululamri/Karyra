@@ -139,25 +139,32 @@ export default async function StellarReadinessPage() {
             >
               Readiness Passport
             </Link>
+
+            <Link
+              href="/stacks/stellar-readiness/checklist"
+              className="rounded-2xl border border-sky-400/30 bg-sky-400/10 px-5 py-3 text-sm font-bold text-sky-300 transition hover:bg-sky-400/20"
+            >
+              Pre-Transaction Checklist
+            </Link>
           </div>
         </div>
-        
+
         <section className="rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-6 md:p-8">
           <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-sky-300">
-               Live Course Status
+                Live Course Status
               </p>
               <h2 className="mt-4 text-3xl font-bold">
                 {stellarCourse
-                ? stellarCourse.title
+                  ? stellarCourse.title
                   : "Stellar Readiness Course belum tersedia"}
               </h2>
               <p className="mt-3 max-w-3xl leading-8 text-slate-300">
-                 {stellarCourse
-                 ? stellarCourse.description
-                   : "Jalankan seed data terlebih dahulu agar course Stellar muncul di database."}
-               </p>
+                {stellarCourse
+                  ? stellarCourse.description
+                  : "Jalankan seed data terlebih dahulu agar course Stellar muncul di database."}
+              </p>
             </div>
 
             {stellarCourse ? (
@@ -166,75 +173,82 @@ export default async function StellarReadinessPage() {
                   href={`/courses/${stellarCourse.slug}`}
                   className="rounded-2xl bg-sky-300 px-6 py-4 text-center text-base font-bold text-slate-950 transition hover:bg-sky-200"
                 >
-                 Start Stellar Course
+                  Start Stellar Course
                 </Link>
 
                 <Link
                   href="/quests?track=stellar-readiness"
                   className="rounded-2xl border border-sky-400/30 bg-sky-400/10 px-6 py-4 text-center text-base font-bold text-sky-300 transition hover:bg-sky-400/20"
                 >
-                Stellar Quests
+                  Stellar Quests
                 </Link>
-            </div>
-                ) : (
+
+                <Link
+                  href="/stacks/stellar-readiness/checklist"
+                  className="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-6 py-4 text-center text-base font-bold text-emerald-300 transition hover:bg-emerald-400/20"
+                >
+                  Readiness Checklist
+                </Link>
+              </div>
+            ) : (
               <Link
-               href="/courses"
-               className="rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-center text-base font-bold text-white transition hover:border-sky-400/40"
+                href="/courses"
+                className="rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-center text-base font-bold text-white transition hover:border-sky-400/40"
               >
-              Explore Courses
-               </Link>
-                )}
-            </div>
+                Explore Courses
+              </Link>
+            )}
+          </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-3xl bg-slate-950/50 p-5">
-               <p className="text-sm text-slate-400">Status</p>
-               <p className="mt-2 text-2xl font-bold text-sky-300">
-                  {stellarCourse?.status ?? "Missing"}
-               </p>
+              <p className="text-sm text-slate-400">Status</p>
+              <p className="mt-2 text-2xl font-bold text-sky-300">
+                {stellarCourse?.status ?? "Missing"}
+              </p>
             </div>
 
             <div className="rounded-3xl bg-slate-950/50 p-5">
-               <p className="text-sm text-slate-400">Modules</p>
-               <p className="mt-2 text-2xl font-bold">
-                  {stellarCourse?.modules.length ?? 0}
-               </p>
+              <p className="text-sm text-slate-400">Modules</p>
+              <p className="mt-2 text-2xl font-bold">
+                {stellarCourse?.modules.length ?? 0}
+              </p>
             </div>
 
             <div className="rounded-3xl bg-slate-950/50 p-5">
-               <p className="text-sm text-slate-400">Lessons</p>
-               <p className="mt-2 text-2xl font-bold">{totalLessons}</p>
+              <p className="text-sm text-slate-400">Lessons</p>
+              <p className="mt-2 text-2xl font-bold">{totalLessons}</p>
             </div>
 
             <div className="rounded-3xl bg-slate-950/50 p-5">
-                <p className="text-sm text-slate-400">Quests</p>
-                <p className="mt-2 text-2xl font-bold">{stellarQuests.length}</p>
+              <p className="text-sm text-slate-400">Quests</p>
+              <p className="mt-2 text-2xl font-bold">{stellarQuests.length}</p>
             </div>
           </div>
 
-            {stellarQuests.length > 0 ? (
+          {stellarQuests.length > 0 ? (
             <div className="mt-6 grid gap-3 md:grid-cols-2">
               {stellarQuests.map((quest) => (
-               <div
-                    key={quest.id}
-                    className="rounded-3xl border border-white/10 bg-slate-950/50 p-5"
-               >
-               <div className="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wide">
-                  <span className="rounded-full bg-sky-400/10 px-3 py-1 text-sky-300">
-                   {quest.difficulty}
-                  </span>
-                  <span className="rounded-full bg-emerald-400/10 px-3 py-1 text-emerald-300">
-                  {quest.status}
-                  </span>
-                </div>
+                <div
+                  key={quest.id}
+                  className="rounded-3xl border border-white/10 bg-slate-950/50 p-5"
+                >
+                  <div className="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wide">
+                    <span className="rounded-full bg-sky-400/10 px-3 py-1 text-sky-300">
+                      {quest.difficulty}
+                    </span>
+                    <span className="rounded-full bg-emerald-400/10 px-3 py-1 text-emerald-300">
+                      {quest.status}
+                    </span>
+                  </div>
 
-                <h3 className="mt-4 text-lg font-bold">{quest.title}</h3>
-                <p className="mt-2 text-sm font-semibold text-sky-300">
-                  {quest.xpReward} XP Reward
-                </p>
-          </div>
-            ))}
-          </div>
+                  <h3 className="mt-4 text-lg font-bold">{quest.title}</h3>
+                  <p className="mt-2 text-sm font-semibold text-sky-300">
+                    {quest.xpReward} XP Reward
+                  </p>
+                </div>
+              ))}
+            </div>
           ) : null}
         </section>
 
@@ -299,9 +313,7 @@ export default async function StellarReadinessPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-300">
                 Track Modules
               </p>
-              <h2 className="mt-4 text-3xl font-bold">
-                Modul kesiapan Stellar
-              </h2>
+              <h2 className="mt-4 text-3xl font-bold">Modul kesiapan Stellar</h2>
             </div>
 
             <p className="text-sm text-slate-400">
@@ -364,21 +376,30 @@ export default async function StellarReadinessPage() {
           <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="text-3xl font-bold">
-                Next: ubah track ini menjadi course dan quest.
+                Next: gunakan checklist sebelum submit quest.
               </h2>
               <p className="mt-3 max-w-3xl leading-8 text-slate-300">
-                Setelah halaman ini aman, kita bisa membuat seed data untuk
-                course “Stellar Readiness”, lesson, quest, dan checklist agar
-                learner bisa mendapatkan Proof-of-Readiness dari jalur Stellar.
+                Checklist membantu learner membangun kepercayaan diri sebelum
+                menjawab quest Stellar dan sebelum mencoba transaksi digital
+                bernilai nyata di tahap berikutnya.
               </p>
             </div>
 
-            <Link
-              href="/quests?track=stellar-readiness"
-              className="rounded-2xl bg-emerald-400 px-6 py-4 text-center text-base font-bold text-slate-950 transition hover:bg-emerald-300"
-            >
-              Start Stellar Quests
-            </Link>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/stacks/stellar-readiness/checklist"
+                className="rounded-2xl bg-emerald-400 px-6 py-4 text-center text-base font-bold text-slate-950 transition hover:bg-emerald-300"
+              >
+                Open Checklist
+              </Link>
+
+              <Link
+                href="/quests?track=stellar-readiness"
+                className="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-6 py-4 text-center text-base font-bold text-emerald-300 transition hover:bg-emerald-400/20"
+              >
+                Start Stellar Quests
+              </Link>
+            </div>
           </div>
         </section>
       </section>
