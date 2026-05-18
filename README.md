@@ -1,84 +1,84 @@
 # Karyra
 
-**Karyra** is a mobile-first Web3 learning and quest platform designed to help beginners and local communities understand Web3 through structured lessons, guided quests, XP rewards, badges, and offline community onboarding.
+**Karyra** is a mobile-first Web3 readiness platform for local communities. It helps beginners build practical confidence before entering Web3 through structured lessons, quests, workshop participation, readiness passports, and proof records.
 
-
----
-
-## Project Overview
-
-Karyra aims to make Web3 education more approachable for beginners by combining:
-
-- beginner-friendly Web3 learning content
-- interactive lessons and quizzes
-- quest-based learning progression
-- XP and badge rewards
-- admin-reviewed quest submissions
-- offline workshop registration
-- public transparency pages
-- an internal admin console for managing content and community activity
-
-The project is built with a mobile-first approach, but also provides a desktop-friendly experience for reviewers, educators, grant evaluators, and community partners.
+Karyra is not positioned as a generic learn-and-earn product. It is designed as a **local Web3 readiness infrastructure** for beginners, community educators, workshop organizers, and grant reviewers.
 
 ---
 
-## Problem
+## Core Positioning
 
-Many beginners struggle to enter Web3 because the onboarding experience is often too technical, fragmented, and intimidating.
+Karyra focuses on the **pre-transaction layer** of Web3 adoption:
 
-Common problems include:
+- safety literacy before asset usage
+- wallet confidence before real transactions
+- proof of learning before deeper technical steps
+- proof of participation before community progression
+- readiness records before onchain activity
+- local/offline onboarding for non-technical communities
 
-- wallet confusion and fear of making mistakes
-- difficult technical terminology
-- poor localization for non-English communities
-- lack of structured beginner learning paths
-- weak connection between online learning and offline community support
-- limited visibility into learner progress and real onboarding impact
+The current long-term stack direction is:
 
-Karyra addresses these problems by providing a simpler, localized, and community-centered learning experience.
-
----
-
-## Solution
-
-Karyra provides a guided learning system where users can:
-
-1. start from beginner-friendly Web3 lessons,
-2. complete quizzes and learning activities,
-3. submit quests as proof of participation,
-4. receive XP and badge rewards after review,
-5. join offline workshops for community onboarding,
-6. track progress through a learner dashboard.
-
-Admins can manage the ecosystem through the Karyra Admin Console.
+```txt
+Filecoin = Proof Archive / evidence preservation layer
+Stellar  = Financial Web3 Readiness / payment-readiness learning layer
+```
 
 ---
 
-## Current MVP Features
+## Current MVP Highlights
 
-### Learning
+### Readiness Layer
 
-- Public homepage
-- Course list
+- Readiness Passport
+- Readiness score and level
+- Readiness timeline
+- Shareable passport summary placeholder
+- Badge identity
+- Proof-of-Learning
+- Proof-of-Participation
+- Proof-of-Readiness
+
+### Filecoin Proof Archive Demo
+
+- Admin proof archive page
+- Public proof verification page
+- Demo Filecoin CID generation
+- Archive manifest JSON
+- SHA-256 checksum
+- Archive status in Passport
+- Verification links from Passport and Impact pages
+
+### Stellar Readiness Track
+
+- Stellar Readiness stack page
+- Stellar Readiness course seed
+- Stellar-focused quests
+- Stellar Readiness badge
+- Interactive pre-transaction checklist
+- Quest filter for `stellar-readiness`
+- Dashboard submission status
+
+### Learning Engine
+
+- Public course list
 - Course detail page
 - Lesson detail page
 - Quiz display
-- Enroll course action
-- Start lesson action
-- Complete lesson action
+- Enroll/start/complete flow
 - XP reward for completed lessons
-- Learner dashboard with progress display
+- Learner dashboard
 
 ### Quest & Reward
 
 - Public quest page
-- Quest task display
 - Quest submission form
+- Client-side validation and character counter
 - Admin submission review
 - Approve/reject submission flow
 - XP reward approval
 - RewardLedger tracking
-- Dashboard and impact metrics update after approval
+- Auto readiness sync after approval
 
 ### Community Onboarding
 
@@ -88,28 +88,16 @@ Admins can manage the ecosystem through the Karyra Admin Console.
 - Capacity counter
 - Dashboard workshop registration display
 - Admin workshop management
-- Workshop status management
-
-### Admin Console
-
-- Karyra Admin Console overview
-- Course management
-- Course creation
-- Publish/archive course
-- Quest submission review
-- Workshop management
-- Workshop creation
-- Public proof navigation
 
 ### Transparency
 
-- Public project status page
+- Public status page
 - Public changelog
 - Public impact report
 - Grant reviewer guide
 - Platform metrics
 - Roadmap overview
-- Grant readiness signals
+- Development transparency narrative
 
 ---
 
@@ -118,28 +106,48 @@ Admins can manage the ecosystem through the Karyra Admin Console.
 ### Public App
 
 ```txt
-/                   Homepage
-/courses            Public course list
-/courses/[slug]     Course detail
-/lessons/[slug]     Lesson detail
-/quests             Quest page
-/workshops          Public workshop page
-/dashboard          Demo learner dashboard
-/status             Public project status
-/changelog          Public changelog
-/impact             Public impact report
-/reviewer-guide     Grant reviewer guide
+/                                      Homepage
+/courses                               Public course list
+/courses/[slug]                        Course detail
+/lessons/[slug]                        Lesson detail
+/quests                                Quest page
+/quests?track=stellar-readiness        Stellar readiness quest filter
+/workshops                             Public workshop page
+/dashboard                             Demo learner dashboard
+/status                                Public project status
+/changelog                             Public changelog
+/impact                                Public impact report
+/reviewer-guide                        Grant reviewer guide
+```
+
+### Readiness & Proof
+
+```txt
+/passport                              Readiness Passport
+/passport/timeline                     Readiness Timeline
+/passport/share                        Shareable Passport Summary
+/proofs/[id]                           Public proof verification
+```
+
+### Filecoin + Stellar
+
+```txt
+/admin/proofs                          Filecoin Proof Archive admin page
+/stacks/stellar-readiness              Stellar Readiness stack
+/stacks/stellar-readiness/checklist    Stellar pre-transaction checklist
 ```
 
 ### Karyra Admin Console
 
 ```txt
-/admin                    Admin console overview
-/admin/courses            Manage courses
-/admin/courses/new        Create new course
-/admin/submissions        Review quest submissions
-/admin/workshops          Manage workshops
-/admin/workshops/new      Create new workshop
+/admin                                 Admin console overview
+/admin/courses                         Manage courses
+/admin/courses/new                     Create new course
+/admin/submissions                     Review quest submissions
+/admin/workshops                       Manage workshops
+/admin/workshops/new                   Create new workshop
+/admin/learners                        Learner readiness monitor
+/admin/proofs                          Proof archive monitor
 ```
 
 ---
@@ -150,7 +158,7 @@ The current MVP uses demo identities to validate product flows.
 
 ```txt
 Learner demo:
-username: demo
+username: demo or demo-learner depending on seed/demo flow
 
 Admin demo:
 username: admin
@@ -173,7 +181,32 @@ Learner
 → submit quest
 → admin review
 → reward approval
-→ dashboard update
+→ readiness sync
+→ proof record
+→ readiness passport
+```
+
+### Stellar Readiness Flow
+
+```txt
+Open Stellar Readiness
+→ study wallet/payment readiness modules
+→ complete checklist
+→ submit Stellar quest
+→ admin approval
+→ Proof-of-Readiness
+→ Passport + Timeline
+```
+
+### Filecoin Proof Flow
+
+```txt
+Proof record
+→ admin archive action
+→ archive manifest
+→ checksum
+→ demo Filecoin CID
+→ public proof verification
 ```
 
 ### Community Flow
@@ -182,7 +215,8 @@ Learner
 Workshop published
 → learner registers
 → dashboard reflects registration
-→ public impact metrics update
+→ impact/status metrics update
+→ participation can become a proof layer
 ```
 
 ### Admin Flow
@@ -193,8 +227,9 @@ Karyra Admin Console
 → create lessons
 → review quest submissions
 → approve/reject rewards
-→ manage workshops
-→ monitor status and impact
+→ monitor readiness
+→ archive proofs
+→ review status/impact
 ```
 
 ---
@@ -216,7 +251,7 @@ Preview Mode: Auto / Mobile / Desktop
 
 ---
 
-## Database & ORM
+## Database & ORM Notes
 
 Karyra uses PostgreSQL with Prisma 7.8.0.
 
@@ -310,17 +345,21 @@ Recommended review path:
 ```txt
 1. /reviewer-guide
 2. /
-3. /courses
-4. /courses/dasar-web3-untuk-pemula
-5. /lessons/apa-itu-web3
-6. /dashboard
-7. /quests
-8. /admin/submissions
-9. /workshops
-10. /status
-11. /impact
-12. /changelog
-13. /admin
+3. /status
+4. /impact
+5. /courses
+6. /courses/stellar-readiness-for-local-communities
+7. /stacks/stellar-readiness
+8. /stacks/stellar-readiness/checklist
+9. /quests?track=stellar-readiness
+10. /dashboard
+11. /passport
+12. /passport/timeline
+13. /passport/share
+14. /admin/submissions
+15. /admin/learners
+16. /admin/proofs
+17. /changelog
 ```
 
 ---
@@ -333,8 +372,10 @@ The current MVP intentionally keeps several areas simple:
 - role-based permission system is planned later
 - wallet integration is not connected to a live chain yet
 - quest verification is currently based on manual/admin review
-- workshop attendance/check-in is planned for later
-- AI-assistant is planned but not active yet
+- Filecoin archive currently uses demo CIDs and manifest placeholders
+- Stellar track currently focuses on readiness education, not live payments
+- workshop attendance/check-in can be expanded later
+- AI-assisted content generation is planned but not active yet
 - production deployment and public demo packaging are still in progress
 
 ---
@@ -351,14 +392,15 @@ The current MVP intentionally keeps several areas simple:
 - learner dashboard
 - admin console foundation
 
-### Phase 2 — Learning & Quest Expansion
+### Phase 2 — Readiness & Proof Expansion
 
-- richer course structure
-- detailed lesson progress
-- quest review improvements
-- badge rules
-- reward logic refinement
-- learner history
+- Readiness Passport
+- Readiness Timeline
+- proof records
+- badge identity
+- admin learner readiness monitor
+- Filecoin Proof Archive demo
+- Stellar Readiness course, checklist, and quests
 
 ### Phase 3 — Community Onboarding
 
@@ -387,11 +429,12 @@ Karyra is designed for:
 - local Indonesian communities
 - offline learning workshops
 - beginner-friendly wallet education
+- payment-readiness learning
 - quest-based learning
 - community onboarding
 - future chain-agnostic learning identity
 
-The project is being prepared as a grant-ready MVP with a strong focus on practical education, transparency, and community impact.
+The project is being prepared as a grant-ready MVP with a strong focus on practical education, transparency, local impact, and readiness before transaction.
 
 ---
 
