@@ -154,6 +154,15 @@ export default async function AdminOverviewPage() {
       descriptionId: "Buat workshop dan pantau registrasi learner.",
       descriptionEn: "Create workshops and monitor learner registrations.",
     },
+    {
+      href: "/admin/learners",
+      titleId: "Learner Readiness",
+      titleEn: "Learner Readiness",
+      descriptionId:
+        "Pantau passport, readiness score, proof record, dan status arsip Filecoin.",
+      descriptionEn:
+        "Monitor passports, readiness scores, proof records, and Filecoin archive status.",
+    },
   ];
 
   return (
@@ -246,9 +255,7 @@ export default async function AdminOverviewPage() {
         <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 md:p-8">
           <div className="flex items-center justify-between gap-4">
             <h2 className="text-2xl font-bold">
-              {language === "id"
-                ? "Submission Terbaru"
-                : "Recent Submissions"}
+              {language === "id" ? "Submission Terbaru" : "Recent Submissions"}
             </h2>
 
             <Link
@@ -262,7 +269,10 @@ export default async function AdminOverviewPage() {
           <div className="mt-5 grid gap-3">
             {recentSubmissions.length > 0 ? (
               recentSubmissions.map((submission) => (
-                <div key={submission.id} className="rounded-2xl bg-slate-900 p-4">
+                <div
+                  key={submission.id}
+                  className="rounded-2xl bg-slate-900 p-4"
+                >
                   <div className="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wide">
                     <span className="rounded-full bg-white/10 px-3 py-1 text-slate-300">
                       {submission.status}

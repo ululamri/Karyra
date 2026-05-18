@@ -141,6 +141,8 @@ model User {
   badges                UserBadge[]
   workshopRegistrations WorkshopRegistration[]
   aiGenerations         AiGeneration[]
+  readinessProfile      ReadinessProfile?
+  proofRecords          ProofRecord[]
 
   createdCourses Course[] @relation("CourseCreator")
   createdLessons Lesson[] @relation("LessonCreator")
@@ -512,4 +514,60 @@ model AiGeneration {
   @@index([userId])
   @@index([purpose])
   @@map("ai_generations")
+}
+
+enum ProofType {
+  LEARNING
+  PARTICIPATION
+  READINESS
+}
+
+enum ReadinessLevel {
+  BEGINNER
+  LEARNING
+  READY
+  COMMUNITY_READY
+}
+
+model ReadinessProfile {
+  id               String         @id @default(cuid())
+  userId           String         @unique
+  level            ReadinessLevel @default(BEGINNER)
+  totalXp          Int            @default(0)
+  completedCourses Int            @default(0)
+  approvedQuests   Int            @default(0)
+  workshopsJoined  Int            @default(0)
+  readinessScore   Int            @default(0)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  proofRecords ProofRecord[]
+
+  @@index([level])
+  @@map("readiness_profiles")
+}
+
+model ProofRecord {
+  id                 String    @id @default(cuid())
+  userId             String
+  readinessProfileId String?
+  type               ProofType
+  title              String    @db.VarChar(160)
+  description        String?
+  source             String?   @db.VarChar(80)
+  sourceId           String?
+  xpValue            Int       @default(0)
+  metadata           Json?
+  archivedToFilecoin Boolean   @default(false)
+  filecoinCid        String?   @db.VarChar(160)
+  issuedAt           DateTime  @default(now())
+
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  readinessProfile ReadinessProfile? @relation(fields: [readinessProfileId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([type])
+  @@index([issuedAt])
+  @@map("proof_records")
 }

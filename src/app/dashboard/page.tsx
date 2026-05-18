@@ -157,13 +157,12 @@ export default async function DashboardPage() {
           workshop: {
             select: {
               slug: true,
-             title: true,
+              title: true,
               city: true,
-          startsAt: true,
+              startsAt: true,
             },
           },
         },
-        
       },
     },
   });
@@ -172,7 +171,9 @@ export default async function DashboardPage() {
     return (
       <main className="min-h-screen bg-slate-950 px-5 py-8 text-white md:px-8 md:py-16">
         <section className="mx-auto max-w-5xl rounded-3xl border border-white/10 bg-white/5 p-6">
-          <h1 className="text-3xl font-bold">{t(language, "learnerDashboard")}</h1>
+          <h1 className="text-3xl font-bold">
+            {t(language, "learnerDashboard")}
+          </h1>
           <p className="mt-4 text-slate-300">
             Demo learner belum tersedia. Jalankan:
           </p>
@@ -214,14 +215,25 @@ export default async function DashboardPage() {
                 : "Continue your Web3 learning progress, collect XP, and complete community quests."}
             </p>
 
-            {continueLesson ? (
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              {continueLesson ? (
+                <Link
+                  href={`/lessons/${continueLesson.slug}`}
+                  className="inline-flex rounded-2xl bg-emerald-400 px-6 py-4 text-base font-bold text-slate-950 md:px-8 md:text-lg"
+                >
+                  {t(language, "continueLearning")}
+                </Link>
+              ) : null}
+
               <Link
-                href={`/lessons/${continueLesson.slug}`}
-                className="mt-8 inline-flex rounded-2xl bg-emerald-400 px-6 py-4 text-base font-bold text-slate-950 md:px-8 md:text-lg"
+                href="/passport"
+                className="inline-flex rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-6 py-4 text-base font-bold text-emerald-300 transition hover:bg-emerald-400/20 md:px-8 md:text-lg"
               >
-                {t(language, "continueLearning")}
+                {language === "id"
+                  ? "Lihat Readiness Passport"
+                  : "View Readiness Passport"}
               </Link>
-            ) : null}
+            </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3 md:grid-cols-1">
@@ -240,7 +252,9 @@ export default async function DashboardPage() {
             </div>
 
             <div className="rounded-3xl bg-white/5 p-6">
-              <p className="text-sm text-slate-400">{t(language, "dayStreak")}</p>
+              <p className="text-sm text-slate-400">
+                {t(language, "dayStreak")}
+              </p>
               <p className="mt-2 text-4xl font-bold">{learner.streakCount}</p>
             </div>
           </div>
@@ -284,7 +298,9 @@ export default async function DashboardPage() {
                 <p className="text-sm text-slate-400">
                   {language === "id" ? "Lesson aktif" : "Active lesson"}
                 </p>
-                <h3 className="mt-2 text-xl font-bold">{continueLesson.title}</h3>
+                <h3 className="mt-2 text-xl font-bold">
+                  {continueLesson.title}
+                </h3>
                 <p className="mt-2 text-sm text-slate-400">
                   {continueLesson.estimatedMinutes} menit •{" "}
                   {continueLesson.xpReward} XP
@@ -295,7 +311,10 @@ export default async function DashboardPage() {
             {activeCourse ? (
               <div className="mt-6 grid gap-3">
                 {activeCourse.modules.map((module) => (
-                  <div key={module.id} className="rounded-2xl bg-slate-900/70 p-4">
+                  <div
+                    key={module.id}
+                    className="rounded-2xl bg-slate-900/70 p-4"
+                  >
                     <p className="text-sm text-slate-400">
                       Module {module.order}
                     </p>
@@ -311,7 +330,9 @@ export default async function DashboardPage() {
 
           <section className="grid gap-6">
             <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-6 md:p-8">
-              <h2 className="text-2xl font-bold">{t(language, "activeQuest")}</h2>
+              <h2 className="text-2xl font-bold">
+                {t(language, "activeQuest")}
+              </h2>
 
               {activeQuest ? (
                 <div className="mt-5">
@@ -324,7 +345,9 @@ export default async function DashboardPage() {
                     </span>
                   </div>
 
-                  <h3 className="mt-4 text-xl font-bold">{activeQuest.title}</h3>
+                  <h3 className="mt-4 text-xl font-bold">
+                    {activeQuest.title}
+                  </h3>
 
                   {activeQuest.description ? (
                     <p className="mt-2 leading-7 text-slate-300">
@@ -338,7 +361,10 @@ export default async function DashboardPage() {
 
                   <div className="mt-5 grid gap-2">
                     {activeQuest.tasks.map((task) => (
-                      <div key={task.id} className="rounded-2xl bg-slate-950/50 p-4">
+                      <div
+                        key={task.id}
+                        className="rounded-2xl bg-slate-950/50 p-4"
+                      >
                         <p className="text-sm text-slate-400">
                           Task {task.order}
                         </p>
@@ -357,7 +383,9 @@ export default async function DashboardPage() {
             </div>
 
             <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 md:p-8">
-              <h2 className="text-2xl font-bold">{t(language, "earnedBadges")}</h2>
+              <h2 className="text-2xl font-bold">
+                {t(language, "earnedBadges")}
+              </h2>
 
               <div className="mt-5 grid gap-3">
                 {learner.badges.length > 0 ? (
@@ -382,61 +410,68 @@ export default async function DashboardPage() {
                   ))
                 ) : (
                   <p className="text-slate-300">
-                    {language === "id"
-                      ? "Belum ada badge."
-                      : "No badges yet."}
+                    {language === "id" ? "Belum ada badge." : "No badges yet."}
                   </p>
                 )}
               </div>
             </div>
-          <section className="mt-6 rounded-[2rem] border border-white/10 bg-white/5 p-6 md:p-8">
-            <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-              <div>
-                <h2 className="text-2xl font-bold">
-                  {language === "id" ? "Workshop Terdaftar" : "Registered Workshops"}
-                </h2>
-                <p className="mt-2 text-slate-400">
-                  {language === "id"
-                    ? "Aktivitas offline/community onboarding yang diikuti learner."
-                    : "Offline/community onboarding activities joined by the learner."}
-                </p>
-              </div>
-
-              <Link
-               href="/workshops"
-                 className="rounded-2xl bg-white/10 px-5 py-3 text-center font-bold text-white"
-               >
-                 {t(language, "workshops")}
-              </Link>
-            </div>
-
-            <div className="mt-5 grid gap-3">
-              {learner.workshopRegistrations.length > 0 ? (
-                 learner.workshopRegistrations.map((registration) => (
-                <div key={registration.id} className="rounded-2xl bg-slate-900 p-4">
-                <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
+            <section className="mt-6 rounded-[2rem] border border-white/10 bg-white/5 p-6 md:p-8">
+              <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
                 <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-emerald-300">
-                {registration.status}
-              </p>
-              <h3 className="mt-2 font-bold">{registration.workshop.title}</h3>
-              <p className="mt-1 text-sm text-slate-400">
-                {registration.workshop.city ?? "Community"} •{" "}
-                {new Date(registration.workshop.startsAt).toLocaleString()}
-              </p>
-               </div>
+                  <h2 className="text-2xl font-bold">
+                    {language === "id"
+                      ? "Workshop Terdaftar"
+                      : "Registered Workshops"}
+                  </h2>
+                  <p className="mt-2 text-slate-400">
+                    {language === "id"
+                      ? "Aktivitas offline/community onboarding yang diikuti learner."
+                      : "Offline/community onboarding activities joined by the learner."}
+                  </p>
+                </div>
+
+                <Link
+                  href="/workshops"
+                  className="rounded-2xl bg-white/10 px-5 py-3 text-center font-bold text-white"
+                >
+                  {t(language, "workshops")}
+                </Link>
               </div>
-             </div>
-              ))
-              ) : (
-             <p className="rounded-2xl bg-slate-900 p-4 text-slate-300">
-             {language === "id"
-                    ? "Belum terdaftar di workshop."
-                    : "Not registered in any workshop yet."}
-             </p>
-              )}
-            </div>
-           </section>
+
+              <div className="mt-5 grid gap-3">
+                {learner.workshopRegistrations.length > 0 ? (
+                  learner.workshopRegistrations.map((registration) => (
+                    <div
+                      key={registration.id}
+                      className="rounded-2xl bg-slate-900 p-4"
+                    >
+                      <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-wide text-emerald-300">
+                            {registration.status}
+                          </p>
+                          <h3 className="mt-2 font-bold">
+                            {registration.workshop.title}
+                          </h3>
+                          <p className="mt-1 text-sm text-slate-400">
+                            {registration.workshop.city ?? "Community"} •{" "}
+                            {new Date(
+                              registration.workshop.startsAt,
+                            ).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="rounded-2xl bg-slate-900 p-4 text-slate-300">
+                    {language === "id"
+                      ? "Belum terdaftar di workshop."
+                      : "Not registered in any workshop yet."}
+                  </p>
+                )}
+              </div>
+            </section>
           </section>
         </div>
       </section>
