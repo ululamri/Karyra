@@ -82,6 +82,14 @@ const totalXp = xpAggregate._sum.xpAmount ?? 0;
           : "Early impact report from learning, quests, rewards, and workshops.",
     },
     {
+      href: "/stacks/stellar-readiness",
+      title: "Stellar Readiness",
+      description:
+        language === "id"
+          ? "Jalur kesiapan pembayaran Web3: wallet safety, memo awareness, stablecoin literacy, dan kesiapan transaksi."
+          : "A Web3 payment-readiness track covering wallet safety, memo awareness, stablecoin literacy, and transaction confidence.",
+    },
+    {
       href: "/changelog",
       title: t(language, "changelog"),
       description:

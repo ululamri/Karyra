@@ -306,25 +306,28 @@ export default async function AdminProofsPage() {
                       </td>
 
                       <td className="px-5 py-4">
-                        {proof.archivedToFilecoin ? (
-                          <span className="text-sm text-zinc-500">
-                            Already archived
-                          </span>
-                        ) : (
-                          <form action={archiveProof}>
-                            <input
-                              type="hidden"
-                              name="proofId"
-                              value={proof.id}
-                            />
-                            <button
-                              type="submit"
-                              className="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-bold text-zinc-950 transition hover:bg-emerald-300"
+                          <div className="flex flex-col gap-2">
+                            <Link
+                              href={`/proofs/${proof.id}`}
+                              className="text-sm font-medium text-emerald-300 hover:text-emerald-200"
                             >
-                              Archive
-                            </button>
-                          </form>
-                        )}
+                             Open Proof
+                            </Link>
+
+                        {proof.archivedToFilecoin ? (
+                           <span className="text-sm text-zinc-500">Already archived</span>
+                            ) : (
+                             <form action={archiveProof}>
+                               <input type="hidden" name="proofId" value={proof.id} />
+                                 <button
+                                  type="submit"
+                                  className="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-bold text-zinc-950 transition hover:bg-emerald-300"
+                                 >
+                                   Archive
+                                 </button>
+                             </form>
+                         )}
+                        </div>
                       </td>
                     </tr>
                   ))}

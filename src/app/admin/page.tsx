@@ -163,6 +163,23 @@ export default async function AdminOverviewPage() {
       descriptionEn:
         "Monitor passports, readiness scores, proof records, and Filecoin archive status.",
     },
+    {
+      href: "/admin/proofs",
+      titleId: "Filecoin Proof Archive",
+      titleEn: "Filecoin Proof Archive",
+      descriptionId:
+        "Kelola Proof-of-Learning, Proof-of-Participation, dan Proof-of-Readiness sebelum diarsipkan ke Filecoin.",
+      descriptionEn:
+        "Manage Proof-of-Learning, Proof-of-Participation, and Proof-of-Readiness before archiving them to Filecoin.",
+    },
+    {
+      href: "/stacks/stellar-readiness",       titleId: "Stellar Readiness Track",
+      titleEn: "Stellar Readiness Track",
+      descriptionId:
+        "Lihat jalur kesiapan pembayaran Web3: wallet safety, memo awareness, stablecoin literacy, dan pre-transaction confidence.",
+      descriptionEn:
+        "View the Web3 payment-readiness track: wallet safety, memo awareness, stablecoin literacy, and pre-transaction confidence.",
+    },
   ];
 
   return (
