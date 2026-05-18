@@ -64,19 +64,26 @@ export default async function PassportPage() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-              <Link
-                 href="/passport/timeline"
-                 className="rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-300"
-              >
-              View Timeline
-              </Link>
+            <Link
+              href="/passport/share"
+              className="rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-300"
+            >
+              Share Summary
+            </Link>
 
-              <Link
-                 href="/dashboard"
-                 className="rounded-2xl border border-zinc-800 px-4 py-3 text-sm font-medium text-zinc-200 transition hover:border-emerald-500 hover:text-emerald-300"
-              >
+            <Link
+              href="/passport/timeline"
+              className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-300 transition hover:bg-emerald-500/20"
+            >
+              View Timeline
+            </Link>
+
+            <Link
+              href="/dashboard"
+              className="rounded-2xl border border-zinc-800 px-4 py-3 text-sm font-medium text-zinc-200 transition hover:border-emerald-500 hover:text-emerald-300"
+            >
               Back to Dashboard
-              </Link>
+            </Link>
           </div>
         </div>
 
@@ -153,17 +160,17 @@ export default async function PassportPage() {
             </div>
           </section>
         </div>
-        
-      <section className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
-        <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="text-sm font-medium text-emerald-400">
-             Readiness Badges
-            </p>
-            <h2 className="mt-1 text-2xl font-semibold">
-             Identitas kesiapan learner
-            </h2>
-          </div>
+
+        <section className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
+          <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="text-sm font-medium text-emerald-400">
+                Readiness Badges
+              </p>
+              <h2 className="mt-1 text-2xl font-semibold">
+                Identitas kesiapan learner
+              </h2>
+            </div>
 
             <p className="text-sm text-zinc-500">
               {passport.badges.length} badge
@@ -171,44 +178,45 @@ export default async function PassportPage() {
           </div>
 
           <div className="mt-6 grid gap-3 md:grid-cols-2">
-             {passport.badges.length === 0 ? (
-             <div className="rounded-2xl border border-dashed border-zinc-800 p-6 text-sm text-zinc-400 md:col-span-2">
-                 Belum ada badge. Selesaikan course, quest, atau milestone readiness
-                 untuk mendapatkan badge.
-             </div>
-             ) : (
+            {passport.badges.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-zinc-800 p-6 text-sm text-zinc-400 md:col-span-2">
+                Belum ada badge. Selesaikan course, quest, atau milestone
+                readiness untuk mendapatkan badge.
+              </div>
+            ) : (
               passport.badges.map((userBadge) => (
-             <article
-                key={userBadge.id}
-                className="flex items-start gap-4 rounded-2xl border border-zinc-800 bg-zinc-950/50 p-4"
-             > 
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-400/10 text-xl">
-            🏅
+                <article
+                  key={userBadge.id}
+                  className="flex items-start gap-4 rounded-2xl border border-zinc-800 bg-zinc-950/50 p-4"
+                >
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-400/10 text-xl">
+                    🏅
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold text-zinc-100">
+                      {userBadge.badge.name}
+                    </h3>
+
+                    {userBadge.badge.description ? (
+                      <p className="mt-2 text-sm leading-6 text-zinc-400">
+                        {userBadge.badge.description}
+                      </p>
+                    ) : null}
+
+                    <p className="mt-2 text-xs text-zinc-500">
+                      Awarded{" "}
+                      {new Intl.DateTimeFormat("id-ID", {
+                        dateStyle: "medium",
+                      }).format(userBadge.awardedAt)}
+                    </p>
+                  </div>
+                </article>
+              ))
+            )}
           </div>
+        </section>
 
-          <div>
-            <h3 className="font-semibold text-zinc-100">
-              {userBadge.badge.name}
-            </h3>
-
-            {userBadge.badge.description ? (
-              <p className="mt-2 text-sm leading-6 text-zinc-400">
-                {userBadge.badge.description}
-              </p>
-            ) : null}
-
-            <p className="mt-2 text-xs text-zinc-500">
-              Awarded{" "}
-              {new Intl.DateTimeFormat("id-ID", {
-                dateStyle: "medium",
-              }).format(userBadge.awardedAt)}
-            </p>
-          </div>
-              </article>
-          ))
-        )}
-      </div>
-    </section>
         <section className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
@@ -254,7 +262,7 @@ export default async function PassportPage() {
 
                     <div className="flex shrink-0 flex-col gap-1 text-left text-xs text-zinc-500 md:text-right">
                       <span>
-                        XP Value:{" "}
+                        XP Value: {" "}
                         <strong className="text-zinc-300">
                           {proof.xpValue}
                         </strong>
@@ -267,25 +275,25 @@ export default async function PassportPage() {
                     </div>
                   </div>
 
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <span className="rounded-full border border-zinc-800 px-3 py-1 text-xs text-zinc-400">
-                       Source: {proof.source ?? "manual"}
-                      </span>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <span className="rounded-full border border-zinc-800 px-3 py-1 text-xs text-zinc-400">
+                      Source: {proof.source ?? "manual"}
+                    </span>
 
-                      <span className="rounded-full border border-zinc-800 px-3 py-1 text-xs text-zinc-400">
-                       Filecoin:{" "}
-                       {proof.archivedToFilecoin
+                    <span className="rounded-full border border-zinc-800 px-3 py-1 text-xs text-zinc-400">
+                      Filecoin: {" "}
+                      {proof.archivedToFilecoin
                         ? proof.filecoinCid ?? "archived"
                         : "not archived yet"}
-                      </span>
+                    </span>
 
-                  <Link
+                    <Link
                       href={`/proofs/${proof.id}`}
                       className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300 transition hover:bg-emerald-500/20"
-                  >
+                    >
                       View Proof
-                  </Link>
-                 </div>
+                    </Link>
+                  </div>
                 </article>
               ))
             )}
