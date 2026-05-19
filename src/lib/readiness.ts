@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@/generated/prisma/client";
 import {
   ProofType,
   ReadinessLevel,
@@ -39,6 +40,16 @@ function calculateReadinessScore(input: {
   return Math.min(100, xpScore + courseScore + questScore + workshopScore);
 }
 
+function toJsonDate(value: Date | string | null | undefined) {
+  if (!value) return null;
+  if (value instanceof Date) return value.toISOString();
+  return value;
+}
+
+function asJsonValue(value: Prisma.InputJsonValue): Prisma.InputJsonValue {
+  return value;
+}
+
 export async function getOrCreateDemoLearner() {
   const existingLearner = await prisma.user.findFirst({
     where: {
@@ -74,7 +85,7 @@ async function createProofIfMissing(input: {
   source: string;
   sourceId: string;
   xpValue?: number;
-  metadata?: Record<string, unknown>;
+  metadata?: Prisma.InputJsonValue;
 }) {
   const existing = await prisma.proofRecord.findFirst({
     where: {
@@ -102,37 +113,40 @@ async function createProofIfMissing(input: {
   });
 }
 
-export async function syncReadinessProfile(userId: string): Promise<ReadinessSnapshot> {
-  const [user, completedCourses, approvedQuests, workshopsJoined] = await Promise.all([
-    prisma.user.findUniqueOrThrow({
-      where: { id: userId },
-      select: {
-        id: true,
-        xp: true,
-      },
-    }),
+export async function syncReadinessProfile(
+  userId: string,
+): Promise<ReadinessSnapshot> {
+  const [user, completedCourses, approvedQuests, workshopsJoined] =
+    await Promise.all([
+      prisma.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: {
+          id: true,
+          xp: true,
+        },
+      }),
 
-    prisma.enrollment.count({
-      where: {
-        userId,
-        status: ProgressStatus.COMPLETED,
-      },
-    }),
+      prisma.enrollment.count({
+        where: {
+          userId,
+          status: ProgressStatus.COMPLETED,
+        },
+      }),
 
-    prisma.questSubmission.count({
-      where: {
-        userId,
-        status: SubmissionStatus.APPROVED,
-      },
-    }),
+      prisma.questSubmission.count({
+        where: {
+          userId,
+          status: SubmissionStatus.APPROVED,
+        },
+      }),
 
-    prisma.workshopRegistration.count({
-      where: {
-        userId,
-        status: RegistrationStatus.ATTENDED,
-      },
-    }),
-  ]);
+      prisma.workshopRegistration.count({
+        where: {
+          userId,
+          status: RegistrationStatus.ATTENDED,
+        },
+      }),
+    ]);
 
   const readinessScore = calculateReadinessScore({
     totalXp: user.xp,
@@ -186,14 +200,15 @@ export async function syncReadinessProfile(userId: string): Promise<ReadinessSna
       readinessProfileId: profile.id,
       type: ProofType.LEARNING,
       title: `Completed course: ${enrollment.course.title}`,
-      description: "Proof-of-Learning record generated from completed course progress.",
+      description:
+        "Proof-of-Learning record generated from completed course progress.",
       source: "course",
       sourceId: enrollment.course.id,
       xpValue: 10,
-      metadata: {
+      metadata: asJsonValue({
         courseSlug: enrollment.course.slug,
-        completedAt: enrollment.completedAt,
-      },
+        completedAt: toJsonDate(enrollment.completedAt),
+      }),
     });
   }
 
@@ -221,15 +236,16 @@ export async function syncReadinessProfile(userId: string): Promise<ReadinessSna
       readinessProfileId: profile.id,
       type: ProofType.READINESS,
       title: `Approved quest: ${submission.quest.title}`,
-      description: "Proof-of-Readiness record generated from approved quest submission.",
+      description:
+        "Proof-of-Readiness record generated from approved quest submission.",
       source: "quest",
       sourceId: submission.quest.id,
       xpValue: submission.quest.xpReward,
-      metadata: {
+      metadata: asJsonValue({
         questSlug: submission.quest.slug,
         questType: submission.quest.type,
-        reviewedAt: submission.reviewedAt,
-      },
+        reviewedAt: toJsonDate(submission.reviewedAt),
+      }),
     });
   }
 
@@ -257,16 +273,17 @@ export async function syncReadinessProfile(userId: string): Promise<ReadinessSna
       readinessProfileId: profile.id,
       type: ProofType.PARTICIPATION,
       title: `Joined workshop: ${registration.workshop.title}`,
-      description: "Proof-of-Participation record generated from workshop attendance.",
+      description:
+        "Proof-of-Participation record generated from workshop attendance.",
       source: "workshop",
       sourceId: registration.workshop.id,
       xpValue: 15,
-      metadata: {
+      metadata: asJsonValue({
         workshopSlug: registration.workshop.slug,
         city: registration.workshop.city,
-        startsAt: registration.workshop.startsAt,
-        attendedAt: registration.attendedAt,
-      },
+        startsAt: toJsonDate(registration.workshop.startsAt),
+        attendedAt: toJsonDate(registration.attendedAt),
+      }),
     });
   }
 

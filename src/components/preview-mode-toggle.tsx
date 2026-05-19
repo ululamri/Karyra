@@ -24,13 +24,13 @@ function PhoneIcon() {
   return (
     <svg
       aria-hidden="true"
-      className="h-4 w-4"
+      className="h-3.5 w-3.5"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
       strokeWidth={2}
     >
-      <rect x="7" y="2" width="10" height="20" rx="2" />
+      <rect x="8" y="2" width="8" height="20" rx="2" />
       <path d="M11 18h2" />
     </svg>
   );
@@ -40,7 +40,7 @@ function DesktopIcon() {
   return (
     <svg
       aria-hidden="true"
-      className="h-4 w-4"
+      className="h-3.5 w-3.5"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -56,16 +56,16 @@ function AutoIcon() {
   return (
     <svg
       aria-hidden="true"
-      className="h-4 w-4"
+      className="h-3.5 w-3.5"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
       strokeWidth={2}
     >
-      <path d="M4 4v6h6" />
-      <path d="M20 20v-6h-6" />
-      <path d="M5 19A9 9 0 0 0 19 5" />
-      <path d="M19 5A9 9 0 0 0 5 19" />
+      <path d="M4 12a8 8 0 0 1 13.66-5.66" />
+      <path d="M18 4v5h-5" />
+      <path d="M20 12a8 8 0 0 1-13.66 5.66" />
+      <path d="M6 20v-5h5" />
     </svg>
   );
 }
@@ -83,7 +83,6 @@ export function PreviewModeToggle({ language }: PreviewModeToggleProps) {
     function sync() {
       const currentPreference = getStoredPreviewPreference();
       const state = applyPreviewPreference(currentPreference);
-
       setPreference(state.preference);
       setMode(state.mode);
     }
@@ -104,17 +103,18 @@ export function PreviewModeToggle({ language }: PreviewModeToggleProps) {
           ? "desktop"
           : "auto";
 
-    const state = savePreviewPreference(nextPreference);
+    savePreviewPreference(nextPreference);
+
+    // savePreviewPreference intentionally returns void; apply again locally so
+    // this component updates immediately and TypeScript stays aligned with the
+    // preview-mode helper contract.
+    const state = applyPreviewPreference(nextPreference);
     setPreference(state.preference);
     setMode(state.mode);
   }
 
   const label =
-    preference === "auto"
-      ? "AUTO"
-      : mode === "mobile"
-        ? "MOBILE"
-        : "DESKTOP";
+    preference === "auto" ? "AUTO" : mode === "mobile" ? "MOBILE" : "DESKTOP";
 
   const title =
     preference === "mobile"
@@ -131,7 +131,7 @@ export function PreviewModeToggle({ language }: PreviewModeToggleProps) {
       type="button"
       onClick={handleToggle}
       title={title}
-      className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-slate-200 transition hover:border-emerald-400/40 hover:text-emerald-300"
+      className="inline-flex min-h-9 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-slate-200 transition hover:border-emerald-400/40 hover:bg-white/10"
     >
       {preference === "auto" ? (
         <AutoIcon />
