@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SiteHeader } from "../components/site-header";
+import { SiteFooter } from "../components/site-footer";
 import { BottomNav } from "../components/bottom-nav";
 import { PreviewModeController } from "../components/preview-mode-controller";
 import { getServerLanguage } from "../lib/i18n-server";
@@ -21,19 +22,13 @@ export default async function RootLayout({
   const language = await getServerLanguage();
 
   return (
-    <html
-      lang={language}
-      data-preview-preference="auto"
-      data-preview-mode="desktop"
-    >
+    <html lang={language}>
       <body>
         <PreviewModeController />
-
-        <div className="karyra-preview-frame min-h-screen bg-slate-950">
-          <SiteHeader language={language} />
-          <div className="page-shell">{children}</div>
-          <BottomNav language={language} />
-        </div>
+        <SiteHeader language={language} />
+        {children}
+        <SiteFooter language={language} />
+        <BottomNav language={language} />
       </body>
     </html>
   );

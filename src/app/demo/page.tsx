@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { prisma } from "../lib/prisma";
-import { getServerLanguage } from "../lib/i18n-server";
+import { prisma } from "@/lib/prisma";
+import { getServerLanguage } from "@/lib/i18n-server";
 
 type DemoStep = {
   titleId: string;
