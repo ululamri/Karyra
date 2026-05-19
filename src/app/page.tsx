@@ -6,57 +6,82 @@ import { t } from "../lib/i18n";
 export default async function HomePage() {
   const language = await getServerLanguage();
 
- const [
-  courseCount,
-  questCount,
-  lessonCount,
-  learnerCount,
-  submissionCount,
-  _workshopCount,
-  xpAggregate,
-] = await Promise.all([
-  prisma.course.count({
-    where: {
-      status: "PUBLISHED",
-    },
-  }),
-  prisma.quest.count({
-    where: {
-      status: "PUBLISHED",
-    },
-  }),
-  prisma.lesson.count({
-    where: {
-      status: "PUBLISHED",
-    },
-  }),
-  prisma.user.count({
-    where: {
-      role: "LEARNER",
-    },
-  }),
-  prisma.questSubmission.count(),
-  prisma.workshop.count({
-    where: {
-      status: {
-        in: ["OPEN", "COMPLETED"],
+  const [
+    courseCount,
+    questCount,
+    lessonCount,
+    learnerCount,
+    submissionCount,
+    workshopCount,
+    xpAggregate,
+    readinessProfileCount,
+    proofRecordCount,
+    archivedProofCount,
+    stellarQuestCount,
+  ] = await Promise.all([
+    prisma.course.count({
+      where: {
+        status: "PUBLISHED",
       },
-    },
-  }),
-  prisma.rewardLedger.aggregate({
-    where: {
-      kind: "XP",
-      direction: "CREDIT",
-    },
-    _sum: {
-      xpAmount: true,
-    },
-  }),
-]);
+    }),
+    prisma.quest.count({
+      where: {
+        status: "PUBLISHED",
+      },
+    }),
+    prisma.lesson.count({
+      where: {
+        status: "PUBLISHED",
+      },
+    }),
+    prisma.user.count({
+      where: {
+        role: "LEARNER",
+      },
+    }),
+    prisma.questSubmission.count(),
+    prisma.workshop.count({
+      where: {
+        status: {
+          in: ["OPEN", "COMPLETED"],
+        },
+      },
+    }),
+    prisma.rewardLedger.aggregate({
+      where: {
+        kind: "XP",
+        direction: "CREDIT",
+      },
+      _sum: {
+        xpAmount: true,
+      },
+    }),
+    prisma.readinessProfile.count(),
+    prisma.proofRecord.count(),
+    prisma.proofRecord.count({
+      where: {
+        archivedToFilecoin: true,
+      },
+    }),
+    prisma.quest.count({
+      where: {
+        status: "PUBLISHED",
+        chainKey: "stellar-readiness",
+      },
+    }),
+  ]);
 
-const totalXp = xpAggregate._sum.xpAmount ?? 0;
-  
+  const totalXp = xpAggregate._sum.xpAmount ?? 0;
+
   const proofLinks = [
+    {
+      href: "/mvp-map",
+      title: "MVP Map",
+      description:
+        language === "id"
+          ? "Peta alur produk dari learning, quest, proof, Filecoin, Stellar, sampai impact."
+          : "A product-flow map from learning, quests, proofs, Filecoin, Stellar, and impact.",
+    },
     {
       href: "/reviewer-guide",
       title: "Reviewer Guide",
@@ -78,8 +103,8 @@ const totalXp = xpAggregate._sum.xpAmount ?? 0;
       title: t(language, "impact"),
       description:
         language === "id"
-          ? "Laporan dampak awal dari learning, quest, reward, dan workshop."
-          : "Early impact report from learning, quests, rewards, and workshops.",
+          ? "Laporan dampak awal dari learning, quest, reward, readiness, dan workshop."
+          : "Early impact report from learning, quests, rewards, readiness, and workshops.",
     },
     {
       href: "/stacks/stellar-readiness",
@@ -88,6 +113,14 @@ const totalXp = xpAggregate._sum.xpAmount ?? 0;
         language === "id"
           ? "Jalur kesiapan pembayaran Web3: wallet safety, memo awareness, stablecoin literacy, dan kesiapan transaksi."
           : "A Web3 payment-readiness track covering wallet safety, memo awareness, stablecoin literacy, and transaction confidence.",
+    },
+    {
+      href: "/admin/proofs",
+      title: "Filecoin Proof Archive",
+      description:
+        language === "id"
+          ? "Demo archive layer untuk proof record, manifest, checksum, dan CID placeholder."
+          : "A demo archive layer for proof records, manifests, checksums, and placeholder CIDs.",
     },
     {
       href: "/changelog",
@@ -108,9 +141,19 @@ const totalXp = xpAggregate._sum.xpAmount ?? 0;
               "Course, lesson, quiz, dan dashboard progress untuk membantu pemula memahami wallet, blockchain, dan keamanan dasar.",
           },
           {
-            title: "Quest dan reward",
+            title: "Quest, review, dan reward",
             description:
-              "Learner dapat submit quest, admin dapat review, dan XP reward tercatat melalui RewardLedger.",
+              "Learner submit quest, admin review, XP reward tercatat di RewardLedger, dan status submission tampil di dashboard.",
+          },
+          {
+            title: "Readiness Passport",
+            description:
+              "Proof record, badge, readiness score, timeline, dan share summary membentuk identitas kesiapan learner.",
+          },
+          {
+            title: "Filecoin + Stellar layer",
+            description:
+              "Filecoin menjadi arah proof archive, sementara Stellar menjadi jalur payment-readiness sebelum transaksi nyata.",
           },
           {
             title: "Onboarding komunitas offline",
@@ -120,7 +163,7 @@ const totalXp = xpAggregate._sum.xpAmount ?? 0;
           {
             title: "Admin Console internal",
             description:
-              "Karyra Admin Console mengelola course, submission, workshop, reward, dan proof layer dari satu panel.",
+              "Karyra Admin Console mengelola course, submission, workshop, learner readiness, reward, dan proof archive.",
           },
         ]
       : [
@@ -130,9 +173,19 @@ const totalXp = xpAggregate._sum.xpAmount ?? 0;
               "Courses, lessons, quizzes, and progress dashboard help beginners understand wallets, blockchain, and basic safety.",
           },
           {
-            title: "Quests and rewards",
+            title: "Quests, review, and rewards",
             description:
-              "Learners can submit quests, admins can review, and XP rewards are recorded through RewardLedger.",
+              "Learners submit quests, admins review them, XP rewards are recorded in RewardLedger, and submission status appears on the dashboard.",
+          },
+          {
+            title: "Readiness Passport",
+            description:
+              "Proof records, badges, readiness score, timeline, and share summary form learner readiness identity.",
+          },
+          {
+            title: "Filecoin + Stellar layer",
+            description:
+              "Filecoin is positioned as proof archive, while Stellar is the payment-readiness path before real transactions.",
           },
           {
             title: "Offline community onboarding",
@@ -142,252 +195,201 @@ const totalXp = xpAggregate._sum.xpAmount ?? 0;
           {
             title: "Internal Admin Console",
             description:
-              "Karyra Admin Console manages courses, submissions, workshops, rewards, and proof layers from one panel.",
+              "Karyra Admin Console manages courses, submissions, workshops, learner readiness, rewards, and proof archive.",
           },
         ];
 
+  const metrics = [
+    {
+      label: t(language, "activeCourses"),
+      value: courseCount,
+    },
+    {
+      label: t(language, "availableLessons"),
+      value: lessonCount,
+    },
+    {
+      label: t(language, "activeQuests"),
+      value: questCount,
+    },
+    {
+      label: t(language, "totalLearners"),
+      value: learnerCount,
+    },
+    {
+      label: t(language, "totalSubmissions"),
+      value: submissionCount,
+    },
+    {
+      label: t(language, "totalXpDistributed"),
+      value: totalXp,
+    },
+    {
+      label: language === "id" ? "Workshop aktif" : "Active workshops",
+      value: workshopCount,
+    },
+    {
+      label: language === "id" ? "Readiness Profile" : "Readiness Profiles",
+      value: readinessProfileCount,
+    },
+    {
+      label: language === "id" ? "Proof Record" : "Proof Records",
+      value: proofRecordCount,
+    },
+    {
+      label: language === "id" ? "Proof Archived" : "Archived Proofs",
+      value: archivedProofCount,
+    },
+    {
+      label: language === "id" ? "Quest Stellar" : "Stellar Quests",
+      value: stellarQuestCount,
+    },
+  ];
+
   return (
     <main className="min-h-screen bg-slate-950 px-5 py-8 text-white md:px-8 md:py-16">
-      <section className="mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-[1.1fr_0.9fr]">
-        <div>
-          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.22em] text-emerald-300 md:text-base">
-            Karyra V2
-          </p>
-
-          <h1 className="max-w-4xl text-4xl font-bold leading-tight md:text-6xl">
-            {t(language, "heroTitle")}
-          </h1>
-
-          <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 md:text-xl md:leading-9">
-            {t(language, "heroDescription")}
-          </p>
-
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <Link
-              href="/courses"
-              className="rounded-2xl bg-emerald-400 px-6 py-4 text-center text-base font-bold text-slate-950 md:px-8 md:text-lg"
-            >
-              {t(language, "startLearning")}
-            </Link>
-
-            <Link
-              href="/quests"
-              className="rounded-2xl border border-white/15 px-6 py-4 text-center text-base font-bold text-white md:px-8 md:text-lg"
-            >
-              {t(language, "viewQuests")}
-            </Link>
-
-            <Link
-              href="/reviewer-guide"
-              className="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-6 py-4 text-center text-base font-bold text-emerald-300 md:px-8 md:text-lg"
-            >
-              Reviewer Guide
-            </Link>
-          </div>
-        </div>
-
-        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-5 shadow-2xl md:p-8">
-          <div className="rounded-3xl bg-slate-900 p-5 md:p-6">
-            <p className="text-sm font-semibold text-emerald-300">
-              {language === "id" ? "Grant Demo Snapshot" : "Grant Demo Snapshot"}
+      <section className="mx-auto flex max-w-7xl flex-col gap-12">
+        <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-300">
+              Karyra V2
+            </p>
+            <h1 className="mt-4 max-w-4xl text-4xl font-bold tracking-tight md:text-6xl">
+              {t(language, "heroTitle")}
+            </h1>
+            <p className="mt-5 max-w-3xl text-base leading-8 text-slate-300 md:text-lg">
+              {t(language, "heroDescription")}
             </p>
 
-            <h2 className="mt-3 text-2xl font-bold md:text-3xl">
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/courses"
+                className="rounded-2xl bg-emerald-400 px-6 py-4 text-base font-bold text-slate-950 transition hover:bg-emerald-300"
+              >
+                {t(language, "startLearning")}
+              </Link>
+              <Link
+                href="/quests?track=stellar-readiness"
+                className="rounded-2xl border border-sky-400/30 bg-sky-400/10 px-6 py-4 text-base font-bold text-sky-300 transition hover:bg-sky-400/20"
+              >
+                Stellar Quests
+              </Link>
+              <Link
+                href="/mvp-map"
+                className="rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-base font-bold text-white transition hover:border-emerald-400/40"
+              >
+                MVP Map
+              </Link>
+              <Link
+                href="/reviewer-guide"
+                className="rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-base font-bold text-white transition hover:border-emerald-400/40"
+              >
+                Reviewer Guide
+              </Link>
+            </div>
+          </div>
+
+          <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-6 md:p-8">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-300">
+              {language === "id" ? "Grant Demo Snapshot" : "Grant Demo Snapshot"}
+            </p>
+            <h2 className="mt-4 text-3xl font-bold">
               {language === "id"
                 ? "MVP aktif, bukan landing page kosong."
                 : "Active MVP, not an empty landing page."}
             </h2>
-
-            <p className="mt-3 leading-7 text-slate-300">
+            <p className="mt-4 leading-8 text-slate-300">
               {language === "id"
-                ? "Karyra sudah memiliki database, learner dashboard, quest review, reward ledger, workshop registration, admin console, dan halaman bukti publik."
-                : "Karyra already includes a database, learner dashboard, quest review, reward ledger, workshop registration, admin console, and public proof pages."}
+                ? "Karyra sudah memiliki database, learner dashboard, quest review, reward ledger, workshop registration, admin console, readiness passport, Filecoin proof archive, dan Stellar readiness track."
+                : "Karyra already includes a database, learner dashboard, quest review, reward ledger, workshop registration, admin console, readiness passport, Filecoin proof archive, and Stellar readiness track."}
             </p>
 
-            <div className="mt-6 grid gap-3">
-              <div className="rounded-2xl bg-white/5 p-4">
-                <p className="font-semibold">01. Learning</p>
-                <p className="mt-1 text-sm text-slate-400">
-                  {language === "id"
-                    ? "Course, lesson, quiz, progress, dan XP."
-                    : "Courses, lessons, quizzes, progress, and XP."}
-                </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-3xl bg-slate-950/50 p-4">
+                <p className="text-sm text-slate-400">Filecoin</p>
+                <p className="mt-2 font-bold text-emerald-300">Proof Archive</p>
               </div>
-
-              <div className="rounded-2xl bg-white/5 p-4">
-                <p className="font-semibold">02. Quest Review</p>
-                <p className="mt-1 text-sm text-slate-400">
-                  {language === "id"
-                    ? "Submit quest, admin review, reward approval."
-                    : "Quest submission, admin review, reward approval."}
-                </p>
+              <div className="rounded-3xl bg-slate-950/50 p-4">
+                <p className="text-sm text-slate-400">Stellar</p>
+                <p className="mt-2 font-bold text-sky-300">Payment Readiness</p>
               </div>
-
-              <div className="rounded-2xl bg-white/5 p-4">
-                <p className="font-semibold">03. Community</p>
-                <p className="mt-1 text-sm text-slate-400">
-                  {language === "id"
-                    ? "Workshop onboarding untuk komunitas lokal."
-                    : "Workshop onboarding for local communities."}
-                </p>
+              <div className="rounded-3xl bg-slate-950/50 p-4">
+                <p className="text-sm text-slate-400">Passport</p>
+                <p className="mt-2 font-bold text-amber-300">Learning Identity</p>
               </div>
             </div>
           </div>
         </div>
-      </section>
 
-      <section className="mx-auto mt-10 grid max-w-7xl gap-4 md:mt-16 md:grid-cols-3 xl:grid-cols-6">
-        <div className="rounded-3xl bg-white/5 p-6 md:p-7">
-          <p className="text-4xl font-bold text-emerald-300 md:text-5xl">
-            {courseCount}
-          </p>
-          <p className="mt-2 text-sm text-slate-400">
-            {t(language, "activeCourses")}
-          </p>
-        </div>
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+          {metrics.map((metric) => (
+            <div key={metric.label} className="rounded-3xl border border-white/10 bg-white/5 p-5">
+              <p className="text-3xl font-bold text-emerald-300">{metric.value}</p>
+              <p className="mt-2 text-sm text-slate-400">{metric.label}</p>
+            </div>
+          ))}
+        </section>
 
-        <div className="rounded-3xl bg-white/5 p-6 md:p-7">
-          <p className="text-4xl font-bold text-emerald-300 md:text-5xl">
-            {lessonCount}
-          </p>
-          <p className="mt-2 text-sm text-slate-400">
-            {t(language, "availableLessons")}
-          </p>
-        </div>
-
-        <div className="rounded-3xl bg-white/5 p-6 md:p-7">
-          <p className="text-4xl font-bold text-emerald-300 md:text-5xl">
-            {questCount}
-          </p>
-          <p className="mt-2 text-sm text-slate-400">
-            {t(language, "activeQuests")}
-          </p>
-        </div>
-
-        <div className="rounded-3xl bg-white/5 p-6 md:p-7">
-          <p className="text-4xl font-bold text-emerald-300 md:text-5xl">
-            {learnerCount}
-          </p>
-          <p className="mt-2 text-sm text-slate-400">
-            {t(language, "totalLearners")}
-          </p>
-        </div>
-
-        <div className="rounded-3xl bg-white/5 p-6 md:p-7">
-          <p className="text-4xl font-bold text-emerald-300 md:text-5xl">
-            {submissionCount}
-          </p>
-          <p className="mt-2 text-sm text-slate-400">
-            {t(language, "totalSubmissions")}
-          </p>
-        </div>
-
-        <div className="rounded-3xl bg-white/5 p-6 md:p-7">
-          <p className="text-4xl font-bold text-emerald-300 md:text-5xl">
-            {totalXp}
-          </p>
-          <p className="mt-2 text-sm text-slate-400">
-            {t(language, "totalXpDistributed")}
-          </p>
-        </div>
-      </section>
-
-      <section className="mx-auto mt-10 max-w-7xl md:mt-16">
-        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 md:p-8">
-          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+        <section>
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-300">
                 {language === "id" ? "Product Pillars" : "Product Pillars"}
               </p>
-
-              <h2 className="mt-3 text-3xl font-bold md:text-4xl">
-                {language === "id"
-                  ? "Apa yang sudah bisa diuji?"
-                  : "What can already be tested?"}
+              <h2 className="mt-4 text-3xl font-bold">
+                {language === "id" ? "Apa yang sudah bisa diuji?" : "What can already be tested?"}
               </h2>
-
-              <p className="mt-3 max-w-3xl leading-8 text-slate-300">
+              <p className="mt-3 max-w-3xl text-slate-300">
                 {language === "id"
                   ? "Karyra saat ini sudah punya beberapa loop utama yang bisa langsung dicoba oleh reviewer."
                   : "Karyra currently has several core loops that reviewers can directly test."}
               </p>
             </div>
 
-            <Link
-              href="/reviewer-guide"
-              className="rounded-2xl bg-emerald-400 px-6 py-4 text-center font-bold text-slate-950"
-            >
-              Reviewer Guide
+            <Link href="/mvp-map" className="text-sm font-bold text-emerald-300 hover:text-emerald-200">
+              View MVP Map →
             </Link>
           </div>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {productPillars.map((pillar) => (
-              <div key={pillar.title} className="rounded-3xl bg-slate-900 p-5">
+              <article key={pillar.title} className="rounded-3xl border border-white/10 bg-white/5 p-5">
                 <h3 className="text-xl font-bold">{pillar.title}</h3>
-                <p className="mt-3 leading-7 text-slate-300">
-                  {pillar.description}
-                </p>
-              </div>
+                <p className="mt-3 leading-7 text-slate-300">{pillar.description}</p>
+              </article>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="mx-auto mt-10 max-w-7xl md:mt-16">
-        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-6 md:p-8">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-300">
-              {language === "id" ? "Grant Readiness" : "Grant Readiness"}
-            </p>
+        <section className="rounded-[2rem] border border-white/10 bg-white/5 p-6 md:p-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-300">
+            {language === "id" ? "Grant Readiness" : "Grant Readiness"}
+          </p>
+          <h2 className="mt-4 text-3xl font-bold">
+            {language === "id"
+              ? "Siap ditinjau sebagai MVP aktif."
+              : "Ready to review as an active MVP."}
+          </h2>
+          <p className="mt-4 max-w-3xl leading-8 text-slate-300">
+            {language === "id"
+              ? "Halaman bukti publik membantu reviewer melihat progress, impact, roadmap, transparency, dan readiness infrastructure tanpa harus menebak kondisi proyek."
+              : "Public proof pages help reviewers see progress, impact, roadmap, transparency, and readiness infrastructure without guessing the project's status."}
+          </p>
 
-            <h2 className="mt-3 text-3xl font-bold md:text-4xl">
-              {language === "id"
-                ? "Siap ditinjau sebagai MVP aktif."
-                : "Ready to review as an active MVP."}
-            </h2>
-
-            <p className="mt-4 leading-8 text-slate-300">
-              {language === "id"
-                ? "Halaman bukti publik membantu reviewer melihat progress, impact, roadmap, dan transparency tanpa harus menebak kondisi proyek."
-                : "Public proof pages help reviewers see progress, impact, roadmap, and transparency without guessing the project's status."}
-            </p>
-
-            <div className="mt-6 grid gap-3">
-              <Link
-                href="/workshops"
-                className="rounded-2xl bg-slate-950/50 p-4 font-bold text-white"
-              >
-                {t(language, "workshops")} →
-              </Link>
-
-              <Link
-                href="/admin"
-                className="rounded-2xl bg-slate-950/50 p-4 font-bold text-white"
-              >
-                Karyra Admin Console →
-              </Link>
-            </div>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {proofLinks.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-[2rem] border border-white/10 bg-white/5 p-6 transition hover:bg-white/10"
+                className="rounded-3xl border border-white/10 bg-slate-950/50 p-5 transition hover:border-emerald-400/40"
               >
                 <h3 className="text-xl font-bold">{item.title}</h3>
-                <p className="mt-3 leading-7 text-slate-300">
-                  {item.description}
-                </p>
-                <p className="mt-5 text-sm font-bold text-emerald-300">
-                  Open →
-                </p>
+                <p className="mt-3 text-sm leading-6 text-slate-400">{item.description}</p>
+                <p className="mt-4 text-sm font-bold text-emerald-300">Open →</p>
               </Link>
             ))}
           </div>
-        </div>
+        </section>
       </section>
     </main>
   );
