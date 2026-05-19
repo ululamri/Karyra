@@ -1,228 +1,144 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
 import { getServerLanguage } from "@/lib/i18n-server";
-import type { Language } from "@/lib/i18n";
+import { prisma } from "@/lib/prisma";
 
-type PackageCard = {
-  href: string;
-  label: string;
-  titleId: string;
-  titleEn: string;
-  descriptionId: string;
-  descriptionEn: string;
-};
-
-const reviewerLinks: PackageCard[] = [
+const packageSections = [
   {
+    title: "Reviewer Entry",
+    href: "/reviewer",
+    badge: "Start",
+    descriptionId: "Pilih jalur review: visitor, learner, admin, atau grant package.",
+    descriptionEn: "Choose a review path: visitor, learner, admin, or grant package.",
+  },
+  {
+    title: "Demo Path",
     href: "/demo",
-    label: "Demo",
-    titleId: "Demo Path",
-    titleEn: "Demo Path",
-    descriptionId: "Ikuti alur 8 checkpoint untuk mencoba MVP dari learner sampai proof archive.",
-    descriptionEn: "Follow an 8-checkpoint path to try the MVP from learner flow to proof archive.",
+    badge: "Demo",
+    descriptionId: "Alur checkpoint untuk menilai MVP dari homepage sampai proof archive.",
+    descriptionEn: "Checkpoint flow to evaluate the MVP from homepage to proof archive.",
   },
   {
-    href: "/reviewer-guide",
-    label: "Guide",
-    titleId: "Reviewer Guide",
-    titleEn: "Reviewer Guide",
-    descriptionId: "Panduan cepat untuk memahami positioning, fitur, dan bukti progres Karyra.",
-    descriptionEn: "A quick guide to understand Karyra positioning, features, and progress evidence.",
-  },
-  {
+    title: "MVP Map",
     href: "/mvp-map",
-    label: "Map",
-    titleId: "MVP Map",
-    titleEn: "MVP Map",
-    descriptionId: "Peta hubungan learner flow, admin review, passport, Filecoin, dan Stellar.",
-    descriptionEn: "A map connecting learner flow, admin review, passport, Filecoin, and Stellar.",
+    badge: "Map",
+    descriptionId: "Peta visual alur learner, admin, proof, Filecoin, dan Stellar.",
+    descriptionEn: "Visual map of learner, admin, proof, Filecoin, and Stellar flows.",
   },
   {
+    title: "Impact Report",
     href: "/impact",
-    label: "Impact",
-    titleId: "Impact Report",
-    titleEn: "Impact Report",
-    descriptionId: "Ringkasan dampak awal dari learning, proof, reward, workshop, dan readiness.",
-    descriptionEn: "Early impact summary across learning, proof, reward, workshop, and readiness.",
+    badge: "Impact",
+    descriptionId: "Ringkasan dampak awal, proof records, dan readiness metrics.",
+    descriptionEn: "Early impact summary, proof records, and readiness metrics.",
   },
   {
+    title: "Transparency Portal",
     href: "/transparency",
-    label: "Transparency",
-    titleId: "Transparency Portal",
-    titleEn: "Transparency Portal",
-    descriptionId: "Portal untuk melihat progress, proof, submissions, dan demo path secara terbuka.",
-    descriptionEn: "A portal to view progress, proofs, submissions, and demo path openly.",
+    badge: "Transparency",
+    descriptionId: "Portal progres, recent proof, recent submission, dan demo path.",
+    descriptionEn: "Progress portal with recent proofs, submissions, and demo path.",
   },
   {
-    href: "/roadmap",
-    label: "Roadmap",
-    titleId: "Roadmap",
-    titleEn: "Roadmap",
-    descriptionId: "Fase shipped, in progress, dan next untuk pengembangan Karyra.",
-    descriptionEn: "Shipped, in-progress, and next development phases for Karyra.",
-  },
-];
-
-const proofLinks: PackageCard[] = [
-  {
-    href: "/passport",
-    label: "Passport",
-    titleId: "Readiness Passport",
-    titleEn: "Readiness Passport",
-    descriptionId: "Lihat score, level, badge, proof record, dan status archive learner.",
-    descriptionEn: "View learner score, level, badges, proof records, and archive status.",
+    title: "Project Status",
+    href: "/status",
+    badge: "Metrics",
+    descriptionId: "Snapshot metrik platform, readiness, Filecoin, dan Stellar.",
+    descriptionEn: "Metrics snapshot for platform, readiness, Filecoin, and Stellar.",
   },
   {
-    href: "/passport/share",
-    label: "Share",
-    titleId: "Passport Share",
-    titleEn: "Passport Share",
-    descriptionId: "Ringkasan passport yang siap dibagikan ke mentor, reviewer, atau organizer.",
-    descriptionEn: "A passport summary ready to share with mentors, reviewers, or organizers.",
+    title: "QA Checklist",
+    href: "/qa-checklist",
+    badge: "QA",
+    descriptionId: "Checklist manual untuk memverifikasi flow MVP sebelum review/demo.",
+    descriptionEn: "Manual checklist to verify MVP flow before review/demo.",
   },
   {
-    href: "/passport/timeline",
-    label: "Timeline",
-    titleId: "Readiness Timeline",
-    titleEn: "Readiness Timeline",
-    descriptionId: "Riwayat badge, submission, reward, proof, workshop, dan archive event.",
-    descriptionEn: "History of badges, submissions, rewards, proofs, workshops, and archive events.",
+    title: "System Health",
+    href: "/admin/health",
+    badge: "Admin",
+    descriptionId: "Cek database, readiness, submission, proof, dan archive health.",
+    descriptionEn: "Check database, readiness, submission, proof, and archive health.",
   },
   {
-    href: "/admin/proofs",
-    label: "Filecoin",
-    titleId: "Filecoin Proof Archive",
-    titleEn: "Filecoin Proof Archive",
-    descriptionId: "Demo manifest, checksum, CID, dan verifikasi proof untuk arah Filecoin.",
-    descriptionEn: "Demo manifest, checksum, CID, and proof verification for the Filecoin direction.",
-  },
-];
-
-const stellarLinks: PackageCard[] = [
-  {
-    href: "/stacks/stellar-readiness",
-    label: "Stellar",
-    titleId: "Stellar Readiness Stack",
-    titleEn: "Stellar Readiness Stack",
-    descriptionId: "Jalur kesiapan pembayaran Web3 untuk komunitas lokal non-teknikal.",
-    descriptionEn: "A Web3 payment-readiness path for local non-technical communities.",
-  },
-  {
-    href: "/stacks/stellar-readiness/checklist",
-    label: "Checklist",
-    titleId: "Pre-Transaction Checklist",
-    titleEn: "Pre-Transaction Checklist",
-    descriptionId: "Checklist interaktif untuk wallet safety, memo awareness, dan confidence.",
-    descriptionEn: "Interactive checklist for wallet safety, memo awareness, and confidence.",
-  },
-  {
-    href: "/quests?track=stellar-readiness",
-    label: "Quests",
-    titleId: "Stellar Quests",
-    titleEn: "Stellar Quests",
-    descriptionId: "Quest untuk menghasilkan Proof-of-Readiness dari jalur Stellar.",
-    descriptionEn: "Quests to produce Proof-of-Readiness from the Stellar track.",
-  },
-  {
-    href: "/courses/stellar-readiness-for-local-communities",
-    label: "Course",
-    titleId: "Stellar Course",
-    titleEn: "Stellar Course",
-    descriptionId: "Course seed untuk wallet safety, address/memo, stablecoin, dan scam prevention.",
-    descriptionEn: "Seeded course for wallet safety, address/memo, stablecoins, and scam prevention.",
-  },
-];
-
-const localPilotLinks: PackageCard[] = [
-  {
+    title: "Workshop Kit",
     href: "/workshop-kit",
-    label: "Workshop",
-    titleId: "Workshop Kit",
-    titleEn: "Workshop Kit",
-    descriptionId: "Panduan fasilitator lokal, agenda workshop, checklist, dan expected outcomes.",
-    descriptionEn: "Local facilitator guide, workshop agenda, checklist, and expected outcomes.",
+    badge: "Local",
+    descriptionId: "Panduan fasilitator untuk membawa Karyra ke workshop lokal.",
+    descriptionEn: "Facilitator guide for bringing Karyra into local workshops.",
   },
   {
+    title: "Pilot Plan",
     href: "/pilot-plan",
-    label: "Pilot",
-    titleId: "Pilot Plan",
-    titleEn: "Pilot Plan",
+    badge: "Pilot",
     descriptionId: "Rencana pilot 4 minggu, success metrics, dan risk controls.",
     descriptionEn: "A 4-week pilot plan, success metrics, and risk controls.",
   },
   {
-    href: "/workshops",
-    label: "Events",
-    titleId: "Workshop Registry",
-    titleEn: "Workshop Registry",
-    descriptionId: "Daftar workshop publik dan registrasi learner.",
-    descriptionEn: "Public workshop list and learner registration.",
+    title: "Stellar Readiness",
+    href: "/stacks/stellar-readiness",
+    badge: "Stellar",
+    descriptionId: "Jalur kesiapan pembayaran Web3 untuk komunitas non-teknikal.",
+    descriptionEn: "Web3 payment-readiness path for non-technical communities.",
   },
   {
-    href: "/docs/grant-readiness",
-    label: "Docs",
-    titleId: "Grant Readiness Docs",
-    titleEn: "Grant Readiness Docs",
-    descriptionId: "Checklist kesiapan Karyra untuk diskusi grant dan reviewer.",
-    descriptionEn: "Karyra readiness checklist for grant discussions and reviewers.",
+    title: "Filecoin Proof Archive",
+    href: "/admin/proofs",
+    badge: "Filecoin",
+    descriptionId: "Proof archive demo dengan manifest JSON, checksum, dan CID demo.",
+    descriptionEn: "Proof archive demo with JSON manifest, checksum, and demo CID.",
   },
 ];
 
-function localize(language: Language, valueId: string, valueEn: string) {
-  return language === "id" ? valueId : valueEn;
-}
-
-function PackageSection({
-  language,
-  eyebrow,
-  titleId,
-  titleEn,
-  descriptionId,
-  descriptionEn,
-  items,
-}: {
-  language: Language;
-  eyebrow: string;
-  titleId: string;
-  titleEn: string;
-  descriptionId: string;
-  descriptionEn: string;
-  items: PackageCard[];
-}) {
-  return (
-    <section className="rounded-[2rem] border border-white/10 bg-white/5 p-6 md:p-8">
-      <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-300">
-        {eyebrow}
-      </p>
-      <h2 className="mt-4 text-3xl font-bold">
-        {localize(language, titleId, titleEn)}
-      </h2>
-      <p className="mt-3 max-w-3xl leading-8 text-slate-300">
-        {localize(language, descriptionId, descriptionEn)}
-      </p>
-
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
-        {items.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="rounded-3xl border border-white/10 bg-slate-950/60 p-5 transition hover:border-emerald-400/40 hover:bg-slate-900"
-          >
-            <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-emerald-300">
-              {item.label}
-            </span>
-            <h3 className="mt-4 text-xl font-bold">
-              {localize(language, item.titleId, item.titleEn)}
-            </h3>
-            <p className="mt-2 text-sm leading-6 text-slate-400">
-              {localize(language, item.descriptionId, item.descriptionEn)}
-            </p>
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
+const grantSignals = [
+  {
+    titleId: "Role clarity",
+    titleEn: "Role clarity",
+    descriptionId:
+      "Navigasi sudah dipisah menjadi learner, admin, reviewer, docs, dan local pilot agar reviewer tidak tersesat.",
+    descriptionEn:
+      "Navigation is grouped into learner, admin, reviewer, docs, and local pilot paths so reviewers do not get lost.",
+  },
+  {
+    titleId: "Readiness infrastructure",
+    titleEn: "Readiness infrastructure",
+    descriptionId:
+      "Karyra tidak berhenti di course; learner punya passport, timeline, badge, proof, dan share summary.",
+    descriptionEn:
+      "Karyra goes beyond courses; learners have passports, timelines, badges, proofs, and share summaries.",
+  },
+  {
+    titleId: "Filecoin archive direction",
+    titleEn: "Filecoin archive direction",
+    descriptionId:
+      "Proof archive sudah memiliki manifest JSON, checksum, dan demo CID sebagai placeholder integrasi Filecoin/IPFS asli.",
+    descriptionEn:
+      "Proof archive includes JSON manifests, checksums, and demo CIDs as placeholders for real Filecoin/IPFS integration.",
+  },
+  {
+    titleId: "Stellar readiness direction",
+    titleEn: "Stellar readiness direction",
+    descriptionId:
+      "Stellar diposisikan sebagai pre-transaction confidence layer melalui course, quest, checklist, dan proof-of-readiness.",
+    descriptionEn:
+      "Stellar is positioned as a pre-transaction confidence layer through courses, quests, checklists, and proof-of-readiness.",
+  },
+  {
+    titleId: "Local pilot readiness",
+    titleEn: "Local pilot readiness",
+    descriptionId:
+      "Workshop Kit dan Pilot Plan sudah tersedia untuk menghubungkan produk online dengan edukasi komunitas lokal.",
+    descriptionEn:
+      "Workshop Kit and Pilot Plan are available to connect the online product with local community education.",
+  },
+  {
+    titleId: "QA and health visibility",
+    titleEn: "QA and health visibility",
+    descriptionId:
+      "QA Checklist dan Admin System Health membantu solo builder mengecek alur MVP sebelum demo/grant review.",
+    descriptionEn:
+      "QA Checklist and Admin System Health help the solo builder check the MVP flow before demo/grant review.",
+  },
+];
 
 export default async function GrantPackagePage() {
   const language = await getServerLanguage();
@@ -231,119 +147,79 @@ export default async function GrantPackagePage() {
     learnerCount,
     courseCount,
     questCount,
-    stellarQuestCount,
     proofRecordCount,
     archivedProofCount,
     readinessProfileCount,
     workshopCount,
+    pendingSubmissionCount,
+    stellarQuestCount,
   ] = await Promise.all([
-    prisma.user.count({
-      where: {
-        role: "LEARNER",
-      },
-    }),
-    prisma.course.count({
-      where: {
-        status: "PUBLISHED",
-      },
-    }),
-    prisma.quest.count({
-      where: {
-        status: "PUBLISHED",
-      },
-    }),
-    prisma.quest.count({
-      where: {
-        status: "PUBLISHED",
-        chainKey: "stellar-readiness",
-      },
-    }),
+    prisma.user.count({ where: { role: "LEARNER" } }),
+    prisma.course.count({ where: { status: "PUBLISHED" } }),
+    prisma.quest.count({ where: { status: "PUBLISHED" } }),
     prisma.proofRecord.count(),
-    prisma.proofRecord.count({
-      where: {
-        archivedToFilecoin: true,
-      },
-    }),
+    prisma.proofRecord.count({ where: { archivedToFilecoin: true } }),
     prisma.readinessProfile.count(),
     prisma.workshop.count(),
+    prisma.questSubmission.count({
+      where: { status: { in: ["SUBMITTED", "NEEDS_REVIEW"] } },
+    }),
+    prisma.quest.count({ where: { status: "PUBLISHED", chainKey: "stellar-readiness" } }),
   ]);
 
   const metrics = [
-    {
-      label: language === "id" ? "Learner" : "Learners",
-      value: learnerCount,
-    },
-    {
-      label: language === "id" ? "Course Published" : "Published Courses",
-      value: courseCount,
-    },
-    {
-      label: language === "id" ? "Quest Published" : "Published Quests",
-      value: questCount,
-    },
-    {
-      label: language === "id" ? "Quest Stellar" : "Stellar Quests",
-      value: stellarQuestCount,
-    },
-    {
-      label: language === "id" ? "Proof Record" : "Proof Records",
-      value: proofRecordCount,
-    },
-    {
-      label: language === "id" ? "Proof Archived" : "Archived Proofs",
-      value: archivedProofCount,
-    },
-    {
-      label: language === "id" ? "Passport Profile" : "Passport Profiles",
-      value: readinessProfileCount,
-    },
-    {
-      label: language === "id" ? "Workshop" : "Workshops",
-      value: workshopCount,
-    },
+    { label: language === "id" ? "Learner" : "Learners", value: learnerCount },
+    { label: language === "id" ? "Course" : "Courses", value: courseCount },
+    { label: "Quest", value: questCount },
+    { label: language === "id" ? "Proof" : "Proofs", value: proofRecordCount },
+    { label: language === "id" ? "Archived" : "Archived", value: archivedProofCount },
+    { label: language === "id" ? "Passport" : "Passports", value: readinessProfileCount },
+    { label: "Workshop", value: workshopCount },
+    { label: language === "id" ? "Pending Review" : "Pending Review", value: pendingSubmissionCount },
+    { label: language === "id" ? "Quest Stellar" : "Stellar Quests", value: stellarQuestCount },
   ];
 
   return (
     <main className="min-h-screen bg-slate-950 px-5 py-8 text-white md:px-8 md:py-16">
       <section className="mx-auto flex max-w-7xl flex-col gap-8">
-        <div className="rounded-[2.5rem] border border-emerald-400/20 bg-emerald-400/10 p-6 md:p-10">
+        <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-6 md:p-8">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-300">
             Karyra Grant Package
           </p>
           <h1 className="mt-4 max-w-5xl text-4xl font-bold tracking-tight md:text-6xl">
             {language === "id"
-              ? "Satu halaman untuk meninjau MVP, impact, proof, dan pilot Karyra."
-              : "One page to review Karyra's MVP, impact, proof, and pilot package."}
+              ? "Satu halaman untuk seluruh bukti MVP, demo, QA, dan readiness grant."
+              : "One page for all MVP evidence, demo, QA, and grant-readiness signals."}
           </h1>
           <p className="mt-5 max-w-4xl text-base leading-8 text-slate-300 md:text-lg">
             {language === "id"
-              ? "Halaman ini dirancang sebagai index reviewer: mulai dari demo path, readiness passport, Filecoin proof archive, Stellar readiness, workshop kit, pilot plan, sampai dokumen grant readiness."
-              : "This page is designed as a reviewer index: from demo path, readiness passport, Filecoin proof archive, Stellar readiness, workshop kit, pilot plan, to grant-readiness documentation."}
+              ? "Gunakan halaman ini sebagai paket review Karyra. Reviewer bisa mulai dari role-based entry, mengikuti demo path, memeriksa impact, melihat Filecoin + Stellar layer, lalu mengecek QA dan system health."
+              : "Use this page as the Karyra review package. Reviewers can start from the role-based entry, follow the demo path, inspect impact, review the Filecoin + Stellar layer, then check QA and system health."}
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap gap-3">
             <Link
-              href="/demo"
+              href="/reviewer"
               className="rounded-2xl bg-emerald-400 px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-emerald-300"
             >
-              {language === "id" ? "Mulai Demo Path" : "Start Demo Path"}
+              Reviewer Entry
             </Link>
             <Link
-              href="/reviewer-guide"
+              href="/qa-checklist"
               className="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40"
             >
-              Reviewer Guide
+              QA Checklist
             </Link>
             <Link
-              href="/mvp-map"
-              className="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40"
+              href="/admin/health"
+              className="rounded-2xl border border-rose-400/30 bg-rose-400/10 px-5 py-3 text-sm font-bold text-rose-300 transition hover:bg-rose-400/20"
             >
-              MVP Map
+              System Health
             </Link>
           </div>
         </div>
 
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-9">
           {metrics.map((metric) => (
             <div
               key={metric.label}
@@ -357,60 +233,65 @@ export default async function GrantPackagePage() {
           ))}
         </section>
 
-        <PackageSection
-          language={language}
-          eyebrow="01 / Review"
-          titleId="Reviewer Evidence"
-          titleEn="Reviewer Evidence"
-          descriptionId="Jalur tercepat untuk memahami fitur, flow, bukti progres, dan kesiapan MVP."
-          descriptionEn="The fastest path to understand features, flows, progress evidence, and MVP readiness."
-          items={reviewerLinks}
-        />
-
-        <PackageSection
-          language={language}
-          eyebrow="02 / Proof"
-          titleId="Passport & Filecoin Proof"
-          titleEn="Passport & Filecoin Proof"
-          descriptionId="Bukti kesiapan learner: score, level, badge, proof record, timeline, manifest, dan archive status."
-          descriptionEn="Learner readiness evidence: score, level, badges, proof records, timeline, manifest, and archive status."
-          items={proofLinks}
-        />
-
-        <PackageSection
-          language={language}
-          eyebrow="03 / Stellar"
-          titleId="Stellar Payment Readiness"
-          titleEn="Stellar Payment Readiness"
-          descriptionId="Jalur non-transaction-first untuk wallet safety, memo awareness, stablecoin literacy, dan pre-transaction confidence."
-          descriptionEn="A non-transaction-first path for wallet safety, memo awareness, stablecoin literacy, and pre-transaction confidence."
-          items={stellarLinks}
-        />
-
-        <PackageSection
-          language={language}
-          eyebrow="04 / Local Pilot"
-          titleId="Workshop & Pilot Package"
-          titleEn="Workshop & Pilot Package"
-          descriptionId="Paket untuk menjalankan pilot lokal: workshop kit, pilot plan, workshop registry, dan grant readiness docs."
-          descriptionEn="A package for running a local pilot: workshop kit, pilot plan, workshop registry, and grant-readiness docs."
-          items={localPilotLinks}
-        />
-
         <section className="rounded-[2rem] border border-white/10 bg-white/5 p-6 md:p-8">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-300">
-            Positioning
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-sky-300">
+              Package Links
+            </p>
+            <h2 className="mt-4 text-3xl font-bold">
+              {language === "id"
+                ? "Halaman penting untuk reviewer."
+                : "Key pages for reviewers."}
+            </h2>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {packageSections.map((section) => (
+              <Link
+                key={section.href}
+                href={section.href}
+                className="rounded-3xl border border-white/10 bg-slate-950/50 p-5 transition hover:border-emerald-400/40"
+              >
+                <span className="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-emerald-300">
+                  {section.badge}
+                </span>
+                <h3 className="mt-4 text-xl font-bold">{section.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-slate-400">
+                  {language === "id" ? section.descriptionId : section.descriptionEn}
+                </p>
+                <p className="mt-4 text-sm font-bold text-emerald-300">
+                  Open →
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-6 md:p-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-sky-300">
+            Grant Readiness Signals
           </p>
           <h2 className="mt-4 text-3xl font-bold">
             {language === "id"
-              ? "Karyra bukan learn-to-earn biasa."
-              : "Karyra is not a generic learn-to-earn app."}
+              ? "Signal bahwa MVP sudah siap diuji."
+              : "Signals that the MVP is ready to be tested."}
           </h2>
-          <p className="mt-4 max-w-4xl leading-8 text-slate-300">
-            {language === "id"
-              ? "Karyra diposisikan sebagai infrastruktur kesiapan Web3 lokal: learner membangun literasi, partisipasi, dan confidence terlebih dahulu, lalu menghasilkan proof record yang dapat ditinjau, diarsipkan, dan dibagikan."
-              : "Karyra is positioned as local Web3 readiness infrastructure: learners build literacy, participation, and confidence first, then generate proof records that can be reviewed, archived, and shared."}
-          </p>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {grantSignals.map((signal) => (
+              <div
+                key={signal.titleEn}
+                className="rounded-3xl border border-white/10 bg-slate-950/50 p-5"
+              >
+                <h3 className="text-xl font-bold">
+                  {language === "id" ? signal.titleId : signal.titleEn}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-slate-400">
+                  {language === "id" ? signal.descriptionId : signal.descriptionEn}
+                </p>
+              </div>
+            ))}
+          </div>
         </section>
       </section>
     </main>
