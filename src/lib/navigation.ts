@@ -149,11 +149,57 @@ export const navigationSections: NavigationSection[] = [
     ],
   },
   {
+    titleId: "Local Pilot",
+    titleEn: "Local Pilot",
+    descriptionId: "Materi untuk membawa Karyra ke workshop dan pilot komunitas.",
+    descriptionEn: "Resources for bringing Karyra into workshops and community pilots.",
+    links: [
+      {
+        href: "/workshop-kit",
+        titleId: "Workshop Kit",
+        titleEn: "Workshop Kit",
+        descriptionId: "Panduan fasilitator, fase workshop, checklist, dan outcome.",
+        descriptionEn: "Facilitator guide, workshop phases, checklist, and outcomes.",
+        badge: "Local",
+      },
+      {
+        href: "/pilot-plan",
+        titleId: "Pilot Plan",
+        titleEn: "Pilot Plan",
+        descriptionId: "Rencana pilot 4 minggu, success metrics, dan risk controls.",
+        descriptionEn: "A 4-week pilot plan, success metrics, and risk controls.",
+        badge: "Pilot",
+      },
+      {
+        href: "/workshops",
+        titleId: "Workshop Publik",
+        titleEn: "Public Workshops",
+        descriptionId: "Daftar workshop dan registrasi learner.",
+        descriptionEn: "Workshop list and learner registration.",
+      },
+      {
+        href: "/impact",
+        titleId: "Impact Report",
+        titleEn: "Impact Report",
+        descriptionId: "Ringkasan dampak awal learning, proof, reward, dan workshop.",
+        descriptionEn: "Early impact summary for learning, proofs, rewards, and workshops.",
+      },
+    ],
+  },
+  {
     titleId: "Public Review",
     titleEn: "Public Review",
     descriptionId: "Halaman untuk grant reviewer, komunitas, dan transparansi publik.",
     descriptionEn: "Pages for grant reviewers, community, and public transparency.",
     links: [
+      {
+        href: "/grant-package",
+        titleId: "Grant Package",
+        titleEn: "Grant Package",
+        descriptionId: "Index utama semua link dan bukti MVP untuk reviewer.",
+        descriptionEn: "Main index of MVP links and evidence for reviewers.",
+        badge: "Review",
+      },
       {
         href: "/demo",
         titleId: "Demo Path",
