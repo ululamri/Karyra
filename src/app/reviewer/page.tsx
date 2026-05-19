@@ -1,51 +1,37 @@
 import Link from "next/link";
 import { getServerLanguage } from "@/lib/i18n-server";
 import { prisma } from "@/lib/prisma";
+import { RoleModeBanner } from "@/components/role-mode-banner";
 
 const modeCards = [
   {
-    href: "/",
-    label: "Visitor",
-    titleId: "Mulai sebagai pengunjung publik",
-    titleEn: "Start as a public visitor",
-    descriptionId:
-      "Lihat positioning Karyra, masalah yang diselesaikan, dan snapshot produk dari homepage.",
-    descriptionEn:
-      "See Karyra's positioning, problem framing, and product snapshot from the homepage.",
-  },
-  {
-    href: "/dashboard",
+    href: "/learner",
     label: "Learner",
     titleId: "Coba sebagai learner",
     titleEn: "Try as a learner",
-    descriptionId:
-      "Masuk ke learner journey: belajar, quest, submission, badge, passport, dan timeline.",
-    descriptionEn:
-      "Enter the learner journey: learning, quests, submissions, badges, passport, and timeline.",
+    descriptionId: "Masuk ke user-facing journey: course, quest, checklist, passport, dan workshop.",
+    descriptionEn: "Enter the user-facing journey: courses, quests, checklist, passport, and workshops.",
   },
   {
     href: "/admin",
     label: "Admin",
     titleId: "Coba sebagai admin MVP",
     titleEn: "Try as an MVP admin",
-    descriptionId:
-      "Review submission, monitor learner readiness, archive proof, dan cek system health.",
-    descriptionEn:
-      "Review submissions, monitor learner readiness, archive proofs, and check system health.",
+    descriptionId: "Review submission, pantau readiness, arsipkan proof, dan cek health.",
+    descriptionEn: "Review submissions, monitor readiness, archive proofs, and check health.",
   },
   {
     href: "/grant-package",
-    label: "Reviewer",
-    titleId: "Review grant package",
-    titleEn: "Review grant package",
-    descriptionId:
-      "Buka index semua bukti MVP: demo path, impact, docs, roadmap, QA, workshop kit, dan pilot plan.",
-    descriptionEn:
-      "Open the MVP evidence index: demo path, impact, docs, roadmap, QA, workshop kit, and pilot plan.",
+    label: "Grant",
+    titleId: "Buka grant package",
+    titleEn: "Open grant package",
+    descriptionId: "Index semua bukti MVP: demo, impact, docs, roadmap, QA, workshop kit, dan pilot plan.",
+    descriptionEn: "Index all MVP evidence: demo, impact, docs, roadmap, QA, workshop kit, and pilot plan.",
   },
 ];
 
 const demoSteps = [
+  { href: "/learner", label: "Learner Entry" },
   { href: "/stacks/stellar-readiness", label: "Stellar Readiness" },
   { href: "/stacks/stellar-readiness/checklist", label: "Pre-Transaction Checklist" },
   { href: "/quests?track=stellar-readiness", label: "Submit Stellar Quest" },
@@ -58,7 +44,6 @@ const demoSteps = [
 
 export default async function ReviewerEntryPage() {
   const language = await getServerLanguage();
-
   const [
     learnerCount,
     courseCount,
@@ -67,6 +52,7 @@ export default async function ReviewerEntryPage() {
     archivedProofCount,
     readinessProfileCount,
     pendingSubmissionCount,
+    workshopCount,
   ] = await Promise.all([
     prisma.user.count({ where: { role: "LEARNER" } }),
     prisma.course.count({ where: { status: "PUBLISHED" } }),
@@ -74,9 +60,8 @@ export default async function ReviewerEntryPage() {
     prisma.proofRecord.count(),
     prisma.proofRecord.count({ where: { archivedToFilecoin: true } }),
     prisma.readinessProfile.count(),
-    prisma.questSubmission.count({
-      where: { status: { in: ["SUBMITTED", "NEEDS_REVIEW"] } },
-    }),
+    prisma.questSubmission.count({ where: { status: { in: ["SUBMITTED", "NEEDS_REVIEW"] } } }),
+    prisma.workshop.count(),
   ]);
 
   const metrics = [
@@ -87,35 +72,47 @@ export default async function ReviewerEntryPage() {
     { label: language === "id" ? "Archived" : "Archived", value: archivedProofCount },
     { label: language === "id" ? "Passport" : "Passports", value: readinessProfileCount },
     { label: language === "id" ? "Pending Review" : "Pending Review", value: pendingSubmissionCount },
+    { label: language === "id" ? "Workshop" : "Workshops", value: workshopCount },
   ];
 
   return (
     <main className="min-h-screen bg-slate-950 px-5 py-8 text-white md:px-8 md:py-16">
       <section className="mx-auto flex max-w-7xl flex-col gap-8">
-        <div className="rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-6 md:p-8">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-sky-300">
+        <RoleModeBanner mode="reviewer" language={language} />
+
+        <section className="rounded-[2rem] border border-white/10 bg-white/5 p-6 md:p-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-300">
             Karyra Reviewer Mode
           </p>
-          <h1 className="mt-4 max-w-5xl text-4xl font-bold tracking-tight md:text-6xl">
+          <h1 className="mt-4 max-w-4xl text-4xl font-bold tracking-tight md:text-6xl">
             {language === "id"
-              ? "Pilih jalur review: visitor, learner, admin, atau grant package."
-              : "Choose a review path: visitor, learner, admin, or grant package."}
+              ? "Evaluasi MVP tanpa tersesat di halaman learner atau admin."
+              : "Evaluate the MVP without getting lost in learner or admin pages."}
           </h1>
-          <p className="mt-5 max-w-4xl text-base leading-8 text-slate-300 md:text-lg">
+          <p className="mt-5 max-w-3xl text-base leading-8 text-slate-300 md:text-lg">
             {language === "id"
-              ? "Halaman ini dibuat agar reviewer tidak bingung sedang menggunakan Karyra sebagai siapa. Karyra memiliki alur publik, learner journey, admin console, dan grant review package yang sengaja dipisahkan untuk evaluasi MVP."
-              : "This page helps reviewers understand which role they are using. Karyra separates the public flow, learner journey, admin console, and grant review package for MVP evaluation."}
+              ? "Reviewer Mode mengumpulkan jalur review utama: role demo, grant package, impact, transparency, QA, workshop kit, dan pilot plan. Produk final nantinya akan memisahkan akses dengan auth dan permission sungguhan."
+              : "Reviewer Mode gathers the main review paths: role demo, grant package, impact, transparency, QA, workshop kit, and pilot plan. The final product will separate access with real auth and permissions."}
           </p>
-        </div>
+        </section>
 
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {metrics.map((metric) => (
+            <div key={metric.label} className="rounded-3xl border border-white/10 bg-white/5 p-5">
+              <p className="text-sm text-slate-400">{metric.label}</p>
+              <p className="mt-2 text-3xl font-bold text-amber-300">{metric.value}</p>
+            </div>
+          ))}
+        </section>
+
+        <section className="grid gap-4 md:grid-cols-3">
           {modeCards.map((card) => (
             <Link
               key={card.href}
               href={card.href}
-              className="rounded-[2rem] border border-white/10 bg-white/5 p-6 transition hover:border-sky-400/40 hover:bg-sky-400/10"
+              className="rounded-[2rem] border border-white/10 bg-white/5 p-6 transition hover:border-amber-400/40 hover:bg-amber-400/10"
             >
-              <span className="rounded-full border border-sky-400/30 bg-sky-400/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-sky-300">
+              <span className="rounded-full bg-amber-400/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber-300">
                 {card.label}
               </span>
               <h2 className="mt-4 text-2xl font-bold">
@@ -128,54 +125,36 @@ export default async function ReviewerEntryPage() {
           ))}
         </section>
 
-        <section className="grid gap-4 md:grid-cols-4 lg:grid-cols-7">
-          {metrics.map((metric) => (
-            <div
-              key={metric.label}
-              className="rounded-3xl border border-white/10 bg-white/5 p-5"
-            >
-              <p className="text-sm text-slate-400">{metric.label}</p>
-              <p className="mt-2 text-3xl font-bold text-emerald-300">
-                {metric.value}
-              </p>
-            </div>
-          ))}
-        </section>
-
         <section className="rounded-[2rem] border border-white/10 bg-white/5 p-6 md:p-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-300">
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-300">
                 Suggested Demo Path
               </p>
               <h2 className="mt-4 text-3xl font-bold">
-                {language === "id"
-                  ? "Jalur cepat untuk memahami MVP."
-                  : "A fast path to understand the MVP."}
+                {language === "id" ? "Jalur cepat memahami MVP." : "A fast path to understand the MVP."}
               </h2>
             </div>
             <Link
               href="/grant-package"
-              className="rounded-2xl bg-emerald-400 px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-emerald-300"
+              className="rounded-2xl bg-amber-300 px-5 py-3 text-center text-sm font-bold text-slate-950 transition hover:bg-amber-200"
             >
               Grant Package
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-6 grid gap-3 md:grid-cols-3">
             {demoSteps.map((step, index) => (
               <Link
                 key={step.href}
                 href={step.href}
-                className="rounded-3xl border border-white/10 bg-slate-950/50 p-5 transition hover:border-emerald-400/40"
+                className="rounded-3xl border border-white/10 bg-slate-950/50 p-5 transition hover:border-amber-400/40"
               >
-                <p className="text-sm font-bold text-emerald-300">
+                <p className="text-xs font-bold uppercase tracking-wide text-amber-300">
                   Step {index + 1}
                 </p>
-                <h3 className="mt-2 text-xl font-bold">{step.label}</h3>
-                <p className="mt-3 text-sm font-semibold text-slate-400">
-                  Open →
-                </p>
+                <h3 className="mt-2 font-bold">{step.label}</h3>
+                <p className="mt-2 text-sm text-slate-400">Open →</p>
               </Link>
             ))}
           </div>
