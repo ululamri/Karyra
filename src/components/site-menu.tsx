@@ -11,42 +11,37 @@ import {
 } from "@/lib/navigation";
 
 type SiteMenuProps = {
-  language: Language;
+  language?: Language;
 };
 
-export function SiteMenu({ language }: SiteMenuProps) {
+const fallbackLanguage: Language = "id";
+
+export function SiteMenu({ language = fallbackLanguage }: SiteMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const safeLanguage = language ?? fallbackLanguage;
 
   const filteredLinks = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
+    if (!normalizedQuery) return primaryNavigationLinks;
 
-    if (!normalizedQuery) {
-      return primaryNavigationLinks;
-    }
-
-    return flatNavigationLinks.filter((link) => {
-      const haystack = [
-        link.href,
-        link.titleId,
-        link.titleEn,
-        link.descriptionId,
-        link.descriptionEn,
-        link.badge ?? "",
-      ]
+    return flatNavigationLinks.filter((link) =>
+      [link.href, link.titleId, link.titleEn, link.descriptionId, link.descriptionEn, link.badge ?? ""]
         .join(" ")
-        .toLowerCase();
-
-      return haystack.includes(normalizedQuery);
-    });
+        .toLowerCase()
+        .includes(normalizedQuery),
+    );
   }, [query]);
+
+  const switchLinks = primaryNavigationLinks.slice(0, 3);
+  const quickLinks = primaryNavigationLinks.slice(3);
 
   return (
     <div className="relative">
       <button
         type="button"
         onClick={() => setIsOpen((current) => !current)}
-        className="inline-flex items-center gap-2 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-2.5 text-sm font-bold text-emerald-200 transition hover:bg-emerald-400/20"
+        className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-2.5 text-sm font-bold text-emerald-200 transition hover:bg-emerald-400/20"
         aria-expanded={isOpen}
         aria-controls="site-menu-panel"
       >
@@ -56,25 +51,22 @@ export function SiteMenu({ language }: SiteMenuProps) {
       {isOpen ? (
         <div
           id="site-menu-panel"
-          className="absolute right-0 top-14 z-[80] w-[min(92vw,980px)] rounded-[2rem] border border-white/10 bg-slate-950 p-5 shadow-2xl shadow-black/50"
+          className="absolute right-0 z-50 mt-3 w-[min(92vw,380px)] rounded-3xl border border-white/10 bg-slate-950/95 p-4 shadow-2xl shadow-black/50 backdrop-blur"
         >
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-sm font-bold uppercase tracking-[0.22em] text-emerald-300">
-                Karyra Role Menu
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">
+                Karyra Menu
               </p>
-              <h2 className="mt-2 text-2xl font-black text-white">
-                {language === "id"
-                  ? "Masuk sesuai peran"
-                  : "Enter by role"}
+              <h2 className="mt-1 text-lg font-bold text-white">
+                {safeLanguage === "id" ? "Pilih mode" : "Choose a mode"}
               </h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-                {language === "id"
-                  ? "Pilih pengalaman yang sesuai: learner, admin, reviewer/grantee, local pilot, atau docs. Ini menjaga demo MVP tidak bercampur."
-                  : "Choose the right experience: learner, admin, reviewer/grantee, local pilot, or docs. This keeps the MVP demo from feeling mixed."}
+              <p className="mt-1 text-xs leading-5 text-slate-400">
+                {safeLanguage === "id"
+                  ? "Dropdown ini dibuat ringkas. Buka Full Menu untuk semua halaman."
+                  : "This dropdown is intentionally compact. Open Full Menu for every page."}
               </p>
             </div>
-
             <button
               type="button"
               onClick={() => setIsOpen(false)}
@@ -88,106 +80,83 @@ export function SiteMenu({ language }: SiteMenuProps) {
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder={
-              language === "id"
-                ? "Cari learner, admin, reviewer, passport, Stellar..."
-                : "Search learner, admin, reviewer, passport, Stellar..."
-            }
+            placeholder={safeLanguage === "id" ? "Cari passport, admin, grant..." : "Search passport, admin, grant..."}
             className="mt-4 w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-emerald-400"
           />
 
           {query.trim() ? (
-            <div className="mt-5">
-              <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
-                {language === "id" ? "Hasil pencarian" : "Search results"}
-              </p>
-              <div className="mt-3 grid gap-3 md:grid-cols-2">
-                {filteredLinks.length > 0 ? (
-                  filteredLinks.map((link) => (
+            <div className="mt-4 grid max-h-[55vh] gap-2 overflow-y-auto pr-1">
+              {filteredLinks.length > 0 ? (
+                filteredLinks.slice(0, 10).map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className="rounded-2xl border border-white/10 bg-white/5 p-3 transition hover:border-emerald-400/40 hover:bg-emerald-400/10"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="text-sm font-bold text-white">{localize(safeLanguage, link.titleId, link.titleEn)}</h3>
+                      {link.badge ? <span className="rounded-full bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold text-emerald-300">{link.badge}</span> : null}
+                    </div>
+                    <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-400">{localize(safeLanguage, link.descriptionId, link.descriptionEn)}</p>
+                  </Link>
+                ))
+              ) : (
+                <p className="rounded-2xl border border-white/10 bg-white/5 p-3 text-sm text-slate-400">
+                  {safeLanguage === "id" ? "Tidak ada hasil." : "No results."}
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="mt-4 grid gap-4">
+              <div>
+                <p className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-500">Switch Mode</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {switchLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
                       onClick={() => setIsOpen(false)}
-                      className="rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:border-emerald-400/40 hover:bg-emerald-400/10"
+                      className="rounded-2xl border border-white/10 bg-white/5 p-3 text-center text-xs font-bold text-white transition hover:border-emerald-400/40 hover:bg-emerald-400/10"
                     >
-                      <div className="flex items-center justify-between gap-3">
-                        <h3 className="font-bold text-white">
-                          {localize(language, link.titleId, link.titleEn)}
-                        </h3>
-                        {link.badge ? (
-                          <span className="rounded-full bg-emerald-400/10 px-2 py-1 text-[10px] font-bold uppercase text-emerald-300">
-                            {link.badge}
-                          </span>
-                        ) : null}
-                      </div>
-                      <p className="mt-2 text-sm leading-6 text-slate-400">
-                        {localize(
-                          language,
-                          link.descriptionId,
-                          link.descriptionEn,
-                        )}
-                      </p>
+                      {localize(safeLanguage, link.titleId, link.titleEn)}
                     </Link>
-                  ))
-                ) : (
-                  <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-400">
-                    {language === "id"
-                      ? "Tidak ada hasil. Coba learner, admin, reviewer, passport, stellar, proof, atau grant."
-                      : "No results. Try learner, admin, reviewer, passport, stellar, proof, or grant."}
-                  </p>
-                )}
+                  ))}
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="mt-5 grid max-h-[65vh] gap-4 overflow-y-auto pr-1 lg:grid-cols-2">
-              {navigationSections.map((section) => (
-                <section
-                  key={section.id}
-                  className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4"
-                >
-                  <h3 className="font-black text-white">
-                    {localize(language, section.titleId, section.titleEn)}
-                  </h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">
-                    {localize(
-                      language,
-                      section.descriptionId,
-                      section.descriptionEn,
-                    )}
-                  </p>
-                  <div className="mt-4 grid gap-2">
-                    {section.links.slice(0, 5).map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setIsOpen(false)}
-                        className="rounded-2xl border border-white/10 bg-slate-950/50 p-3 transition hover:border-emerald-400/40 hover:bg-emerald-400/10"
-                      >
-                        <div className="flex items-center justify-between gap-3">
-                          <span className="text-sm font-bold text-white">
-                            {localize(language, link.titleId, link.titleEn)}
-                          </span>
-                          {link.badge ? (
-                            <span className="rounded-full bg-emerald-400/10 px-2 py-1 text-[10px] font-bold uppercase text-emerald-300">
-                              {link.badge}
-                            </span>
-                          ) : null}
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </section>
-              ))}
+
+              <div>
+                <p className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-500">Quick Access</p>
+                <div className="grid gap-2">
+                  {quickLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center justify-between rounded-2xl border border-white/10 bg-slate-900/80 px-3 py-2.5 text-sm font-bold text-white transition hover:border-emerald-400/40"
+                    >
+                      <span>{localize(safeLanguage, link.titleId, link.titleEn)}</span>
+                      <span className="text-emerald-300">→</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              <Link
+                href="/menu"
+                onClick={() => setIsOpen(false)}
+                className="flex min-h-11 items-center justify-center rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-bold text-slate-950 transition hover:bg-emerald-300"
+              >
+                {safeLanguage === "id" ? "Buka Menu Lengkap" : "Open Full Menu"}
+              </Link>
             </div>
           )}
 
-          <Link
-            href="/menu"
-            onClick={() => setIsOpen(false)}
-            className="mt-5 flex items-center justify-center rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-bold text-slate-950 transition hover:bg-emerald-300"
-          >
-            {language === "id" ? "Buka Menu Lengkap" : "Open Full Menu"}
-          </Link>
+          {!query.trim() ? (
+            <p className="mt-3 text-center text-[11px] text-slate-500">
+              {navigationSections.length} sections · {flatNavigationLinks.length} links
+            </p>
+          ) : null}
         </div>
       ) : null}
     </div>
