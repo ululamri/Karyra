@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { SiteHeader } from "../components/site-header";
-import { SiteFooter } from "../components/site-footer";
-import { BottomNav } from "../components/bottom-nav";
-import { PreviewModeController } from "../components/preview-mode-controller";
-import { getServerLanguage } from "../lib/i18n-server";
+import { BottomNav } from "@/components/bottom-nav";
+import { DemoBillboard } from "@/components/demo-billboard";
+import { PreviewModeController } from "@/components/preview-mode-controller";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { getServerLanguage } from "@/lib/i18n-server";
 
 export const metadata: Metadata = {
   title: "Karyra",
-  description: "Mobile-first Web3 learning and quest platform.",
+  description:
+    "Mobile-first Web3 readiness infrastructure for local communities.",
 };
 
 export const runtime = "nodejs";
@@ -22,13 +24,14 @@ export default async function RootLayout({
   const language = await getServerLanguage();
 
   return (
-    <html lang={language}>
-      <body>
+    <html lang={language === "id" ? "id" : "en"}>
+      <body className="bg-slate-950 text-white antialiased">
         <PreviewModeController />
+        <DemoBillboard language={language} />
         <SiteHeader language={language} />
         {children}
         <SiteFooter language={language} />
-        <BottomNav language={language} />
+        <BottomNav />
       </body>
     </html>
   );

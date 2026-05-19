@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { type Language, t } from "../lib/i18n";
+import {
+  DEFAULT_LANGUAGE,
+  type Language,
+  normalizeLanguage,
+  t,
+} from "../lib/i18n";
 import {
   applyPreviewPreference,
   getStoredPreviewPreference,
@@ -12,18 +17,18 @@ import {
 } from "../lib/preview-mode";
 
 type PreviewModeToggleProps = {
-  language: Language;
+  language?: Language | null;
 };
 
 function PhoneIcon() {
   return (
     <svg
-      viewBox="0 0 24 24"
       aria-hidden="true"
-      className="h-5 w-5 md:h-6 md:w-6"
+      className="h-4 w-4"
       fill="none"
+      viewBox="0 0 24 24"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth={2}
     >
       <rect x="7" y="2" width="10" height="20" rx="2" />
       <path d="M11 18h2" />
@@ -34,16 +39,15 @@ function PhoneIcon() {
 function DesktopIcon() {
   return (
     <svg
-      viewBox="0 0 24 24"
       aria-hidden="true"
-      className="h-5 w-5 md:h-6 md:w-6"
+      className="h-4 w-4"
       fill="none"
+      viewBox="0 0 24 24"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth={2}
     >
       <rect x="3" y="4" width="18" height="12" rx="2" />
-      <path d="M8 20h8" />
-      <path d="M12 16v4" />
+      <path d="M8 20h8M12 16v4" />
     </svg>
   );
 }
@@ -51,23 +55,27 @@ function DesktopIcon() {
 function AutoIcon() {
   return (
     <svg
-      viewBox="0 0 24 24"
       aria-hidden="true"
-      className="h-5 w-5 md:h-6 md:w-6"
+      className="h-4 w-4"
       fill="none"
+      viewBox="0 0 24 24"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth={2}
     >
-      <path d="M4 6h16" />
-      <path d="M4 12h10" />
-      <path d="M4 18h7" />
-      <path d="M18 14v6" />
-      <path d="M15 17h6" />
+      <path d="M4 4v6h6" />
+      <path d="M20 20v-6h-6" />
+      <path d="M5 19A9 9 0 0 0 19 5" />
+      <path d="M19 5A9 9 0 0 0 5 19" />
     </svg>
   );
 }
 
+function getSafeLanguage(language?: Language | null): Language {
+  return normalizeLanguage(language ?? DEFAULT_LANGUAGE);
+}
+
 export function PreviewModeToggle({ language }: PreviewModeToggleProps) {
+  const safeLanguage = getSafeLanguage(language);
   const [preference, setPreference] = useState<PreviewPreference>("auto");
   const [mode, setMode] = useState<EffectivePreviewMode>("desktop");
 
@@ -81,7 +89,6 @@ export function PreviewModeToggle({ language }: PreviewModeToggleProps) {
     }
 
     sync();
-
     window.addEventListener(PREVIEW_EVENT_NAME, sync);
 
     return () => {
@@ -97,22 +104,34 @@ export function PreviewModeToggle({ language }: PreviewModeToggleProps) {
           ? "desktop"
           : "auto";
 
-    savePreviewPreference(nextPreference);
+    const state = savePreviewPreference(nextPreference);
+    setPreference(state.preference);
+    setMode(state.mode);
   }
 
   const label =
-    preference === "auto" ? "AUTO" : mode === "mobile" ? "MOBILE" : "DESKTOP";
+    preference === "auto"
+      ? "AUTO"
+      : mode === "mobile"
+        ? "MOBILE"
+        : "DESKTOP";
+
+  const title =
+    preference === "mobile"
+      ? t(safeLanguage, "mobilePreview")
+      : preference === "desktop"
+        ? t(safeLanguage, "desktopPreview")
+        : `${t(safeLanguage, "mobilePreview")} / ${t(
+            safeLanguage,
+            "desktopPreview",
+          )}`;
 
   return (
     <button
       type="button"
       onClick={handleToggle}
-      title={
-        mode === "mobile"
-          ? t(language, "desktopPreview")
-          : t(language, "mobilePreview")
-      }
-      className="inline-flex h-10 items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-3 text-xs font-bold text-white md:h-12 md:px-4 md:text-sm"
+      title={title}
+      className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-slate-200 transition hover:border-emerald-400/40 hover:text-emerald-300"
     >
       {preference === "auto" ? (
         <AutoIcon />
@@ -121,8 +140,7 @@ export function PreviewModeToggle({ language }: PreviewModeToggleProps) {
       ) : (
         <DesktopIcon />
       )}
-
-      <span className="hidden md:inline">{label}</span>
+      <span>{label}</span>
     </button>
   );
 }
