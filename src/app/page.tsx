@@ -1,122 +1,137 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
 import { getServerLanguage } from "@/lib/i18n-server";
-import { PageShell } from "@/components/ui/page-shell";
-import { CompactCard, MetricCard } from "@/components/ui/compact-card";
-import { ModePill } from "@/components/ui/mode-pill";
 
-const roleCards = [
+const pillars = [
   {
-    href: "/learner",
-    mode: "Learner" as const,
-    titleId: "Masuk sebagai Learner",
-    titleEn: "Enter as Learner",
-    descriptionId: "Belajar Web3 dari nol, ikut quest, buka Readiness Passport, dan coba Stellar readiness track.",
-    descriptionEn: "Learn Web3 from zero, complete quests, open the Readiness Passport, and try the Stellar readiness track.",
-    ctaId: "Mulai belajar",
-    ctaEn: "Start learning",
+    title: "Proof-of-Learning",
+    titleId: "Proof-of-Learning",
+    text: "Learning progress that shows a learner has completed foundational Web3 education.",
+    textId: "Bukti bahwa learner telah menyelesaikan pembelajaran dasar Web3.",
   },
   {
-    href: "/admin",
-    mode: "Admin" as const,
-    titleId: "Masuk sebagai Admin",
-    titleEn: "Enter as Admin",
-    descriptionId: "Kelola course, review submission, pantau learner readiness, archive proof, dan cek system health.",
-    descriptionEn: "Manage courses, review submissions, monitor learner readiness, archive proofs, and check system health.",
-    ctaId: "Buka admin",
-    ctaEn: "Open admin",
+    title: "Proof-of-Participation",
+    titleId: "Proof-of-Participation",
+    text: "Community activity, workshops, and local onboarding captured as participation evidence.",
+    textId: "Bukti partisipasi dalam workshop, komunitas, dan onboarding lokal.",
   },
   {
-    href: "/reviewer",
-    mode: "Reviewer" as const,
-    titleId: "Masuk sebagai Reviewer / Grantee",
-    titleEn: "Enter as Reviewer / Grantee",
-    descriptionId: "Evaluasi MVP melalui grant package, demo path, impact report, transparency, QA checklist, dan docs.",
-    descriptionEn: "Evaluate the MVP through the grant package, demo path, impact report, transparency, QA checklist, and docs.",
-    ctaId: "Review MVP",
-    ctaEn: "Review MVP",
+    title: "Proof-of-Readiness",
+    titleId: "Proof-of-Readiness",
+    text: "Readiness signals before a beginner touches wallets, payments, stablecoins, or real transactions.",
+    textId: "Bukti kesiapan sebelum pemula menyentuh wallet, payment, stablecoin, atau transaksi nyata.",
   },
 ];
 
 export default async function HomePage() {
   const language = await getServerLanguage();
 
-  const [courseCount, questCount, learnerCount, proofRecordCount, archivedProofCount, stellarQuestCount] = await Promise.all([
-    prisma.course.count({ where: { status: "PUBLISHED" } }),
-    prisma.quest.count({ where: { status: "PUBLISHED" } }),
-    prisma.user.count({ where: { role: "LEARNER" } }),
-    prisma.proofRecord.count(),
-    prisma.proofRecord.count({ where: { archivedToFilecoin: true } }),
-    prisma.quest.count({ where: { status: "PUBLISHED", chainKey: "stellar-readiness" } }),
-  ]);
-
-  const metrics = [
-    { label: language === "id" ? "Course" : "Courses", value: courseCount },
-    { label: language === "id" ? "Quest" : "Quests", value: questCount },
-    { label: language === "id" ? "Learner" : "Learners", value: learnerCount },
-    { label: language === "id" ? "Proof" : "Proofs", value: proofRecordCount },
-    { label: language === "id" ? "Archived" : "Archived", value: archivedProofCount },
-    { label: language === "id" ? "Stellar" : "Stellar", value: stellarQuestCount },
-  ];
-
   return (
-    <PageShell>
-      <section className="grid gap-5 lg:grid-cols-[1fr_0.78fr] lg:items-start">
-        <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 md:p-7">
-          <ModePill mode="Public" label="MVP Preview" />
-          <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-white md:text-5xl">
-            Local Web3 Readiness Infrastructure.
-          </h1>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300 md:text-base md:leading-7">
-            {language === "id"
-              ? "Karyra adalah MVP pembelajaran dan readiness untuk komunitas lokal: belajar, quest, proof record, Filecoin archive, dan Stellar payment-readiness. Pilih mode agar pengalaman learner, admin, dan reviewer tidak bercampur."
-              : "Karyra is a learning and readiness MVP for local communities: learning, quests, proof records, Filecoin archive, and Stellar payment-readiness. Choose a mode so learner, admin, and reviewer experiences stay separated."}
-          </p>
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:max-w-2xl">
-            {metrics.map((metric) => <MetricCard key={metric.label} label={metric.label} value={metric.value} />)}
-          </div>
-        </div>
-
-        <div className="rounded-3xl border border-emerald-400/20 bg-emerald-400/10 p-4 md:p-6">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">
-            {language === "id" ? "Catatan MVP" : "MVP Note"}
-          </p>
-          <h2 className="mt-2 text-xl font-bold text-white md:text-2xl">
-            {language === "id" ? "Demo/preview environment." : "Demo/preview environment."}
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-slate-300">
-            {language === "id"
-              ? "Role dipisahkan secara visual untuk memudahkan evaluasi. Versi produksi akan memakai autentikasi, permission, dashboard per role, dan onboarding yang lebih sederhana."
-              : "Roles are visually separated for easier evaluation. Production will use authentication, permissions, per-role dashboards, and simpler onboarding."}
-          </p>
-          <Link href="/grant-package" className="mt-4 inline-flex min-h-11 items-center rounded-2xl bg-emerald-400 px-4 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-emerald-300">
-            {language === "id" ? "Lihat Grant Package" : "Open Grant Package"}
-          </Link>
-        </div>
-      </section>
-
-      <section className="grid gap-3 md:grid-cols-3">
-        {roleCards.map((card) => (
-          <Link key={card.href} href={card.href} className="group rounded-3xl border border-white/10 bg-white/[0.04] p-4 transition hover:border-emerald-400/40 hover:bg-emerald-400/10 md:p-5">
-            <ModePill mode={card.mode} />
-            <h2 className="mt-3 text-xl font-bold text-white md:text-2xl">
-              {language === "id" ? card.titleId : card.titleEn}
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-slate-400">
-              {language === "id" ? card.descriptionId : card.descriptionEn}
+    <main className="min-h-screen bg-slate-950 text-white">
+      <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-6 pb-24 md:px-8 md:py-12">
+        <section className="grid min-h-[72vh] gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <div>
+            <p className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">
+              Local Web3 Readiness Platform
             </p>
-            <span className="mt-4 inline-flex text-sm font-bold text-emerald-300 group-hover:text-emerald-200">
-              {language === "id" ? card.ctaId : card.ctaEn} →
-            </span>
-          </Link>
-        ))}
-      </section>
 
-      <section className="grid gap-3 md:grid-cols-3">
-        <CompactCard href="/stacks/stellar-readiness" eyebrow="Stellar" title="Payment Readiness" description="Wallet safety, memo awareness, stablecoin literacy, scam prevention, dan pre-transaction confidence." />
-        <CompactCard href="/admin/proofs" eyebrow="Filecoin" title="Proof Archive" description="Proof records, archive manifest, checksum, dan demo CID sebagai pondasi decentralized evidence preservation." />
-        <CompactCard href="/reviewer" eyebrow="Reviewer" title="Grant Review" description="Demo path, impact, transparency, QA checklist, workshop kit, pilot plan, dan technical docs." />
+            <h1 className="mt-5 max-w-4xl text-4xl font-black tracking-tight text-white md:text-6xl lg:text-7xl">
+              {language === "id"
+                ? "Buktikan kesiapan sebelum masuk Web3."
+                : "Prove readiness before entering Web3."}
+            </h1>
+
+            <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300 md:text-lg md:leading-8">
+              {language === "id"
+                ? "Karyra membantu komunitas lokal belajar, berpartisipasi, dan membangun bukti kesiapan sebelum menggunakan wallet, payment, stablecoin, atau transaksi Web3 nyata."
+                : "Karyra helps local communities learn, participate, and build readiness proof before using wallets, payments, stablecoins, or real Web3 transactions."}
+            </p>
+
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/login"
+                className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-emerald-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
+              >
+                {language === "id" ? "Masuk ke Karyra" : "Enter Karyra"}
+              </Link>
+              <Link
+                href="/proof-system"
+                className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40"
+              >
+                {language === "id" ? "Lihat Proof System" : "Explore Proof System"}
+              </Link>
+            </div>
+
+            <p className="mt-4 max-w-xl text-xs leading-5 text-slate-500">
+              {language === "id"
+                ? "MVP preview. Versi produksi akan memiliki akun, role, permission, dan onboarding yang lebih sederhana."
+                : "MVP preview. Production will include accounts, roles, permissions, and simpler onboarding."}
+            </p>
+          </div>
+
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-emerald-950/20 md:p-6">
+            <div className="rounded-[1.5rem] border border-emerald-400/20 bg-emerald-400/10 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">
+                Karyra Proof Passport
+              </p>
+              <h2 className="mt-3 text-2xl font-black text-white md:text-3xl">
+                Learn. Participate. Prove readiness.
+              </h2>
+              <div className="mt-5 grid gap-3">
+                {pillars.map((pillar, index) => (
+                  <div key={pillar.title} className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-emerald-400 text-sm font-black text-slate-950">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-white">
+                          {language === "id" ? pillar.titleId : pillar.title}
+                        </h3>
+                        <p className="mt-1 text-sm leading-6 text-slate-400">
+                          {language === "id" ? pillar.textId : pillar.text}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+              <Link href="/learner" className="rounded-2xl border border-white/10 bg-white/5 p-4 font-bold text-white transition hover:border-emerald-400/40">
+                {language === "id" ? "Mulai belajar" : "Start learning"}
+              </Link>
+              <Link href="/passport" className="rounded-2xl border border-white/10 bg-white/5 p-4 font-bold text-white transition hover:border-emerald-400/40">
+                Passport
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="grid gap-3 md:grid-cols-3">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
+            <p className="text-xs font-bold uppercase tracking-wide text-emerald-300">For beginners</p>
+            <h2 className="mt-2 text-xl font-bold">{language === "id" ? "Non-teknikal dulu." : "Non-technical first."}</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-400">
+              {language === "id" ? "Karyra menjelaskan Web3 dari sisi keamanan, kebiasaan, dan kesiapan, bukan langsung transaksi." : "Karyra explains Web3 through safety, habits, and readiness before transactions."}
+            </p>
+          </div>
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
+            <p className="text-xs font-bold uppercase tracking-wide text-sky-300">For communities</p>
+            <h2 className="mt-2 text-xl font-bold">{language === "id" ? "Belajar bersama." : "Learn together."}</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-400">
+              {language === "id" ? "Workshop dan aktivitas lokal menjadi bagian dari bukti partisipasi, bukan hanya attendance biasa." : "Workshops and local activities become participation proof, not just attendance."}
+            </p>
+          </div>
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
+            <p className="text-xs font-bold uppercase tracking-wide text-amber-300">For readiness</p>
+            <h2 className="mt-2 text-xl font-bold">{language === "id" ? "Bukti sebelum praktik." : "Proof before practice."}</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-400">
+              {language === "id" ? "Readiness Passport merangkum progress, proof, badge, dan kesiapan learner." : "Readiness Passport summarizes progress, proofs, badges, and learner readiness."}
+            </p>
+          </div>
+        </section>
       </section>
-    </PageShell>
+    </main>
   );
 }
