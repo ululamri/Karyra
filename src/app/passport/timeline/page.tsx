@@ -4,14 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 type TimelineItem = {
   id: string;
-  type:
-    | "BADGE"
-    | "QUEST_SUBMITTED"
-    | "QUEST_REVIEWED"
-    | "PROOF"
-    | "FILECOIN_ARCHIVE"
-    | "WORKSHOP"
-    | "REWARD";
+  type: "BADGE" | "QUEST_SUBMITTED" | "QUEST_REVIEWED" | "PROOF" | "FILECOIN_ARCHIVE" | "WORKSHOP" | "REWARD";
   title: string;
   description: string;
   date: Date;
@@ -37,7 +30,7 @@ function getTypeLabel(type: TimelineItem["type"]) {
     case "PROOF":
       return "Proof Issued";
     case "FILECOIN_ARCHIVE":
-      return "Filecoin Archive";
+      return "Proof Archived";
     case "WORKSHOP":
       return "Workshop";
     case "REWARD":
@@ -64,17 +57,12 @@ function getTypeClass(type: TimelineItem["type"]) {
     case "REWARD":
       return "border-lime-400/30 bg-lime-400/10 text-lime-300";
     default:
-      return "border-zinc-700 bg-zinc-800 text-zinc-300";
+      return "border-slate-700 bg-slate-800 text-slate-300";
   }
 }
 
 function getEvidenceText(evidence: unknown) {
-  if (
-    evidence &&
-    typeof evidence === "object" &&
-    "text" in evidence &&
-    typeof evidence.text === "string"
-  ) {
+  if (evidence && typeof evidence === "object" && "text" in evidence && typeof evidence.text === "string") {
     return evidence.text;
   }
 
@@ -95,17 +83,11 @@ export default async function PassportTimelinePage() {
       city: true,
       readinessProfile: true,
       badges: {
-        orderBy: {
-          awardedAt: "desc",
-        },
-        include: {
-          badge: true,
-        },
+        orderBy: { awardedAt: "desc" },
+        include: { badge: true },
       },
       questSubmissions: {
-        orderBy: {
-          submittedAt: "desc",
-        },
+        orderBy: { submittedAt: "desc" },
         include: {
           quest: {
             select: {
@@ -118,14 +100,10 @@ export default async function PassportTimelinePage() {
         },
       },
       proofRecords: {
-        orderBy: {
-          issuedAt: "desc",
-        },
+        orderBy: { issuedAt: "desc" },
       },
       rewardLedger: {
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy: { createdAt: "desc" },
         include: {
           quest: {
             select: {
@@ -137,9 +115,7 @@ export default async function PassportTimelinePage() {
         },
       },
       workshopRegistrations: {
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy: { createdAt: "desc" },
         include: {
           workshop: {
             select: {
@@ -158,225 +134,124 @@ export default async function PassportTimelinePage() {
     ...user.badges.map((userBadge) => ({
       id: `badge-${userBadge.id}`,
       type: "BADGE" as const,
-      title: `Badge awarded: ${userBadge.badge.name}`,
-      description:
-        userBadge.badge.description ??
-        "Learner mendapatkan badge dari milestone Karyra.",
+      title: `Badge earned: ${userBadge.badge.name}`,
+      description: userBadge.badge.description ?? "A readiness badge was added to the learner identity.",
       date: userBadge.awardedAt,
-      meta: "Readiness identity",
+      meta: "Identity milestone",
+      href: "/passport",
     })),
-
     ...user.questSubmissions.map((submission) => ({
       id: `quest-submitted-${submission.id}`,
       type: "QUEST_SUBMITTED" as const,
-      title: `Submitted quest: ${submission.quest.title}`,
-      description:
-        getEvidenceText(submission.evidence) ||
-        "Learner mengirim jawaban atau bukti penyelesaian quest.",
+      title: `Quest submitted: ${submission.quest.title}`,
+      description: getEvidenceText(submission.evidence) || "The learner submitted evidence for a readiness quest.",
       date: submission.submittedAt,
-      meta: `${submission.status} · ${submission.quest.chainKey ?? "chain-agnostic"}`,
-      href: `/quests${
-        submission.quest.chainKey
-          ? `?track=${submission.quest.chainKey}`
-          : ""
-      }`,
+      meta: `${submission.status} · ${submission.quest.chainKey ?? "general"}`,
+      href: `/quests${submission.quest.chainKey ? `?track=${submission.quest.chainKey}` : ""}`,
     })),
-
     ...user.questSubmissions
       .filter((submission) => submission.reviewedAt)
       .map((submission) => ({
         id: `quest-reviewed-${submission.id}`,
         type: "QUEST_REVIEWED" as const,
         title: `${submission.status}: ${submission.quest.title}`,
-        description:
-          submission.reviewNote ??
-          "Submission sudah direview oleh admin Karyra.",
+        description: submission.reviewNote ?? "The quest evidence was reviewed and updated.",
         date: submission.reviewedAt ?? submission.updatedAt,
         meta: `${submission.quest.xpReward} XP reward`,
-        href: "/admin/submissions",
+        href: "/passport",
       })),
-
     ...user.proofRecords.map((proof) => ({
       id: `proof-${proof.id}`,
       type: "PROOF" as const,
       title: proof.title,
-      description:
-        proof.description ??
-        "Proof record diterbitkan sebagai bagian dari Readiness Passport.",
+      description: proof.description ?? "A proof record was issued as part of the Readiness Passport.",
       date: proof.issuedAt,
-      meta: `${proof.type} · ${proof.xpValue} XP value`,
+      meta: `${proof.type} · ${proof.xpValue} XP`,
       href: `/proofs/${proof.id}`,
     })),
-
     ...user.proofRecords
       .filter((proof) => proof.archivedToFilecoin)
       .map((proof) => ({
         id: `filecoin-${proof.id}`,
         type: "FILECOIN_ARCHIVE" as const,
-        title: `Archived to Filecoin: ${proof.title}`,
-        description: proof.filecoinCid
-          ? `CID: ${proof.filecoinCid}`
-          : "Proof record sudah ditandai sebagai archived.",
+        title: `Archived proof: ${proof.title}`,
+        description: proof.filecoinCid ? `CID: ${proof.filecoinCid}` : "The proof was marked as archived.",
         date: proof.issuedAt,
         meta: "Proof Archive",
         href: `/proofs/${proof.id}`,
       })),
-
     ...user.rewardLedger.map((reward) => ({
       id: `reward-${reward.id}`,
       type: "REWARD" as const,
       title: `Reward credited${reward.quest ? `: ${reward.quest.title}` : ""}`,
-      description:
-        reward.reason ??
-        "Reward diberikan dari aktivitas belajar atau quest Karyra.",
+      description: reward.reason ?? "A learning or quest reward was credited.",
       date: reward.createdAt,
       meta: `${reward.kind} · ${reward.xpAmount ?? 0} XP`,
+      href: "/passport",
     })),
-
     ...user.workshopRegistrations.map((registration) => ({
       id: `workshop-${registration.id}`,
       type: "WORKSHOP" as const,
       title: `${registration.status}: ${registration.workshop.title}`,
-      description: `${registration.workshop.city ?? "Community"} · ${formatDate(
-        registration.workshop.startsAt,
-      )}`,
+      description: `${registration.workshop.city ?? "Community"} · ${formatDate(registration.workshop.startsAt)}`,
       date: registration.attendedAt ?? registration.createdAt,
-      meta: "Offline participation",
+      meta: "Proof-of-Participation",
       href: "/workshops",
     })),
   ].sort((a, b) => b.date.getTime() - a.date.getTime());
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-zinc-50">
-      <section className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8 md:px-6 md:py-12">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <main className="min-h-screen bg-slate-950 text-white">
+      <section className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-6 pb-24 md:px-8 md:py-12">
+        <nav className="flex flex-wrap items-center gap-2 text-xs font-bold text-slate-400">
+          <Link href="/learner" className="rounded-full border border-white/10 px-3 py-1.5 hover:border-emerald-400/40 hover:text-emerald-300">Learn</Link>
+          <span>/</span>
+          <Link href="/passport" className="rounded-full border border-white/10 px-3 py-1.5 hover:border-emerald-400/40 hover:text-emerald-300">Passport</Link>
+          <span>/</span>
+          <span className="rounded-full bg-emerald-400/10 px-3 py-1.5 text-emerald-300">Timeline</span>
+        </nav>
+
+        <header className="grid gap-5 lg:grid-cols-[1fr_0.55fr] lg:items-end">
           <div>
-            <p className="text-sm font-medium text-emerald-400">
-              Karyra Readiness Passport
-            </p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight md:text-5xl">
-              Readiness Timeline
-            </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-zinc-400 md:text-base">
-              Riwayat perjalanan learner dari badge, quest, reward, workshop,
-              proof record, sampai status arsip Filecoin.
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-300">Readiness Journey</p>
+            <h1 className="mt-4 text-3xl font-black tracking-tight md:text-6xl">A timeline of learning, participation, and readiness.</h1>
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
+              Follow how a learner moves from lessons and quests into badges, rewards, proof records, and participation evidence.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href="/passport"
-              className="rounded-2xl border border-zinc-800 px-4 py-3 text-sm font-medium text-zinc-200 transition hover:border-emerald-500 hover:text-emerald-300"
-            >
-              Back to Passport
-            </Link>
-
-            <Link
-              href="/dashboard"
-              className="rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-300"
-            >
-              Dashboard
-            </Link>
-          </div>
-        </div>
-
-        <section className="grid gap-4 md:grid-cols-4">
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
-            <p className="text-sm text-zinc-400">Learner</p>
-            <p className="mt-2 text-xl font-bold">{user.displayName}</p>
-            <p className="mt-1 text-xs text-zinc-500">
-              @{user.username}
-              {user.city ? ` · ${user.city}` : ""}
-            </p>
-          </div>
-
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
-            <p className="text-sm text-zinc-400">Readiness Score</p>
-            <p className="mt-2 text-3xl font-bold text-emerald-300">
-              {user.readinessProfile?.readinessScore ?? 0}/100
-            </p>
-          </div>
-
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
-            <p className="text-sm text-zinc-400">Readiness Level</p>
-            <p className="mt-2 text-xl font-bold text-emerald-300">
-              {user.readinessProfile?.level ?? "BEGINNER"}
-            </p>
-          </div>
-
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
-            <p className="text-sm text-zinc-400">Timeline Items</p>
-            <p className="mt-2 text-3xl font-bold">{timelineItems.length}</p>
-          </div>
-        </section>
-
-        <section className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5 md:p-6">
-          <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="text-sm font-medium text-emerald-400">
-                Learning Identity Journey
-              </p>
-              <h2 className="mt-1 text-2xl font-semibold">
-                Aktivitas terbaru learner
-              </h2>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+              <p className="text-xs text-slate-400">Score</p>
+              <p className="mt-1 text-2xl font-black text-emerald-300">{user.readinessProfile?.readinessScore ?? 0}/100</p>
             </div>
-
-            <p className="text-sm text-zinc-500">
-              {timelineItems.length} activity
-            </p>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+              <p className="text-xs text-slate-400">Activities</p>
+              <p className="mt-1 text-2xl font-black">{timelineItems.length}</p>
+            </div>
           </div>
+        </header>
 
-          <div className="mt-6 grid gap-4">
+        <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-4 md:p-6">
+          <div className="grid gap-3">
             {timelineItems.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-zinc-800 p-6 text-sm text-zinc-400">
-                Belum ada aktivitas timeline. Mulai belajar, submit quest, atau
-                ikuti workshop untuk membangun readiness journey.
+              <div className="rounded-2xl border border-dashed border-white/10 p-5 text-sm text-slate-400">
+                No timeline activity yet. Start learning, submit a quest, or join a workshop to build your readiness journey.
               </div>
             ) : (
               timelineItems.map((item) => (
-                <article
-                  key={item.id}
-                  className="relative rounded-2xl border border-zinc-800 bg-zinc-950/50 p-4"
-                >
-                  <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <article key={item.id} className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
+                  <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                     <div>
                       <div className="flex flex-wrap gap-2">
-                        <span
-                          className={`rounded-full border px-3 py-1 text-xs font-semibold ${getTypeClass(
-                            item.type,
-                          )}`}
-                        >
-                          {getTypeLabel(item.type)}
-                        </span>
-
-                        {item.meta ? (
-                          <span className="rounded-full border border-zinc-800 px-3 py-1 text-xs text-zinc-400">
-                            {item.meta}
-                          </span>
-                        ) : null}
+                        <span className={`rounded-full border px-3 py-1 text-xs font-black ${getTypeClass(item.type)}`}>{getTypeLabel(item.type)}</span>
+                        {item.meta ? <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-slate-400">{item.meta}</span> : null}
                       </div>
-
-                      <h3 className="mt-3 text-lg font-semibold text-zinc-100">
-                        {item.title}
-                      </h3>
-
-                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-zinc-400">
-                        {item.description}
-                      </p>
-
-                      {item.href ? (
-                        <Link
-                          href={item.href}
-                          className="mt-3 inline-flex text-sm font-semibold text-emerald-300 hover:text-emerald-200"
-                        >
-                          Open detail
-                        </Link>
-                      ) : null}
+                      <h3 className="mt-3 font-black text-white">{item.title}</h3>
+                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-400">{item.description}</p>
+                      {item.href ? <Link href={item.href} className="mt-3 inline-flex text-sm font-black text-emerald-300">Open detail →</Link> : null}
                     </div>
-
-                    <p className="shrink-0 text-sm text-zinc-500">
-                      {formatDate(item.date)}
-                    </p>
+                    <p className="shrink-0 text-sm text-slate-500">{formatDate(item.date)}</p>
                   </div>
                 </article>
               ))
