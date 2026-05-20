@@ -1,106 +1,221 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import {
+  formatLearningStatus,
+  getLearnerProgressOverview,
+  getLearningStatusTone,
+} from "@/lib/learning";
 import { getServerLanguage } from "@/lib/i18n-server";
-import { t } from "@/lib/i18n";
-import { PageShell } from "@/components/ui/page-shell";
-import { PageHero } from "@/components/ui/page-hero";
-import { CompactCard, MetricCard } from "@/components/ui/compact-card";
-import { ModePill } from "@/components/ui/mode-pill";
-
-function getEvidenceText(evidence: unknown) {
-  if (evidence && typeof evidence === "object" && "text" in evidence && typeof evidence.text === "string") return evidence.text;
-  return "-";
-}
-
-function statusClass(status: string) {
-  switch (status) {
-    case "APPROVED": return "bg-emerald-400/15 text-emerald-300";
-    case "REJECTED": return "bg-rose-400/15 text-rose-300";
-    default: return "bg-amber-400/15 text-amber-300";
-  }
-}
 
 export default async function DashboardPage() {
   const language = await getServerLanguage();
-  const learner = await prisma.user.findUnique({
-    where: { username: "demo" },
-    select: {
-      id: true, username: true, displayName: true, city: true, xp: true, level: true, streakCount: true,
-      enrollments: { orderBy: { createdAt: "desc" }, select: { id: true, status: true, progressPct: true, course: { select: { id: true, slug: true, title: true, subtitle: true, difficulty: true, modules: { orderBy: { order: "asc" }, select: { id: true, order: true, title: true, lessons: { where: { status: "PUBLISHED" }, orderBy: { order: "asc" }, select: { id: true, slug: true, title: true, order: true, estimatedMinutes: true, xpReward: true } } } }, quests: { where: { status: "PUBLISHED" }, orderBy: { createdAt: "asc" }, select: { id: true, slug: true, title: true, description: true, xpReward: true, type: true, difficulty: true, tasks: { orderBy: { order: "asc" }, select: { id: true, order: true, title: true } } } } } } } },
-      lessonProgress: { select: { id: true, status: true, lesson: { select: { id: true, slug: true, title: true, estimatedMinutes: true, xpReward: true } } } },
-      badges: { orderBy: { awardedAt: "desc" }, select: { id: true, awardedAt: true, badge: { select: { slug: true, name: true, description: true } } } },
-      rewardLedger: { orderBy: { createdAt: "desc" }, take: 5, select: { id: true, kind: true, xpAmount: true, reason: true, createdAt: true } },
-      questSubmissions: { orderBy: { submittedAt: "desc" }, take: 5, select: { id: true, status: true, evidence: true, submittedAt: true, reviewNote: true, quest: { select: { slug: true, title: true, xpReward: true, chainKey: true } } } },
-      workshopRegistrations: { orderBy: { createdAt: "desc" }, take: 3, select: { id: true, status: true, workshop: { select: { slug: true, title: true, city: true, startsAt: true } } } },
-    },
-  });
+  const {
+    learner,
+    courses,
+    lessons,
+    activeCourse,
+    continueLesson,
+    completedCourses,
+    overallProgress,
+  } = await getLearnerProgressOverview();
 
-  if (!learner) {
-    return (
-      <PageShell size="narrow">
-        <PageHero eyebrow="Learner Mode" title={t(language, "learnerDashboard")} description="Demo learner belum tersedia. Jalankan seed data terlebih dahulu." />
-        <pre className="rounded-2xl border border-white/10 bg-slate-900 p-4 text-sm text-slate-300">npm run db:seed</pre>
-      </PageShell>
-    );
-  }
-
-  const activeEnrollment = learner.enrollments[0];
-  const activeCourse = activeEnrollment?.course;
-  const continueLesson = learner.lessonProgress[0]?.lesson ?? activeCourse?.modules.flatMap((module) => module.lessons)[0];
-  const activeQuest = activeCourse?.quests[0];
+  const recentLessons = lessons
+    .filter((lesson) => lesson.status !== "NOT_STARTED")
+    .slice(0, 5);
 
   return (
-    <PageShell>
-      <PageHero
-        eyebrow={t(language, "learnerDashboard")}
-        title={language === "id" ? `Halo, ${learner.displayName}` : `Hello, ${learner.displayName}`}
-        description={language === "id" ? "Lanjutkan progres belajar Web3, kumpulkan XP, dan selesaikan quest komunitas." : "Continue your Web3 learning progress, collect XP, and complete community quests."}
-        actions={[
-          ...(continueLesson ? [{ href: `/lessons/${continueLesson.slug}`, label: t(language, "continueLearning"), variant: "primary" as const }] : []),
-          { href: "/passport", label: language === "id" ? "Passport" : "Passport" },
-          { href: "/stacks/stellar-readiness", label: "Stellar" },
-        ]}
-      >
-        <ModePill mode="Learner" />
-      </PageHero>
-
-      <section className="grid grid-cols-3 gap-3">
-        <MetricCard label={t(language, "totalXp")} value={learner.xp} />
-        <MetricCard label={t(language, "currentLevel")} value={learner.level} />
-        <MetricCard label={t(language, "dayStreak")} value={learner.streakCount} />
-      </section>
-
-      <section className="grid gap-4 lg:grid-cols-[1fr_0.9fr]">
-        <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 md:p-5">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h2 className="text-lg font-bold md:text-2xl">{t(language, "learningProgress")}</h2>
-              {activeCourse ? <p className="mt-1 text-sm text-slate-400">{activeCourse.title}</p> : null}
+    <main className="min-h-screen bg-slate-950 text-white">
+      <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-6 pb-24 md:px-8 md:py-12">
+        <header className="grid gap-6 lg:grid-cols-[1.08fr_0.72fr] lg:items-end">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
+              {language === "id" ? "Dashboard Belajar" : "Learning Dashboard"}
+            </p>
+            <h1 className="mt-4 max-w-4xl text-3xl font-black tracking-tight md:text-6xl">
+              {language === "id"
+                ? `Halo, ${learner.displayName}. Lanjutkan progres belajarmu.`
+                : `Hello, ${learner.displayName}. Continue your learning progress.`}
+            </h1>
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
+              {language === "id"
+                ? "Dashboard ini memusatkan course, lesson, progress, dan langkah berikutnya. Quest dan reward tetap ada, tapi bukan jalur utama belajar."
+                : "This dashboard centers courses, lessons, progress, and the next step. Quests and rewards still exist, but they are not the main learning path."}
+            </p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              {continueLesson ? (
+                <Link
+                  href={`/lessons/${continueLesson.slug}`}
+                  className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-emerald-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
+                >
+                  {language === "id" ? "Lanjutkan Lesson" : "Continue Lesson"}
+                </Link>
+              ) : null}
+              <Link
+                href="/courses"
+                className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40"
+              >
+                {language === "id" ? "Semua Course" : "All Courses"}
+              </Link>
             </div>
-            {activeEnrollment ? <p className="text-2xl font-bold text-emerald-300">{activeEnrollment.progressPct}%</p> : null}
-          </div>
-          {activeEnrollment ? <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-800"><div className="h-full rounded-full bg-emerald-400" style={{ width: `${activeEnrollment.progressPct}%` }} /></div> : null}
-          {continueLesson ? <CompactCard href={`/lessons/${continueLesson.slug}`} title={continueLesson.title} eyebrow={language === "id" ? "Lesson aktif" : "Active lesson"} description={`${continueLesson.estimatedMinutes} menit • ${continueLesson.xpReward} XP`} className="mt-4 bg-slate-950/40" /> : null}
-          {activeCourse ? <div className="mt-4 grid gap-2">{activeCourse.modules.slice(0, 4).map((module) => <div key={module.id} className="rounded-2xl bg-slate-950/50 p-3"><p className="text-xs text-slate-500">Module {module.order}</p><h3 className="mt-1 text-sm font-bold">{module.title}</h3><p className="mt-1 text-xs text-slate-500">{module.lessons.length} lesson</p></div>)}</div> : null}
-        </div>
-
-        <div className="grid gap-4">
-          <div className="rounded-3xl border border-emerald-400/20 bg-emerald-400/10 p-4 md:p-5">
-            <h2 className="text-lg font-bold md:text-2xl">{t(language, "activeQuest")}</h2>
-            {activeQuest ? <div className="mt-3"><div className="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wide"><span className="rounded-full bg-emerald-400/15 px-3 py-1 text-emerald-300">{activeQuest.type}</span><span className="rounded-full bg-white/10 px-3 py-1 text-slate-300">{activeQuest.difficulty}</span></div><h3 className="mt-3 font-bold">{activeQuest.title}</h3>{activeQuest.description ? <p className="mt-2 text-sm leading-6 text-slate-300">{activeQuest.description}</p> : null}<p className="mt-3 text-sm font-bold text-emerald-300">Reward {activeQuest.xpReward} XP</p></div> : <p className="mt-2 text-sm text-slate-300">{language === "id" ? "Belum ada quest aktif." : "No active quest yet."}</p>}
           </div>
 
-          <div className="rounded-3xl border border-sky-400/20 bg-sky-400/10 p-4 md:p-5">
-            <div className="flex items-center justify-between gap-3"><h2 className="text-lg font-bold md:text-2xl">{language === "id" ? "Status Submission" : "Submission Status"}</h2><Link href="/quests?track=stellar-readiness" className="text-sm font-bold text-sky-200">Quest →</Link></div>
-            <div className="mt-3 grid gap-2">{learner.questSubmissions.length > 0 ? learner.questSubmissions.map((submission) => <div key={submission.id} className="rounded-2xl bg-slate-950/50 p-3"><div className="flex flex-wrap gap-2"><span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${statusClass(submission.status)}`}>{submission.status}</span>{submission.quest.chainKey ? <span className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-bold text-slate-300">{submission.quest.chainKey}</span> : null}</div><h3 className="mt-2 text-sm font-bold">{submission.quest.title}</h3><p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-400">{getEvidenceText(submission.evidence)}</p><p className="mt-2 text-xs font-bold text-sky-300">{submission.quest.xpReward} XP</p></div>) : <p className="rounded-2xl bg-slate-950/50 p-3 text-sm text-slate-300">{language === "id" ? "Belum ada submission quest." : "No quest submissions yet."}</p>}</div>
+          <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-5 md:p-6">
+            <p className="text-sm text-emerald-300">Overall Learning</p>
+            <p className="mt-2 text-4xl font-black">
+              {overallProgress.progressPct}%
+            </p>
+            <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-slate-800">
+              <div
+                className="h-full rounded-full bg-emerald-400"
+                style={{ width: `${overallProgress.progressPct}%` }}
+              />
+            </div>
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              {overallProgress.completedLessons}/{overallProgress.totalLessons} lessons complete.
+            </p>
           </div>
-        </div>
+        </header>
+
+        <section className="grid grid-cols-2 gap-3 md:grid-cols-5">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="text-xs text-slate-400">XP</p>
+            <p className="mt-1 text-2xl font-black">{learner.xp}</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="text-xs text-slate-400">Level</p>
+            <p className="mt-1 text-2xl font-black">{learner.level}</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="text-xs text-slate-400">Courses</p>
+            <p className="mt-1 text-2xl font-black">{courses.length}</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="text-xs text-slate-400">Completed</p>
+            <p className="mt-1 text-2xl font-black">{completedCourses}</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="text-xs text-slate-400">Lessons</p>
+            <p className="mt-1 text-2xl font-black">{lessons.length}</p>
+          </div>
+        </section>
+
+        <section className="grid gap-4 lg:grid-cols-[1.08fr_0.72fr]">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 md:p-6">
+            <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+              <div>
+                <p className="text-xs font-black uppercase tracking-wide text-emerald-300">
+                  {language === "id" ? "Course Aktif" : "Active Course"}
+                </p>
+                <h2 className="mt-2 text-2xl font-black">
+                  {activeCourse?.title ?? "No active course"}
+                </h2>
+                {activeCourse?.subtitle ? (
+                  <p className="mt-2 text-sm leading-6 text-slate-400">
+                    {activeCourse.subtitle}
+                  </p>
+                ) : null}
+              </div>
+
+              {activeCourse ? (
+                <Link
+                  href={`/courses/${activeCourse.slug}`}
+                  className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-bold text-white transition hover:border-emerald-400/40"
+                >
+                  Open Course
+                </Link>
+              ) : null}
+            </div>
+
+            {activeCourse ? (
+              <>
+                <div className="mt-5 h-2.5 overflow-hidden rounded-full bg-slate-800">
+                  <div
+                    className="h-full rounded-full bg-emerald-400"
+                    style={{ width: `${activeCourse.progress.progressPct}%` }}
+                  />
+                </div>
+                <p className="mt-2 text-xs text-slate-500">
+                  {activeCourse.progress.completedLessons}/{activeCourse.progress.totalLessons} lessons · {activeCourse.progress.progressPct}% complete
+                </p>
+
+                <div className="mt-5 grid gap-3">
+                  {activeCourse.lessons.slice(0, 6).map((lesson) => (
+                    <Link
+                      key={lesson.id}
+                      href={`/lessons/${lesson.slug}`}
+                      className="rounded-2xl border border-white/10 bg-slate-950/60 p-4 transition hover:border-emerald-400/40"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
+                            Module {lesson.moduleOrder}
+                          </p>
+                          <h3 className="mt-1 font-black">{lesson.title}</h3>
+                        </div>
+                        <span
+                          className={`rounded-full border px-3 py-1 text-[11px] font-black ${getLearningStatusTone(
+                            lesson.status,
+                          )}`}
+                        >
+                          {formatLearningStatus(lesson.status)}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </>
+            ) : null}
+          </div>
+
+          <div className="grid gap-4">
+            {continueLesson ? (
+              <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-5 md:p-6">
+                <p className="text-xs font-black uppercase tracking-wide text-emerald-300">
+                  Next Step
+                </p>
+                <h2 className="mt-2 text-2xl font-black">
+                  {continueLesson.title}
+                </h2>
+                <p className="mt-2 text-sm leading-6 text-slate-300">
+                  {continueLesson.courseTitle} · {continueLesson.estimatedMinutes} min · {continueLesson.xpReward} XP
+                </p>
+                <Link
+                  href={`/lessons/${continueLesson.slug}`}
+                  className="mt-5 inline-flex min-h-11 items-center justify-center rounded-2xl bg-emerald-400 px-4 py-2.5 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
+                >
+                  Open Lesson
+                </Link>
+              </div>
+            ) : null}
+
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 md:p-6">
+              <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+                Recent Learning Activity
+              </p>
+              <div className="mt-4 grid gap-3">
+                {recentLessons.length > 0 ? (
+                  recentLessons.map((lesson) => (
+                    <Link
+                      key={lesson.id}
+                      href={`/lessons/${lesson.slug}`}
+                      className="rounded-2xl bg-slate-950/60 p-3 transition hover:bg-emerald-400/10"
+                    >
+                      <p className="text-xs text-slate-500">{lesson.courseTitle}</p>
+                      <h3 className="mt-1 text-sm font-black">{lesson.title}</h3>
+                      <p className="mt-1 text-xs text-emerald-300">
+                        {formatLearningStatus(lesson.status)}
+                      </p>
+                    </Link>
+                  ))
+                ) : (
+                  <p className="text-sm leading-6 text-slate-400">
+                    Belum ada aktivitas lesson. Mulai dari course pertama.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
       </section>
-
-      <section className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 md:p-5"><h2 className="text-lg font-bold md:text-2xl">{t(language, "earnedBadges")}</h2><div className="mt-3 grid gap-2">{learner.badges.length > 0 ? learner.badges.map((userBadge) => <div key={userBadge.id} className="flex gap-3 rounded-2xl bg-slate-950/50 p-3"><div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-emerald-400/15">🏅</div><div><h3 className="text-sm font-bold">{userBadge.badge.name}</h3>{userBadge.badge.description ? <p className="mt-1 text-xs leading-5 text-slate-400">{userBadge.badge.description}</p> : null}</div></div>) : <p className="text-sm text-slate-300">{language === "id" ? "Belum ada badge." : "No badges yet."}</p>}</div></div>
-        <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 md:p-5"><div className="flex items-center justify-between gap-3"><h2 className="text-lg font-bold md:text-2xl">{language === "id" ? "Workshop" : "Workshops"}</h2><Link href="/workshops" className="text-sm font-bold text-emerald-300">{t(language, "workshops")} →</Link></div><div className="mt-3 grid gap-2">{learner.workshopRegistrations.length > 0 ? learner.workshopRegistrations.map((registration) => <div key={registration.id} className="rounded-2xl bg-slate-950/50 p-3"><p className="text-xs font-bold uppercase tracking-wide text-emerald-300">{registration.status}</p><h3 className="mt-1 text-sm font-bold">{registration.workshop.title}</h3><p className="mt-1 text-xs text-slate-500">{registration.workshop.city ?? "Community"} • {new Date(registration.workshop.startsAt).toLocaleString()}</p></div>) : <p className="rounded-2xl bg-slate-950/50 p-3 text-sm text-slate-300">{language === "id" ? "Belum terdaftar di workshop." : "Not registered in any workshop yet."}</p>}</div></div>
-      </section>
-    </PageShell>
+    </main>
   );
 }

@@ -50,8 +50,10 @@ export async function getDemoLearnerOrThrow() {
       id: true,
       username: true,
       displayName: true,
+      city: true,
       xp: true,
       level: true,
+      streakCount: true,
     },
   });
 
@@ -71,8 +73,10 @@ export async function getDemoLearnerOrThrow() {
       id: true,
       username: true,
       displayName: true,
+      city: true,
       xp: true,
       level: true,
+      streakCount: true,
     },
   });
 
@@ -92,6 +96,7 @@ function calculateProgressFromStatuses(lessons: Array<{ status: string }>) {
     return {
       totalLessons: 0,
       completedLessons: 0,
+      inProgressLessons: 0,
       progressPct: 0,
     };
   }
@@ -99,10 +104,14 @@ function calculateProgressFromStatuses(lessons: Array<{ status: string }>) {
   const completedLessons = lessons.filter(
     (lesson) => lesson.status === "COMPLETED",
   ).length;
+  const inProgressLessons = lessons.filter(
+    (lesson) => lesson.status === "IN_PROGRESS",
+  ).length;
 
   return {
     totalLessons: lessons.length,
     completedLessons,
+    inProgressLessons,
     progressPct: Math.round((completedLessons / lessons.length) * 100),
   };
 }
@@ -156,6 +165,8 @@ export async function getCoursesCatalogState() {
             },
             select: {
               id: true,
+              slug: true,
+              title: true,
               order: true,
               estimatedMinutes: true,
               xpReward: true,
@@ -186,6 +197,8 @@ export async function getCoursesCatalogState() {
     const lessons = course.modules.flatMap((module) =>
       module.lessons.map((lesson) => ({
         ...lesson,
+        courseSlug: course.slug,
+        courseTitle: course.title,
         moduleOrder: module.order,
         moduleTitle: module.title,
         status: getLessonStatus(lesson),
@@ -198,6 +211,14 @@ export async function getCoursesCatalogState() {
       0,
     );
     const totalXp = lessons.reduce((total, lesson) => total + lesson.xpReward, 0);
+    const inProgressLesson = lessons.find(
+      (lesson) => lesson.status === "IN_PROGRESS",
+    );
+    const nextLesson =
+      inProgressLesson ??
+      lessons.find((lesson) => lesson.status !== "COMPLETED") ??
+      lessons[0] ??
+      null;
 
     return {
       ...course,
@@ -205,6 +226,7 @@ export async function getCoursesCatalogState() {
       progress,
       totalMinutes,
       totalXp,
+      nextLesson,
       enrollment: course.enrollments[0] ?? null,
       questCount: course.quests.length,
     };
@@ -213,6 +235,52 @@ export async function getCoursesCatalogState() {
   return {
     learner,
     courses: courseCards,
+  };
+}
+
+export async function getLearnerProgressOverview() {
+  const { learner, courses } = await getCoursesCatalogState();
+
+  const lessons = courses.flatMap((course) =>
+    course.lessons.map((lesson) => ({
+      ...lesson,
+      courseSlug: course.slug,
+      courseTitle: course.title,
+    })),
+  );
+
+  const overallProgress = calculateProgressFromStatuses(lessons);
+  const activeCourse =
+    courses.find((course) => course.enrollment?.status === "IN_PROGRESS") ??
+    courses.find((course) => course.progress.progressPct < 100) ??
+    courses[0] ??
+    null;
+
+  const continueLesson =
+    activeCourse?.nextLesson ??
+    lessons.find((lesson) => lesson.status === "IN_PROGRESS") ??
+    lessons.find((lesson) => lesson.status !== "COMPLETED") ??
+    lessons[0] ??
+    null;
+
+  const completedCourses = courses.filter(
+    (course) => course.progress.progressPct >= 100,
+  ).length;
+
+  const totalMinutes = courses.reduce(
+    (total, course) => total + course.totalMinutes,
+    0,
+  );
+
+  return {
+    learner,
+    courses,
+    lessons,
+    activeCourse,
+    continueLesson,
+    completedCourses,
+    totalMinutes,
+    overallProgress,
   };
 }
 
@@ -430,15 +498,6 @@ export async function getCourseLearningState(courseSlug: string) {
   };
 }
 
-/**
- * Lesson detail is intentionally split into smaller queries.
- *
- * The earlier implementation used one very deep Prisma nested query:
- * lesson -> module -> course -> modules -> lessons -> progress -> quests.
- * On slower/remote PostgreSQL connections this can trigger read ECONNABORTED.
- *
- * Splitting it keeps the route lighter and makes the lesson player more stable.
- */
 export async function getLessonLearningState(lessonSlug: string) {
   const learner = await getDemoLearnerOrThrow();
 
