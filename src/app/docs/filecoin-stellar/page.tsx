@@ -48,10 +48,10 @@ const technicalDecisions = [
     href: "/docs/stellar-testnet-flow",
   },
   {
-    title: "Impact metrics",
+    title: "Paspor Kesiapan",
     text:
-      "Proposal memiliki target angka jelas seperti 1.000 pengguna lokal, penyelesaian Stellar Payment Readiness, dan Filecoin Learning Passport CID dalam 3 bulan.",
-    href: "/docs/impact-metrics",
+      "Bukti belajar, bukti partisipasi, readiness score, dan arsip bukti dirangkum agar perjalanan learner bisa dibaca dengan jelas.",
+    href: "/docs/readiness-passport",
   },
 ];
 
@@ -124,7 +124,7 @@ export default function FilecoinStellarDocsPage() {
         </section>
 
         <section className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-5 md:p-6">
-          <h2 className="text-2xl font-black">Narasi grant yang ingin kita capai</h2>
+          <h2 className="text-2xl font-black">Model kelulusan yang ingin dibangun</h2>
           <p className="mt-3 text-lg leading-8 text-slate-200">
             Karyra uses Stellar Testnet and Filecoin Calibration as safe learning sandboxes, then introduces guided Stellar Mainnet and Filecoin Mainnet experiences only after learners complete readiness tracks.
           </p>
