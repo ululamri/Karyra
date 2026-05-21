@@ -18,10 +18,10 @@ const metricTargets = [
       "Mengukur apakah bukti belajar benar-benar dipaketkan menjadi manifest dan diarsipkan melalui Filecoin layer.",
   },
   {
-    metric: "20 workshop komunitas",
+    metric: "3 workshop komunitas awal",
     timeframe: "3 bulan",
     reason:
-      "Menghubungkan produk online dengan aktivitas lokal sehingga Karyra tidak hanya menjadi website edukasi.",
+      "Target ini disesuaikan dengan kapasitas tim awal. Fokus pilot adalah kualitas onboarding, dokumentasi proses, dan bukti partisipasi, bukan jumlah event yang terlalu besar.",
   },
   {
     metric: "60% completion rate",
@@ -109,7 +109,7 @@ export default function ImpactMetricsPage() {
         <section className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-5 md:p-6">
           <h2 className="text-2xl font-black">Kalimat siap proposal</h2>
           <p className="mt-3 text-lg leading-8 text-slate-200">
-            Dalam 3 bulan setelah grant cair, Karyra menargetkan 1.000 pengguna lokal pertama untuk menyelesaikan Stellar Payment Readiness dan mencetak Filecoin Learning Passport CID sebagai bukti belajar yang dapat diverifikasi.
+            Dalam 3 bulan setelah grant cair, Karyra menargetkan 1.000 pengguna lokal pertama untuk menyelesaikan Stellar Payment Readiness, mencetak Filecoin Learning Passport CID, dan menjalankan 3 workshop komunitas awal sebagai bukti belajar serta partisipasi yang dapat diverifikasi.
           </p>
         </section>
       </section>
