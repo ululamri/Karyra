@@ -55,22 +55,26 @@ function levelDescription(level?: string) {
   }
 }
 
+function archiveStatus(archivedToFilecoin: boolean) {
+  return archivedToFilecoin ? "Diarsipkan" : "Belum diarsipkan";
+}
+
 const passportFlow = [
   {
     title: "Belajar",
-    text: "Pengguna mengikuti kursus dan pelajaran dasar blockchain.",
+    text: "Pengguna menyelesaikan kursus dan pelajaran blockchain-first.",
   },
   {
     title: "Berpartisipasi",
-    text: "Pengguna mengikuti workshop, latihan, atau aktivitas komunitas.",
+    text: "Aktivitas komunitas dan workshop menambah konteks sosial.",
   },
   {
-    title: "Direview",
-    text: "Bukti dan progres dirangkum agar tidak sekadar klaim kosong.",
+    title: "Terkumpul",
+    text: "Progress, badge, dan proof record dirangkum sebagai sinyal.",
   },
   {
     title: "Terbukti",
-    text: "Paspor menampilkan sinyal kesiapan yang mudah dibaca.",
+    text: "Paspor menampilkan kesiapan yang bisa dibaca dan diverifikasi.",
   },
 ];
 
@@ -116,29 +120,32 @@ export default async function PassportPage() {
     },
   );
 
+  const totalProofs =
+    proofCounts.learning + proofCounts.participation + proofCounts.readiness;
+
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="mx-auto flex w-full max-w-7xl flex-col gap-7 px-4 py-6 pb-24 md:px-8 md:py-12">
-        <header className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <header className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
           <div>
             <p className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
               Paspor Kesiapan
             </p>
 
             <h1 className="mt-4 max-w-4xl text-3xl font-black tracking-tight md:text-5xl lg:text-6xl">
-              Bukti proses belajar dan kesiapan pengguna.
+              Bukti perjalanan belajar yang bisa dibaca.
             </h1>
 
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
-              Paspor Kesiapan merangkum bukti belajar, bukti partisipasi, badge, XP, workshop, dan readiness score agar pengguna punya gambaran proses sebelum masuk ke praktik blockchain, cryptocurrency, dan Web3 yang lebih nyata.
+              Paspor bukan ruang kerja harian. Paspor adalah ringkasan bukti: apa yang sudah dipelajari, aktivitas apa yang diikuti, level kesiapan apa yang terbentuk, dan bukti mana yang bisa diverifikasi.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/passport/demo"
+                href="/dashboard"
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-emerald-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
               >
-                Lihat Demo Paspor
+                Kembali ke Dashboard
               </Link>
               <Link
                 href="/docs/readiness-passport"
@@ -149,21 +156,49 @@ export default async function PassportPage() {
             </div>
           </div>
 
-          <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-5 md:p-6">
-            <p className="text-sm text-emerald-300">{passport.displayName}</p>
-            <h2 className="mt-1 text-4xl font-black">{readinessScore}/100</h2>
-            <p className="mt-1 text-lg font-bold text-emerald-100">
-              {formatLevel(readinessLevel)}
-            </p>
-            <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-slate-800">
-              <div
-                className="h-full rounded-full bg-emerald-400"
-                style={{ width: `${readinessScore}%` }}
-              />
+          <div className="overflow-hidden rounded-[2rem] border border-emerald-400/20 bg-gradient-to-br from-emerald-400/15 to-white/[0.04] p-5 shadow-2xl shadow-emerald-950/20 md:p-6">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
+                  Karyra Readiness Passport
+                </p>
+                <h2 className="mt-3 text-3xl font-black md:text-4xl">
+                  {passport.displayName}
+                </h2>
+                <p className="mt-1 text-sm font-bold text-slate-400">
+                  Belajar → Paham → Siap → Terbukti
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-white/10 bg-slate-950/70 p-4 text-center">
+                <p className="text-xs text-slate-400">Readiness</p>
+                <p className="mt-1 text-4xl font-black">{readinessScore}</p>
+                <p className="text-xs font-black text-emerald-300">/100</p>
+              </div>
             </div>
-            <p className="mt-3 text-sm leading-6 text-slate-300">
-              {levelDescription(readinessLevel)}
-            </p>
+
+            <div className="mt-5 rounded-3xl border border-white/10 bg-slate-950/70 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm text-slate-400">Level</p>
+                  <p className="text-xl font-black text-emerald-100">
+                    {formatLevel(readinessLevel)}
+                  </p>
+                </div>
+                <p className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-black text-emerald-300">
+                  Public MVP
+                </p>
+              </div>
+              <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-slate-800">
+                <div
+                  className="h-full rounded-full bg-emerald-400"
+                  style={{ width: `${readinessScore}%` }}
+                />
+              </div>
+              <p className="mt-3 text-sm leading-6 text-slate-300">
+                {levelDescription(readinessLevel)}
+              </p>
+            </div>
           </div>
         </header>
 
@@ -182,28 +217,7 @@ export default async function PassportPage() {
           ))}
         </section>
 
-        <section className="grid gap-4 lg:grid-cols-2">
-          {strategicLayers.map((layer) => (
-            <Link
-              key={layer.href}
-              href={layer.href}
-              className={`rounded-[2rem] border p-5 transition hover:scale-[1.01] md:p-6 ${layer.tone}`}
-            >
-              <p className="text-xs font-black uppercase tracking-[0.18em]">
-                {layer.label}
-              </p>
-              <h2 className="mt-2 text-2xl font-black text-white">
-                {layer.title}
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-slate-200">
-                {layer.text}
-              </p>
-              <p className="mt-5 text-sm font-black text-white">Buka layer →</p>
-            </Link>
-          ))}
-        </section>
-
-        <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <section className="grid grid-cols-2 gap-3 md:grid-cols-5">
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
             <p className="text-xs text-slate-400">XP</p>
             <p className="mt-1 text-2xl font-black">{profile?.totalXp ?? 0}</p>
@@ -215,16 +229,18 @@ export default async function PassportPage() {
             </p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-            <p className="text-xs text-slate-400">Quest disetujui</p>
-            <p className="mt-1 text-2xl font-black">
-              {profile?.approvedQuests ?? 0}
-            </p>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
             <p className="text-xs text-slate-400">Workshop</p>
             <p className="mt-1 text-2xl font-black">
               {profile?.workshopsJoined ?? 0}
             </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="text-xs text-slate-400">Total bukti</p>
+            <p className="mt-1 text-2xl font-black">{totalProofs}</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="text-xs text-slate-400">Arsip Filecoin</p>
+            <p className="mt-1 text-2xl font-black">{proofCounts.archived}</p>
           </div>
         </section>
 
@@ -247,12 +263,38 @@ export default async function PassportPage() {
             </p>
             <p className="mt-2 text-2xl font-black">{proofCounts.readiness}</p>
           </div>
-          <div className="rounded-2xl border border-violet-400/20 bg-violet-400/10 p-4">
-            <p className="text-xs font-black uppercase tracking-wide text-violet-300">
-              Arsip Filecoin
+          <Link
+            href="/dashboard"
+            className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition hover:border-emerald-400/40"
+          >
+            <p className="text-xs font-black uppercase tracking-wide text-slate-400">
+              Butuh progres baru?
             </p>
-            <p className="mt-2 text-2xl font-black">{proofCounts.archived}</p>
-          </div>
+            <p className="mt-2 text-sm font-black text-emerald-300">
+              Lanjut dari Dashboard →
+            </p>
+          </Link>
+        </section>
+
+        <section className="grid gap-4 lg:grid-cols-2">
+          {strategicLayers.map((layer) => (
+            <Link
+              key={layer.href}
+              href={layer.href}
+              className={`rounded-[2rem] border p-5 transition hover:scale-[1.01] md:p-6 ${layer.tone}`}
+            >
+              <p className="text-xs font-black uppercase tracking-[0.18em]">
+                {layer.label}
+              </p>
+              <h2 className="mt-2 text-2xl font-black text-white">
+                {layer.title}
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-slate-200">
+                {layer.text}
+              </p>
+              <p className="mt-5 text-sm font-black text-white">Buka layer →</p>
+            </Link>
+          ))}
         </section>
 
         <section className="grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
@@ -344,7 +386,7 @@ export default async function PassportPage() {
 
                     <div className="mt-3 flex flex-wrap gap-2">
                       <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-slate-400">
-                        {proof.archivedToFilecoin ? "Diarsipkan" : "Belum diarsipkan"}
+                        {archiveStatus(proof.archivedToFilecoin)}
                       </span>
                       <Link
                         href={`/proofs/${proof.id}`}
