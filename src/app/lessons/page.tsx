@@ -52,14 +52,14 @@ export default async function LessonsPage() {
       <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-6 pb-24 md:px-8 md:py-12">
         <header className="grid gap-6 lg:grid-cols-[1.08fr_0.72fr] lg:items-end">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
-              Pelajaran
+            <p className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
+              Perpustakaan Pelajaran
             </p>
             <h1 className="mt-4 max-w-4xl text-3xl font-black tracking-tight md:text-6xl">
-              Ruang baca untuk memahami materi secara bertahap.
+              Baca satu konsep kecil, lalu lanjutkan bertahap.
             </h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
-              Pelajaran adalah bagian kecil dari kursus. Setiap pelajaran membantu pengguna memahami satu konsep sebelum lanjut ke bagian berikutnya.
+              Pelajaran adalah unit kecil dari kursus. Gunakan halaman ini untuk melompat ke materi tertentu, tetapi alur terbaik tetap dimulai dari course.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Link
@@ -116,7 +116,7 @@ export default async function LessonsPage() {
                     Pilih kursus
                   </p>
                   <p className="mt-1 text-sm text-slate-400">
-                    Gunakan pintasan ini agar daftar pelajaran tidak terasa terlalu panjang di mobile.
+                    Pintasan ini membantu learner mobile membuka kelompok pelajaran tanpa scroll terlalu jauh.
                   </p>
                 </div>
               </div>

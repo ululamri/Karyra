@@ -36,38 +36,39 @@ export default async function CoursesPage() {
 
   const totalLessons = courses.reduce((total, course) => total + course.progress.totalLessons, 0);
   const totalMinutes = courses.reduce((total, course) => total + course.totalMinutes, 0);
+  const totalOptionalQuests = courses.reduce((total, course) => total + course.questCount, 0);
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-6 pb-24 md:px-8 md:py-12">
         <header className="grid gap-6 lg:grid-cols-[1.08fr_0.72fr] lg:items-end">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
-              Kursus
+            <p className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
+              Jalur Belajar Utama
             </p>
             <h1 className="mt-4 max-w-4xl text-3xl font-black tracking-tight md:text-6xl">
-              Jalur belajar untuk memahami blockchain dari dasar.
+              Kursus adalah pintu utama Karyra.
             </h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
-              Kursus adalah syllabus utama Karyra. Urutan belajar dimulai dari blockchain sebagai fondasi kepercayaan digital, lalu bergerak bertahap ke cryptocurrency, wallet, aset digital, Web3, dan kesiapan berpartisipasi.
+              Karyra dimulai dari kursus dan pelajaran. Quest dan reward tetap tersedia sebagai latihan kecil setelah belajar, tetapi fondasi utamanya adalah pemahaman blockchain yang bertahap dan aman.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/lessons"
+                href="/learner"
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-emerald-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
               >
-                Buka Pelajaran
+                Masuk ke Ruang Belajar
               </Link>
               <Link
-                href="/dashboard"
+                href="/lessons"
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40"
               >
-                Lihat Dasbor
+                Buka Perpustakaan Pelajaran
               </Link>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
               <p className="text-xs text-slate-400">Kursus</p>
               <p className="mt-1 text-2xl font-black">{courses.length}</p>
@@ -80,8 +81,28 @@ export default async function CoursesPage() {
               <p className="text-xs text-slate-400">Menit</p>
               <p className="mt-1 text-2xl font-black">{totalMinutes}</p>
             </div>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+              <p className="text-xs text-slate-400">Latihan</p>
+              <p className="mt-1 text-2xl font-black">{totalOptionalQuests}</p>
+            </div>
           </div>
         </header>
+
+        <section className="rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-5 md:p-6">
+          <div className="grid gap-4 md:grid-cols-[0.85fr_1.15fr] md:items-center">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-sky-300">
+                Cara belajar di Karyra
+              </p>
+              <h2 className="mt-2 text-2xl font-black">
+                Belajar dulu, latihan kemudian, bukti masuk ke Paspor.
+              </h2>
+            </div>
+            <p className="text-sm leading-7 text-slate-300">
+              Setiap kursus membawa learner dari konsep dasar menuju pemahaman yang lebih siap. Setelah itu, quest opsional bisa dipakai untuk refleksi, latihan komunitas, dan bukti kesiapan yang direview.
+            </p>
+          </div>
+        </section>
 
         <section className="grid gap-4 md:grid-cols-2">
           {sortedCourses.length === 0 ? (
@@ -112,6 +133,11 @@ export default async function CoursesPage() {
                         {primary ? (
                           <p className="rounded-full bg-emerald-400 px-3 py-1 text-xs font-black text-slate-950">
                             Fondasi utama
+                          </p>
+                        ) : null}
+                        {course.questCount > 0 ? (
+                          <p className="rounded-full bg-sky-400/10 px-3 py-1 text-xs font-black text-sky-300">
+                            Ada latihan opsional
                           </p>
                         ) : null}
                       </div>
@@ -145,7 +171,7 @@ export default async function CoursesPage() {
                       {course.totalMinutes} menit
                     </span>
                     <span className="rounded-full bg-white/10 px-3 py-1 text-slate-300">
-                      {course.totalXp} XP
+                      {course.totalXp} XP belajar
                     </span>
                     <span className="rounded-full bg-white/10 px-3 py-1 text-slate-300">
                       {course.questCount} latihan opsional

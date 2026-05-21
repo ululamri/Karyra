@@ -10,23 +10,50 @@ type QuestsPageProps = {
 function getTrackTitle(language: "id" | "en", track?: string) {
   if (track === "stellar-readiness") {
     return language === "id"
-      ? "Quest Kesiapan Stellar"
-      : "Stellar Readiness Quests";
+      ? "Latihan Kesiapan Stellar"
+      : "Stellar Readiness Practice";
   }
 
-  return language === "id" ? "Quest Karyra" : "Karyra Quests";
+  return language === "id" ? "Latihan & Quest Karyra" : "Karyra Practice & Quests";
 }
 
 function getTrackDescription(language: "id" | "en", track?: string) {
   if (track === "stellar-readiness") {
     return language === "id"
-      ? "Bangun Proof-of-Readiness sebelum menyentuh wallet, memo, payment, stablecoin, atau transaksi nyata."
-      : "Build Proof-of-Readiness before touching wallets, memos, payments, stablecoins, or real transactions.";
+      ? "Latihan kecil untuk membangun Proof-of-Readiness sebelum menyentuh wallet, memo, payment, stablecoin, atau transaksi nyata."
+      : "Small practice tasks to build Proof-of-Readiness before touching wallets, memos, payments, stablecoins, or real transactions.";
   }
 
   return language === "id"
-    ? "Quest membantu learner mengubah pemahaman menjadi bukti kesiapan yang bisa direview."
-    : "Quests help learners turn understanding into reviewable readiness proof.";
+    ? "Quest di Karyra adalah latihan pendukung setelah belajar. Reward adalah apresiasi proses, bukan janji penghasilan atau spekulasi."
+    : "Karyra quests are supporting practice after learning. Rewards are appreciation for progress, not income promises or speculation.";
+}
+
+function questCategory(type: string, chainKey?: string | null) {
+  const normalizedType = type.toLowerCase();
+  const normalizedChain = chainKey?.toLowerCase() ?? "";
+
+  if (normalizedChain.includes("stellar") || normalizedType.includes("readiness")) {
+    return {
+      label: "Readiness Quest",
+      description: "Latihan untuk membuktikan kesiapan sebelum praktik lebih serius.",
+      tone: "bg-amber-400/10 text-amber-300",
+    };
+  }
+
+  if (normalizedType.includes("workshop") || normalizedType.includes("participation")) {
+    return {
+      label: "Participation Quest",
+      description: "Latihan yang terhubung dengan aktivitas komunitas atau workshop.",
+      tone: "bg-sky-400/10 text-sky-300",
+    };
+  }
+
+  return {
+    label: "Learning Quest",
+    description: "Latihan refleksi untuk membuktikan pemahaman setelah belajar.",
+    tone: "bg-emerald-400/10 text-emerald-300",
+  };
 }
 
 export default async function QuestsPage({ searchParams }: QuestsPageProps) {
@@ -80,7 +107,7 @@ export default async function QuestsPage({ searchParams }: QuestsPageProps) {
         <header className="grid gap-6 lg:grid-cols-[1.1fr_0.75fr] lg:items-end">
           <div>
             <p className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
-              Proof-of-Readiness
+              Practice Layer
             </p>
 
             <h1 className="mt-4 max-w-4xl text-3xl font-black tracking-tight md:text-5xl lg:text-6xl">
@@ -100,7 +127,7 @@ export default async function QuestsPage({ searchParams }: QuestsPageProps) {
                     : "border border-white/10 bg-white/5 text-white hover:border-emerald-400/40"
                 }`}
               >
-                {language === "id" ? "Semua Quest" : "All Quests"}
+                Semua Latihan
               </Link>
               <Link
                 href="/quests?track=stellar-readiness"
@@ -116,18 +143,18 @@ export default async function QuestsPage({ searchParams }: QuestsPageProps) {
                 href="/passport"
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40"
               >
-                Passport
+                Lihat Paspor
               </Link>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-              <p className="text-xs text-slate-400">Quests</p>
+              <p className="text-xs text-slate-400">Latihan</p>
               <p className="mt-1 text-2xl font-black">{quests.length}</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-              <p className="text-xs text-slate-400">Tasks</p>
+              <p className="text-xs text-slate-400">Task</p>
               <p className="mt-1 text-2xl font-black">{totalTasks}</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
@@ -137,27 +164,59 @@ export default async function QuestsPage({ searchParams }: QuestsPageProps) {
           </div>
         </header>
 
+        <section className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-5 md:p-6">
+          <div className="grid gap-5 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
+                Mekanisme Quest & Reward
+              </p>
+              <h2 className="mt-2 text-2xl font-black">
+                Belajar → Latihan → Submit → Review → Reward → Paspor
+              </h2>
+            </div>
+            <div className="grid gap-3 md:grid-cols-3">
+              <div className="rounded-2xl bg-slate-950/60 p-4">
+                <p className="text-sm font-black text-emerald-300">Learning</p>
+                <p className="mt-1 text-xs leading-5 text-slate-400">
+                  Refleksi setelah pelajaran atau kursus.
+                </p>
+              </div>
+              <div className="rounded-2xl bg-slate-950/60 p-4">
+                <p className="text-sm font-black text-sky-300">Participation</p>
+                <p className="mt-1 text-xs leading-5 text-slate-400">
+                  Aktivitas komunitas, workshop, atau praktik bersama.
+                </p>
+              </div>
+              <div className="rounded-2xl bg-slate-950/60 p-4">
+                <p className="text-sm font-black text-amber-300">Readiness</p>
+                <p className="mt-1 text-xs leading-5 text-slate-400">
+                  Bukti kesiapan sebelum praktik blockchain lebih lanjut.
+                </p>
+              </div>
+            </div>
+          </div>
+          <p className="mt-5 rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm leading-7 text-slate-300">
+            Reward di Karyra diposisikan sebagai XP, badge, proof record, dan pengakuan komunitas. Reward bukan janji pendapatan, bukan trading incentive, dan bukan dorongan spekulatif.
+          </p>
+        </section>
+
         {track === "stellar-readiness" ? (
           <section className="rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-5 md:p-6">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-sky-300">
               Financial Web3 Readiness
             </p>
             <h2 className="mt-2 text-2xl font-black">
-              {language === "id"
-                ? "Latihan sebelum praktik pembayaran Web3."
-                : "Practice before Web3 payment activity."}
+              Latihan sebelum praktik pembayaran Web3.
             </h2>
             <p className="mt-3 max-w-4xl text-sm leading-7 text-slate-300">
-              {language === "id"
-                ? "Track ini membantu learner memahami wallet safety, memo awareness, scam prevention, dan checklist transaksi sebelum mencoba aktivitas bernilai nyata."
-                : "This track helps learners understand wallet safety, memo awareness, scam prevention, and transaction checklists before trying real-value activity."}
+              Track ini membantu learner memahami wallet safety, memo awareness, scam prevention, dan checklist transaksi sebelum mencoba aktivitas bernilai nyata.
             </p>
             <div className="mt-4 flex flex-wrap gap-3">
               <Link
                 href="/stacks/stellar-readiness/checklist"
                 className="inline-flex min-h-11 items-center rounded-2xl bg-sky-300 px-4 py-2.5 text-sm font-black text-slate-950"
               >
-                {language === "id" ? "Buka Checklist" : "Open Checklist"}
+                Buka Checklist
               </Link>
               <Link
                 href="/stacks/stellar-readiness"
@@ -172,91 +231,95 @@ export default async function QuestsPage({ searchParams }: QuestsPageProps) {
         <section className="grid gap-4">
           {quests.length === 0 ? (
             <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 text-sm text-slate-300">
-              {language === "id"
-                ? "Belum ada quest untuk filter ini."
-                : "No quests for this filter yet."}
+              Belum ada latihan untuk filter ini.
             </div>
           ) : (
-            quests.map((quest) => (
-              <article
-                key={quest.id}
-                className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 md:p-6"
-              >
-                <div className="flex flex-wrap gap-2 text-xs font-black uppercase tracking-wide">
-                  <span className="rounded-full bg-emerald-400/15 px-3 py-1 text-emerald-300">
-                    {quest.type}
-                  </span>
-                  <span className="rounded-full bg-white/10 px-3 py-1 text-slate-300">
-                    {quest.difficulty}
-                  </span>
-                  <span
-                    className={`rounded-full px-3 py-1 ${
-                      quest.chainKey === "stellar-readiness"
-                        ? "bg-sky-400/15 text-sky-300"
-                        : "bg-white/10 text-slate-300"
-                    }`}
-                  >
-                    {quest.chainKey ?? "chain-agnostic"}
-                  </span>
-                </div>
+            quests.map((quest) => {
+              const category = questCategory(quest.type, quest.chainKey);
 
-                <div className="mt-4 grid gap-5 lg:grid-cols-[1fr_0.42fr]">
-                  <div>
-                    <h2 className="text-2xl font-black">{quest.title}</h2>
+              return (
+                <article
+                  key={quest.id}
+                  className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 md:p-6"
+                >
+                  <div className="flex flex-wrap gap-2 text-xs font-black uppercase tracking-wide">
+                    <span className={`rounded-full px-3 py-1 ${category.tone}`}>
+                      {category.label}
+                    </span>
+                    <span className="rounded-full bg-white/10 px-3 py-1 text-slate-300">
+                      {quest.difficulty}
+                    </span>
+                    <span
+                      className={`rounded-full px-3 py-1 ${
+                        quest.chainKey === "stellar-readiness"
+                          ? "bg-sky-400/15 text-sky-300"
+                          : "bg-white/10 text-slate-300"
+                      }`}
+                    >
+                      {quest.chainKey ?? "chain-agnostic"}
+                    </span>
+                  </div>
 
-                    {quest.description ? (
-                      <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-300">
-                        {quest.description}
-                      </p>
-                    ) : null}
+                  <div className="mt-4 grid gap-5 lg:grid-cols-[1fr_0.42fr]">
+                    <div>
+                      <h2 className="text-2xl font-black">{quest.title}</h2>
 
-                    <div className="mt-4 flex flex-wrap items-center gap-3">
-                      <p className="text-sm font-black text-emerald-300">
-                        {quest.xpReward} XP Reward
-                      </p>
-                      {quest.course ? (
-                        <Link
-                          href={`/courses/${quest.course.slug}`}
-                          className="text-sm font-black text-sky-300"
-                        >
-                          {language === "id" ? "Course" : "Course"}: {quest.course.title}
-                        </Link>
+                      {quest.description ? (
+                        <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-300">
+                          {quest.description}
+                        </p>
                       ) : null}
+
+                      <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">
+                        {category.description}
+                      </p>
+
+                      <div className="mt-4 flex flex-wrap items-center gap-3">
+                        <p className="text-sm font-black text-emerald-300">
+                          {quest.xpReward} XP apresiasi
+                        </p>
+                        {quest.course ? (
+                          <Link
+                            href={`/courses/${quest.course.slug}`}
+                            className="text-sm font-black text-sky-300"
+                          >
+                            Terhubung ke kursus: {quest.course.title}
+                          </Link>
+                        ) : null}
+                      </div>
+
+                      <div className="mt-5 grid gap-2 md:grid-cols-2">
+                        {quest.tasks.map((task) => (
+                          <div
+                            key={task.id}
+                            className="rounded-2xl bg-slate-950/60 p-3"
+                          >
+                            <p className="text-xs text-slate-500">
+                              Task {task.order} • {task.verificationType}
+                            </p>
+                            <h3 className="mt-1 text-sm font-black">{task.title}</h3>
+                          </div>
+                        ))}
+                      </div>
                     </div>
 
-                    <div className="mt-5 grid gap-2 md:grid-cols-2">
-                      {quest.tasks.map((task) => (
-                        <div
-                          key={task.id}
-                          className="rounded-2xl bg-slate-950/60 p-3"
-                        >
-                          <p className="text-xs text-slate-500">
-                            Task {task.order} • {task.verificationType}
-                          </p>
-                          <h3 className="mt-1 text-sm font-black">{task.title}</h3>
-                        </div>
-                      ))}
+                    <div className="rounded-3xl bg-slate-950/60 p-4">
+                      <p className="text-xs font-black uppercase tracking-wide text-emerald-300">
+                        Kirim bukti
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-slate-400">
+                        Tulis jawaban, refleksi, atau bukti penyelesaian. Submission masuk ke review admin sebelum menjadi proof di Paspor.
+                      </p>
+                      <QuestSubmissionForm
+                        questId={quest.id}
+                        questSlug={quest.slug}
+                        minCharacters={40}
+                      />
                     </div>
                   </div>
-
-                  <div className="rounded-3xl bg-slate-950/60 p-4">
-                    <p className="text-xs font-black uppercase tracking-wide text-emerald-300">
-                      {language === "id" ? "Kirim bukti" : "Submit proof"}
-                    </p>
-                    <p className="mt-2 text-sm leading-6 text-slate-400">
-                      {language === "id"
-                        ? "Tulis jawaban atau bukti penyelesaian. Submission akan masuk ke review admin sebelum menjadi proof."
-                        : "Write your answer or completion evidence. Submission is reviewed before it becomes proof."}
-                    </p>
-                    <QuestSubmissionForm
-                      questId={quest.id}
-                      questSlug={quest.slug}
-                      minCharacters={40}
-                    />
-                  </div>
-                </div>
-              </article>
-            ))
+                </article>
+              );
+            })
           )}
         </section>
       </section>
