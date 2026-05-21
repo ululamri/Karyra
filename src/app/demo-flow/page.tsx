@@ -32,10 +32,22 @@ const demoFlow = [
     check: "Readiness tidak diklaim kosong, tetapi dirangkum dari aktivitas.",
   },
   {
+    title: "Filecoin",
+    href: "/filecoin-proof-archive",
+    goal: "Melihat bagaimana bukti belajar dan partisipasi disiapkan untuk arsip.",
+    check: "Filecoin terlihat sebagai proof archive layer, bukan sekadar nama.",
+  },
+  {
+    title: "Stellar",
+    href: "/stacks/stellar-readiness",
+    goal: "Melihat jalur latihan wallet dan payment yang aman untuk pemula.",
+    check: "Stellar terlihat sebagai safe practice layer, bukan reward chain.",
+  },
+  {
     title: "Dokumentasi",
-    href: "/docs",
-    goal: "Melihat penjelasan produk untuk reviewer.",
-    check: "Reviewer memahami masalah, solusi, dan arah pengembangan.",
+    href: "/docs/filecoin-stellar",
+    goal: "Melihat strategi Filecoin + Stellar dalam narasi grant.",
+    check: "Reviewer memahami peran masing-masing teknologi di dalam Karyra.",
   },
 ];
 
@@ -52,7 +64,7 @@ export default function DemoFlowPage() {
               Rute singkat untuk memahami Karyra.
             </h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
-              Halaman ini disiapkan agar reviewer grant bisa mengikuti alur produk tanpa menebak. Fokusnya: pemahaman blockchain, jalur belajar, progres, dan Paspor Kesiapan.
+              Halaman ini disiapkan agar reviewer grant bisa mengikuti alur produk tanpa menebak. Fokusnya: pemahaman blockchain, jalur belajar, progres, Paspor Kesiapan, Filecoin Proof Archive, dan Stellar Readiness Track.
             </p>
           </div>
 
@@ -61,10 +73,10 @@ export default function DemoFlowPage() {
               Urutan utama
             </p>
             <h2 className="mt-2 text-3xl font-black">
-              Beranda → Kursus → Pelajaran → Dasbor → Paspor
+              Belajar → Bukti → Arsip → Latihan → Siap
             </h2>
             <p className="mt-3 text-sm leading-7 text-slate-300">
-              Ini adalah alur produk publik yang perlu terasa matang sebelum pitch deck atau whitepaper dibuat.
+              Filecoin dan Stellar kini terlihat sebagai dua lapisan strategis yang memperkuat Karyra menuju grant-ready.
             </p>
           </div>
         </header>
@@ -76,7 +88,7 @@ export default function DemoFlowPage() {
               href={step.href}
               className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 transition hover:border-emerald-400/40 hover:bg-emerald-400/10 md:p-6"
             >
-              <div className="grid gap-4 lg:grid-cols-[0.25fr_0.75fr_1fr] lg:items-start">
+              <div className="grid gap-4 lg:grid-cols-[0.22fr_0.78fr_1fr] lg:items-start">
                 <div>
                   <p className="text-xs font-black uppercase tracking-wide text-emerald-300">
                     0{index + 1}

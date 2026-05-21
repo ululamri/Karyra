@@ -35,18 +35,18 @@ const pillars = [
 
 const layers = [
   {
-    title: "Stellar Readiness Track",
-    label: "Kesiapan finansial",
-    href: "/stacks/stellar-readiness",
-    text:
-      "Jalur latihan untuk wallet safety, memo awareness, stablecoin/payment literacy, dan pre-transaction confidence.",
-  },
-  {
     title: "Filecoin Proof Archive",
     label: "Arsip bukti",
-    href: "/passport",
+    href: "/filecoin-proof-archive",
     text:
-      "Arah pengarsipan proof record melalui manifest, checksum, CID, dan preservation layer.",
+      "Bukti belajar, partisipasi, dan snapshot paspor disusun menjadi manifest yang siap diarsipkan dan diverifikasi.",
+  },
+  {
+    title: "Stellar Readiness Track",
+    label: "Latihan aman",
+    href: "/stacks/stellar-readiness",
+    text:
+      "Pengguna melatih wallet safety, memo awareness, asset, trustline, payment, dan autentikasi wallet secara bertahap.",
   },
 ];
 
@@ -62,7 +62,7 @@ export default function ProofSystemPage() {
             Dari belajar menjadi bukti kesiapan.
           </h1>
           <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
-            Karyra mengubah proses belajar dan partisipasi menjadi bukti kesiapan yang bisa dibaca, direview, dan dikembangkan menjadi identity layer komunitas.
+            Karyra mengubah proses belajar dan partisipasi menjadi bukti kesiapan yang bisa dibaca, direview, diarsipkan, dan dikembangkan menjadi identity layer komunitas.
           </p>
         </header>
 

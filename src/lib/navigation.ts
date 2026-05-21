@@ -35,6 +35,18 @@ export const navigationSections: NavigationSection[] = [
     ],
   },
   {
+    id: "filecoin-stellar",
+    titleId: "Filecoin + Stellar",
+    titleEn: "Filecoin + Stellar",
+    descriptionId: "Dua lapisan strategis: arsip bukti dan latihan kesiapan finansial blockchain.",
+    descriptionEn: "Dua lapisan strategis: arsip bukti dan latihan kesiapan finansial blockchain.",
+    links: [
+      { href: "/docs/filecoin-stellar", titleId: "Strategi Filecoin + Stellar", titleEn: "Strategi Filecoin + Stellar", descriptionId: "Peran Filecoin dan Stellar di dalam Karyra.", descriptionEn: "Peran Filecoin dan Stellar di dalam Karyra.", badge: "Target" },
+      { href: "/filecoin-proof-archive", titleId: "Filecoin Proof Archive", titleEn: "Filecoin Proof Archive", descriptionId: "Arsip bukti belajar, partisipasi, dan snapshot paspor.", descriptionEn: "Arsip bukti belajar, partisipasi, dan snapshot paspor.", badge: "Filecoin" },
+      { href: "/stacks/stellar-readiness", titleId: "Stellar Readiness Track", titleEn: "Stellar Readiness Track", descriptionId: "Latihan wallet safety, memo, asset, trustline, dan payment readiness.", descriptionEn: "Latihan wallet safety, memo, asset, trustline, dan payment readiness.", badge: "Stellar" },
+    ],
+  },
+  {
     id: "demo",
     titleId: "Demo",
     titleEn: "Demo",
