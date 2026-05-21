@@ -292,6 +292,30 @@ Admin and reviewer routes are intentionally not emphasized in public navigation.
 
 ---
 
+## Screenshots
+
+A few representative views from the current public demo:
+
+### Homepage
+
+![Karyra homepage desktop](public/karyra_screenshots/beranda-desktop.png)
+
+### Course Catalog
+
+![Karyra course catalog desktop](public/karyra_screenshots/courses-desktop.png)
+
+### Readiness Passport
+
+![Karyra readiness passport desktop](public/karyra_screenshots/passport-desktop.png)
+
+### Documentation Hub
+
+![Karyra documentation hub desktop](public/karyra_screenshots/docs-desktop.png)
+
+More desktop and mobile screenshots are available in `public/karyra_screenshots/`.
+
+---
+
 ## Impact Target Draft
 
 Karyra's current grant-facing impact target draft:
