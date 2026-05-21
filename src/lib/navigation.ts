@@ -41,9 +41,24 @@ export const navigationSections: NavigationSection[] = [
     descriptionId: "Dua lapisan strategis: arsip bukti dan latihan kesiapan finansial blockchain.",
     descriptionEn: "Dua lapisan strategis: arsip bukti dan latihan kesiapan finansial blockchain.",
     links: [
+      { href: "/docs/grant-architecture", titleId: "Grant Architecture", titleEn: "Grant Architecture", descriptionId: "Dual-network architecture untuk proposal grant.", descriptionEn: "Dual-network architecture untuk proposal grant.", badge: "Grant" },
       { href: "/docs/filecoin-stellar", titleId: "Strategi Filecoin + Stellar", titleEn: "Strategi Filecoin + Stellar", descriptionId: "Peran Filecoin dan Stellar di dalam Karyra.", descriptionEn: "Peran Filecoin dan Stellar di dalam Karyra.", badge: "Target" },
-      { href: "/filecoin-proof-archive", titleId: "Filecoin Proof Archive", titleEn: "Filecoin Proof Archive", descriptionId: "Arsip bukti belajar, partisipasi, dan snapshot paspor.", descriptionEn: "Arsip bukti belajar, partisipasi, dan snapshot paspor.", badge: "Filecoin" },
-      { href: "/stacks/stellar-readiness", titleId: "Stellar Readiness Track", titleEn: "Stellar Readiness Track", descriptionId: "Latihan wallet safety, memo, asset, trustline, dan payment readiness.", descriptionEn: "Latihan wallet safety, memo, asset, trustline, dan payment readiness.", badge: "Stellar" },
+      { href: "/docs/filecoin-architecture", titleId: "Filecoin Storage Architecture", titleEn: "Filecoin Storage Architecture", descriptionId: "Tooling storage, proof manifest, CID, dan provider strategy.", descriptionEn: "Tooling storage, proof manifest, CID, dan provider strategy.", badge: "Filecoin" },
+      { href: "/docs/stellar-testnet-flow", titleId: "Stellar Testnet Flow", titleEn: "Stellar Testnet Flow", descriptionId: "Friendbot, testnet XLM, trustline, memo, dan payment simulation.", descriptionEn: "Friendbot, testnet XLM, trustline, memo, dan payment simulation.", badge: "Stellar" },
+      { href: "/filecoin-proof-archive", titleId: "Filecoin Proof Archive", titleEn: "Filecoin Proof Archive", descriptionId: "Arsip bukti belajar, partisipasi, dan snapshot paspor.", descriptionEn: "Arsip bukti belajar, partisipasi, dan snapshot paspor." },
+      { href: "/stacks/stellar-readiness", titleId: "Stellar Readiness Track", titleEn: "Stellar Readiness Track", descriptionId: "Latihan wallet safety, memo, asset, trustline, dan payment readiness.", descriptionEn: "Latihan wallet safety, memo, asset, trustline, dan payment readiness." },
+    ],
+  },
+  {
+    id: "grant",
+    titleId: "Grant Ready",
+    titleEn: "Grant Ready",
+    descriptionId: "Dokumentasi pendukung proposal, impact metrics, dan open source transparency.",
+    descriptionEn: "Dokumentasi pendukung proposal, impact metrics, dan open source transparency.",
+    links: [
+      { href: "/docs/impact-metrics", titleId: "Impact Metrics", titleEn: "Impact Metrics", descriptionId: "Target dampak dan angka pilot yang siap masuk proposal.", descriptionEn: "Target dampak dan angka pilot yang siap masuk proposal.", badge: "Impact" },
+      { href: "/docs/open-source", titleId: "Open Source & Transparansi", titleEn: "Open Source & Transparansi", descriptionId: "GitHub, roadmap, changelog, dan lisensi open source.", descriptionEn: "GitHub, roadmap, changelog, dan lisensi open source.", badge: "Open" },
+      { href: "/docs/grant-readiness", titleId: "Kesiapan Grant", titleEn: "Kesiapan Grant", descriptionId: "Checklist internal menuju grant-ready.", descriptionEn: "Checklist internal menuju grant-ready." },
     ],
   },
   {
@@ -78,7 +93,6 @@ export const navigationSections: NavigationSection[] = [
       { href: "/docs", titleId: "Pusat Dokumentasi", titleEn: "Pusat Dokumentasi", descriptionId: "Pusat penjelasan produk dan kesiapan grant.", descriptionEn: "Pusat penjelasan produk dan kesiapan grant.", badge: "Docs" },
       { href: "/docs/product-narrative", titleId: "Narasi Produk", titleEn: "Narasi Produk", descriptionId: "Masalah, pendekatan, dan positioning Karyra.", descriptionEn: "Masalah, pendekatan, dan positioning Karyra." },
       { href: "/docs/readiness-passport", titleId: "Dokumentasi Paspor", titleEn: "Dokumentasi Paspor", descriptionId: "Cara kerja Paspor Kesiapan dan sinyal yang dibaca.", descriptionEn: "Cara kerja Paspor Kesiapan dan sinyal yang dibaca." },
-      { href: "/docs/grant-readiness", titleId: "Kesiapan Grant", titleEn: "Kesiapan Grant", descriptionId: "Checklist internal menuju grant-ready.", descriptionEn: "Checklist internal menuju grant-ready." },
     ],
   },
   {

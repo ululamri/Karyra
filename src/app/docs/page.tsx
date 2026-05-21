@@ -2,11 +2,11 @@ import Link from "next/link";
 
 const docLinks = [
   {
-    href: "/docs/product-narrative",
-    title: "Narasi Produk",
+    href: "/docs/grant-architecture",
+    title: "Grant Architecture",
     description:
-      "Masalah utama, pendekatan blockchain-first, dan alasan Karyra dibangun untuk masyarakat lokal.",
-    badge: "Fondasi",
+      "Dual-Network Architecture Ecosystem: Karyra, Filecoin Proof Archive, dan Stellar Readiness Track.",
+    badge: "Arsitektur",
   },
   {
     href: "/docs/filecoin-stellar",
@@ -14,6 +14,41 @@ const docLinks = [
     description:
       "Peran Filecoin sebagai proof archive layer dan Stellar sebagai safe practice layer.",
     badge: "Target",
+  },
+  {
+    href: "/docs/filecoin-architecture",
+    title: "Filecoin Storage Architecture",
+    description:
+      "Tooling penyimpanan: Synapse SDK, Lighthouse.storage, Web3.Storage, dan direct Storage Providers.",
+    badge: "Filecoin",
+  },
+  {
+    href: "/docs/stellar-testnet-flow",
+    title: "Stellar Testnet Flow",
+    description:
+      "Friendbot, testnet XLM, memo awareness, trustline simulation, dan payment readiness.",
+    badge: "Stellar",
+  },
+  {
+    href: "/docs/impact-metrics",
+    title: "Impact Metrics",
+    description:
+      "Target 1.000 pengguna lokal, Stellar Payment Readiness, dan Filecoin Learning Passport CID.",
+    badge: "Impact",
+  },
+  {
+    href: "/docs/open-source",
+    title: "Open Source & Transparansi",
+    description:
+      "GitHub, roadmap, changelog, lisensi open source, dan checklist repository untuk reviewer.",
+    badge: "Open",
+  },
+  {
+    href: "/docs/product-narrative",
+    title: "Narasi Produk",
+    description:
+      "Masalah utama, pendekatan blockchain-first, dan alasan Karyra dibangun untuk masyarakat lokal.",
+    badge: "Fondasi",
   },
   {
     href: "/docs/readiness-passport",
@@ -34,35 +69,14 @@ const docLinks = [
     title: "Filecoin Proof Archive",
     description:
       "Lapisan arsip bukti untuk proof manifest, snapshot paspor, checksum, dan PieceCID/CID.",
-    badge: "Filecoin",
+    badge: "Layer",
   },
   {
     href: "/stacks/stellar-readiness",
     title: "Stellar Readiness Track",
     description:
       "Jalur latihan aman untuk wallet safety, memo, asset, trustline, payment, dan SEP-10 awareness.",
-    badge: "Stellar",
-  },
-  {
-    href: "/about",
-    title: "Tentang Karyra",
-    description:
-      "Penjelasan singkat tentang arah, prinsip, dan alasan Karyra dibangun.",
-    badge: "About",
-  },
-  {
-    href: "/faq",
-    title: "FAQ",
-    description:
-      "Pertanyaan umum tentang Karyra, Paspor Kesiapan, quest, reward, dan fase demo.",
-    badge: "FAQ",
-  },
-  {
-    href: "/terms",
-    title: "Ketentuan",
-    description:
-      "Batasan penggunaan, disclaimer edukasi, dan risiko teknologi blockchain.",
-    badge: "Legal",
+    badge: "Layer",
   },
   {
     href: "/demo-flow",
@@ -70,20 +84,6 @@ const docLinks = [
     description:
       "Rute singkat agar reviewer dapat memahami Karyra tanpa menebak halaman mana yang harus dibuka.",
     badge: "Demo",
-  },
-  {
-    href: "/proof-system",
-    title: "Sistem Bukti",
-    description:
-      "Bukti Belajar, Bukti Partisipasi, dan Bukti Kesiapan sebagai kerangka utama Karyra.",
-    badge: "Bukti",
-  },
-  {
-    href: "/roadmap",
-    title: "Roadmap",
-    description:
-      "Arah pengembangan produk dari pembelajaran inti menuju readiness dan komunitas.",
-    badge: "Rencana",
   },
 ];
 
@@ -99,7 +99,7 @@ export default function DocsPage() {
             Pusat penjelasan produk dan kesiapan grant.
           </h1>
           <p className="mt-4 text-sm leading-7 text-slate-300 md:text-base md:leading-8">
-            Dokumentasi ini membantu menjaga narasi Karyra tetap jelas: mulai dari masalah salah paham tentang blockchain, Filecoin Proof Archive, Stellar Readiness Track, Paspor Kesiapan, alur demo, sampai ketentuan penggunaan.
+            Dokumentasi ini menjadi sumber utama untuk proposal, pitch deck, whitepaper, reviewer flow, dan pembaruan publik Karyra.
           </p>
         </header>
 

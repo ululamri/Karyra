@@ -33,6 +33,33 @@ const grantNarratives = [
   "Narasi ini membuat Karyra lebih kuat daripada platform belajar biasa atau quest platform biasa.",
 ];
 
+const technicalDecisions = [
+  {
+    title: "Filecoin tooling",
+    text:
+      "Jalur utama yang direkomendasikan adalah Synapse SDK / Filecoin Onchain Cloud. Lighthouse.storage dan Web3.Storage tetap dicatat sebagai opsi ekosistem, sementara direct Storage Providers menjadi jalur lanjutan.",
+    href: "/docs/filecoin-architecture",
+  },
+  {
+    title: "Stellar testnet",
+    text:
+      "Stellar Readiness Track harus berkembang ke pengalaman testnet interaktif: Friendbot, testnet XLM, trustline simulation, memo awareness, dan payment simulation.",
+    href: "/docs/stellar-testnet-flow",
+  },
+  {
+    title: "Impact metrics",
+    text:
+      "Proposal harus memiliki target angka jelas seperti 1.000 pengguna lokal, penyelesaian Stellar Payment Readiness, dan Filecoin Learning Passport CID dalam 3 bulan.",
+    href: "/docs/impact-metrics",
+  },
+  {
+    title: "Open source",
+    text:
+      "GitHub, roadmap, changelog, dan lisensi open source harus mendukung klaim transparansi produk.",
+    href: "/docs/open-source",
+  },
+];
+
 export default function FilecoinStellarDocsPage() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -123,6 +150,20 @@ export default function FilecoinStellarDocsPage() {
               ))}
             </div>
           </div>
+        </section>
+
+        <section className="grid gap-4 md:grid-cols-2">
+          {technicalDecisions.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 transition hover:border-emerald-400/40 md:p-6"
+            >
+              <h2 className="text-xl font-black">{item.title}</h2>
+              <p className="mt-3 text-sm leading-7 text-slate-400">{item.text}</p>
+              <p className="mt-4 text-sm font-black text-emerald-300">Buka detail →</p>
+            </Link>
+          ))}
         </section>
 
         <section className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-5 md:p-6">
