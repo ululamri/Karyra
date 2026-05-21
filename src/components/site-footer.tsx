@@ -51,12 +51,21 @@ export function SiteFooter({ language }: SiteFooterProps) {
     <footer className="border-t border-white/10 bg-slate-950 px-5 pb-28 pt-10 text-white md:px-8 md:pb-10">
       <section className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
-          <Link href="/" className="inline-flex flex-col">
-            <span className="text-2xl font-black tracking-tight text-emerald-300">
-              Karyra
+          <Link href="/" className="inline-flex items-center gap-3">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-emerald-400/20 bg-white shadow-sm">
+              <img
+                src="/brand/karyra-icon.svg"
+                alt="Logo Karyra"
+                className="h-9 w-9"
+              />
             </span>
-            <span className="mt-1 text-sm text-slate-400">
-              Ruang kesiapan blockchain lokal
+            <span className="flex flex-col">
+              <span className="text-2xl font-black tracking-tight text-emerald-300">
+                Karyra
+              </span>
+              <span className="mt-1 text-sm text-slate-400">
+                Ruang kesiapan blockchain lokal
+              </span>
             </span>
           </Link>
 

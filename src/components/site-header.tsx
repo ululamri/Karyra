@@ -31,9 +31,13 @@ export function SiteHeader({ language }: SiteHeaderProps) {
     <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/92 px-4 py-2.5 text-white backdrop-blur md:px-8">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
         <Link href="/" className="flex min-w-0 items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-emerald-400 text-base font-black text-slate-950">
-            K
-          </div>
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-emerald-400/20 bg-white shadow-sm">
+            <img
+              src="/brand/karyra-icon.svg"
+              alt="Logo Karyra"
+              className="h-8 w-8"
+            />
+          </span>
           <div className="min-w-0">
             <p className="truncate text-sm font-black leading-none md:text-base">
               {t(safeLanguage, "appName")}

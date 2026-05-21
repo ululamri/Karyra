@@ -10,6 +10,20 @@ export const metadata: Metadata = {
   title: "Karyra",
   description:
     "Ruang kesiapan blockchain lokal untuk membantu pemula belajar, memahami, dan membuktikan kesiapan digital secara bertahap.",
+  icons: {
+    icon: [
+      {
+        url: "/favicon.svg",
+        type: "image/svg+xml",
+      },
+      {
+        url: "/brand/karyra-icon.svg",
+        type: "image/svg+xml",
+      },
+    ],
+    shortcut: "/favicon.svg",
+    apple: "/brand/karyra-icon.svg",
+  },
 };
 
 export const runtime = "nodejs";
