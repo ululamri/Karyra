@@ -17,8 +17,22 @@ function difficultyLabel(value: string) {
   }
 }
 
+function isBlockchainPrimary(course: { title: string; slug: string }) {
+  return `${course.title} ${course.slug}`.toLowerCase().includes("blockchain");
+}
+
+function coursePriority(course: { title: string; slug: string }) {
+  if (isBlockchainPrimary(course)) return 0;
+  return 1;
+}
+
 export default async function CoursesPage() {
   const { courses } = await getCoursesCatalogState();
+  const sortedCourses = [...courses].sort((a, b) => {
+    const priorityDiff = coursePriority(a) - coursePriority(b);
+    if (priorityDiff !== 0) return priorityDiff;
+    return a.title.localeCompare(b.title, "id");
+  });
 
   const totalLessons = courses.reduce((total, course) => total + course.progress.totalLessons, 0);
   const totalMinutes = courses.reduce((total, course) => total + course.totalMinutes, 0);
@@ -35,7 +49,7 @@ export default async function CoursesPage() {
               Jalur belajar untuk memahami blockchain dari dasar.
             </h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
-              Kursus adalah syllabus utama Karyra. Mulai dari fondasi kepercayaan digital, lalu bergerak bertahap ke cryptocurrency, wallet, aset digital, Web3, dan kesiapan berpartisipasi.
+              Kursus adalah syllabus utama Karyra. Urutan belajar dimulai dari blockchain sebagai fondasi kepercayaan digital, lalu bergerak bertahap ke cryptocurrency, wallet, aset digital, Web3, dan kesiapan berpartisipasi.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Link
@@ -70,25 +84,37 @@ export default async function CoursesPage() {
         </header>
 
         <section className="grid gap-4 md:grid-cols-2">
-          {courses.length === 0 ? (
+          {sortedCourses.length === 0 ? (
             <div className="rounded-[2rem] border border-dashed border-white/10 bg-white/[0.04] p-6 text-sm leading-7 text-slate-300 md:col-span-2">
               Belum ada kursus yang diterbitkan. Jalankan seed data demo atau buat kursus dari Karyra Admin Console.
             </div>
           ) : (
-            courses.map((course) => {
+            sortedCourses.map((course) => {
               const enrollmentStatus = course.enrollment?.status ?? "NOT_STARTED";
+              const primary = isBlockchainPrimary(course);
 
               return (
                 <Link
                   key={course.id}
                   href={`/courses/${course.slug}`}
-                  className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 transition hover:border-emerald-400/40 hover:bg-emerald-400/10 md:p-6"
+                  className={`rounded-[2rem] border p-5 transition hover:border-emerald-400/40 hover:bg-emerald-400/10 md:p-6 ${
+                    primary
+                      ? "border-emerald-400/30 bg-emerald-400/10"
+                      : "border-white/10 bg-white/[0.04]"
+                  }`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-xs font-black uppercase tracking-wide text-emerald-300">
-                        {difficultyLabel(course.difficulty)}
-                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <p className="rounded-full bg-white/10 px-3 py-1 text-xs font-black uppercase tracking-wide text-emerald-300">
+                          {difficultyLabel(course.difficulty)}
+                        </p>
+                        {primary ? (
+                          <p className="rounded-full bg-emerald-400 px-3 py-1 text-xs font-black text-slate-950">
+                            Fondasi utama
+                          </p>
+                        ) : null}
+                      </div>
                       <h2 className="mt-3 text-2xl font-black text-white">
                         {course.title}
                       </h2>

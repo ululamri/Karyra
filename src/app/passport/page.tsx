@@ -74,6 +74,25 @@ const passportFlow = [
   },
 ];
 
+const strategicLayers = [
+  {
+    title: "Filecoin Proof Archive",
+    label: "Arsip bukti",
+    href: "/filecoin-proof-archive",
+    text:
+      "Bukti belajar, partisipasi, dan snapshot Paspor Kesiapan disiapkan sebagai proof manifest agar bisa diarsipkan dan diverifikasi.",
+    tone: "border-violet-400/20 bg-violet-400/10 text-violet-300",
+  },
+  {
+    title: "Stellar Readiness Track",
+    label: "Latihan aman",
+    href: "/stacks/stellar-readiness",
+    text:
+      "Pengguna berlatih wallet safety, memo, asset, trustline, payment, dan autentikasi wallet sebelum masuk ke transaksi nyata.",
+    tone: "border-sky-400/20 bg-sky-400/10 text-sky-300",
+  },
+];
+
 export default async function PassportPage() {
   const learner = await getOrCreateDemoLearner();
   const passport = await getReadinessPassport(learner.id);
@@ -160,6 +179,27 @@ export default async function PassportPage() {
               <h2 className="mt-2 text-xl font-black">{step.title}</h2>
               <p className="mt-2 text-sm leading-6 text-slate-400">{step.text}</p>
             </article>
+          ))}
+        </section>
+
+        <section className="grid gap-4 lg:grid-cols-2">
+          {strategicLayers.map((layer) => (
+            <Link
+              key={layer.href}
+              href={layer.href}
+              className={`rounded-[2rem] border p-5 transition hover:scale-[1.01] md:p-6 ${layer.tone}`}
+            >
+              <p className="text-xs font-black uppercase tracking-[0.18em]">
+                {layer.label}
+              </p>
+              <h2 className="mt-2 text-2xl font-black text-white">
+                {layer.title}
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-slate-200">
+                {layer.text}
+              </p>
+              <p className="mt-5 text-sm font-black text-white">Buka layer →</p>
+            </Link>
           ))}
         </section>
 
