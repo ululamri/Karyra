@@ -55,6 +55,25 @@ function levelDescription(level?: string) {
   }
 }
 
+const passportFlow = [
+  {
+    title: "Belajar",
+    text: "Pengguna mengikuti kursus dan pelajaran dasar blockchain.",
+  },
+  {
+    title: "Berpartisipasi",
+    text: "Pengguna mengikuti workshop, latihan, atau aktivitas komunitas.",
+  },
+  {
+    title: "Direview",
+    text: "Bukti dan progres dirangkum agar tidak sekadar klaim kosong.",
+  },
+  {
+    title: "Terbukti",
+    text: "Paspor menampilkan sinyal kesiapan yang mudah dibaca.",
+  },
+];
+
 export default async function PassportPage() {
   const learner = await getOrCreateDemoLearner();
   const passport = await getReadinessPassport(learner.id);
@@ -92,21 +111,21 @@ export default async function PassportPage() {
             </h1>
 
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
-              Paspor merangkum bukti belajar, bukti partisipasi, badge, XP, workshop, dan readiness score agar pengguna punya gambaran proses sebelum masuk ke praktik blockchain, cryptocurrency, dan Web3 yang lebih nyata.
+              Paspor Kesiapan merangkum bukti belajar, bukti partisipasi, badge, XP, workshop, dan readiness score agar pengguna punya gambaran proses sebelum masuk ke praktik blockchain, cryptocurrency, dan Web3 yang lebih nyata.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/passport/timeline"
+                href="/passport/demo"
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-emerald-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
               >
-                Lihat Timeline
+                Lihat Demo Paspor
               </Link>
               <Link
-                href="/passport/share"
+                href="/docs/readiness-passport"
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40"
               >
-                Bagikan Ringkasan
+                Baca Dokumentasi
               </Link>
             </div>
           </div>
@@ -128,6 +147,21 @@ export default async function PassportPage() {
             </p>
           </div>
         </header>
+
+        <section className="grid gap-3 md:grid-cols-4">
+          {passportFlow.map((step, index) => (
+            <article
+              key={step.title}
+              className="rounded-3xl border border-white/10 bg-white/[0.04] p-5"
+            >
+              <p className="text-xs font-black uppercase tracking-wide text-emerald-300">
+                0{index + 1}
+              </p>
+              <h2 className="mt-2 text-xl font-black">{step.title}</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-400">{step.text}</p>
+            </article>
+          ))}
+        </section>
 
         <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
