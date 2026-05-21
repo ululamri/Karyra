@@ -33,15 +33,12 @@ const testnetFlow = [
   },
 ];
 
-const interactiveFeatures = [
-  "Friendbot claim button untuk testnet XLM",
-  "Public key input dan network indicator",
-  "Secret key warning sebelum latihan",
-  "Trustline readiness checker",
-  "Memo awareness quiz",
-  "Payment simulation preview",
-  "Transaction hash reader",
-  "Readiness badge setelah checklist selesai",
+const mainnetUnlock = [
+  "Pengguna menyelesaikan Stellar Payment Readiness.",
+  "Pengguna memahami secret key safety dan network warning.",
+  "Pengguna menyelesaikan memo awareness dan trustline simulation.",
+  "Karyra menampilkan guided mainnet warning sebelum pengalaman mainnet.",
+  "Mainnet experience masuk ke Paspor Kesiapan sebagai bukti readiness, bukan spekulasi.",
 ];
 
 const implementationPhases = [
@@ -62,8 +59,8 @@ const implementationPhases = [
     text: "Pengguna mencoba alur payment testnet dengan guardrail, edukasi memo, dan readiness warning.",
   },
   {
-    title: "Fase 5 — Wallet SDK / Freighter",
-    text: "Integrasi wallet yang lebih nyata setelah pengguna memahami dasar keamanan dan testnet.",
+    title: "Fase 5 — Guided mainnet experience",
+    text: "Stellar Mainnet dipakai setelah pengguna menyelesaikan readiness track, dengan guardrail dan edukasi risiko yang jelas.",
   },
 ];
 
@@ -76,10 +73,10 @@ export default function StellarTestnetFlowPage() {
             Stellar Testnet Flow
           </p>
           <h1 className="mt-4 max-w-4xl text-3xl font-black tracking-tight md:text-5xl">
-            Jalur interaktif untuk payment readiness.
+            Testnet sebagai latihan, mainnet sebagai kelulusan.
           </h1>
           <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-base md:leading-8">
-            Stellar Readiness Track harus berkembang dari simulasi edukatif menjadi latihan testnet yang interaktif. Tujuannya bukan membuat pengguna langsung transaksi, tetapi membangun kepercayaan diri dan kebiasaan aman sebelum masuk ke aset nyata.
+            Stellar Testnet tetap menjadi bagian dari pelajaran interaktif. Setelah pengguna menyelesaikan Stellar Payment Readiness, Stellar Mainnet dapat diperkenalkan sebagai pengalaman financial access yang terbimbing.
           </p>
         </header>
 
@@ -101,18 +98,18 @@ export default function StellarTestnetFlowPage() {
         <section className="grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
           <article className="rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-5 md:p-6">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-sky-300">
-              Fitur Interaktif
+              Mainnet Unlock
             </p>
             <h2 className="mt-2 text-2xl font-black">
-              Dari membaca menjadi mencoba.
+              Mainnet setelah readiness selesai.
             </h2>
             <div className="mt-5 grid gap-3">
-              {interactiveFeatures.map((feature) => (
+              {mainnetUnlock.map((item) => (
                 <p
-                  key={feature}
+                  key={item}
                   className="rounded-2xl bg-slate-950/60 p-4 text-sm font-bold leading-6 text-slate-200"
                 >
-                  {feature}
+                  {item}
                 </p>
               ))}
             </div>
@@ -140,13 +137,13 @@ export default function StellarTestnetFlowPage() {
         <section className="rounded-[2rem] border border-amber-400/20 bg-amber-400/10 p-5 md:p-6">
           <h2 className="text-2xl font-black">Guardrail utama</h2>
           <p className="mt-3 text-sm leading-7 text-slate-300">
-            Semua latihan awal harus menggunakan Stellar Testnet. Jangan meminta secret key mainnet, jangan mendorong transaksi aset nyata, dan selalu tampilkan penanda jaringan agar pengguna memahami perbedaan testnet dan mainnet.
+            Semua latihan awal harus menggunakan Stellar Testnet. Mainnet hanya diperkenalkan setelah readiness completion, dengan warning, biaya, risiko, dan edukasi network yang jelas.
           </p>
           <Link
-            href="/stacks/stellar-readiness"
+            href="/docs/mainnet-graduation"
             className="mt-5 inline-flex min-h-11 items-center rounded-2xl bg-white px-4 py-2.5 text-sm font-black text-slate-950"
           >
-            Buka Stellar Readiness Track
+            Baca Graduation Model
           </Link>
         </section>
       </section>

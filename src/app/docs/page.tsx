@@ -2,6 +2,13 @@ import Link from "next/link";
 
 const docLinks = [
   {
+    href: "/docs/mainnet-graduation",
+    title: "Testnet-to-Mainnet Graduation",
+    description:
+      "Model latihan aman di testnet/calibration sebelum pengalaman mainnet terbimbing.",
+    badge: "Mainnet",
+  },
+  {
     href: "/docs/grant-architecture",
     title: "Grant Architecture",
     description:
@@ -12,21 +19,21 @@ const docLinks = [
     href: "/docs/filecoin-stellar",
     title: "Strategi Filecoin + Stellar",
     description:
-      "Peran Filecoin sebagai proof archive layer dan Stellar sebagai safe practice layer.",
+      "Peran Filecoin sebagai proof archive layer dan Stellar sebagai safe practice + financial access layer.",
     badge: "Target",
   },
   {
     href: "/docs/filecoin-architecture",
     title: "Filecoin Storage Architecture",
     description:
-      "Tooling penyimpanan: Synapse SDK, Lighthouse.storage, Web3.Storage, dan direct Storage Providers.",
+      "Calibration testing, Filecoin Mainnet archive, Synapse SDK, Lighthouse.storage, Web3.Storage, dan Storage Providers.",
     badge: "Filecoin",
   },
   {
     href: "/docs/stellar-testnet-flow",
     title: "Stellar Testnet Flow",
     description:
-      "Friendbot, testnet XLM, memo awareness, trustline simulation, dan payment readiness.",
+      "Friendbot, testnet XLM, memo awareness, trustline simulation, payment readiness, dan guided mainnet experience.",
     badge: "Stellar",
   },
   {
@@ -63,27 +70,6 @@ const docLinks = [
     description:
       "Checklist internal untuk melihat apa yang sudah kuat dan apa yang masih perlu dipoles sebelum apply.",
     badge: "Grant",
-  },
-  {
-    href: "/filecoin-proof-archive",
-    title: "Filecoin Proof Archive",
-    description:
-      "Lapisan arsip bukti untuk proof manifest, snapshot paspor, checksum, dan PieceCID/CID.",
-    badge: "Layer",
-  },
-  {
-    href: "/stacks/stellar-readiness",
-    title: "Stellar Readiness Track",
-    description:
-      "Jalur latihan aman untuk wallet safety, memo, asset, trustline, payment, dan SEP-10 awareness.",
-    badge: "Layer",
-  },
-  {
-    href: "/demo-flow",
-    title: "Alur Demo",
-    description:
-      "Rute singkat agar reviewer dapat memahami Karyra tanpa menebak halaman mana yang harus dibuka.",
-    badge: "Demo",
   },
 ];
 

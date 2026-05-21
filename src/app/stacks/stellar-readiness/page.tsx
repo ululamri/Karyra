@@ -22,32 +22,18 @@ const trackModules = [
     text: "Membaca payment flow secara aman sebelum pengguna mencoba transaksi nyata.",
   },
   {
-    title: "SEP-10 Awareness",
-    text: "Memahami konsep autentikasi wallet: membuktikan kontrol akun tanpa membagikan secret key.",
+    title: "Guided Mainnet Experience",
+    text: "Setelah readiness selesai, pengguna diperkenalkan ke Stellar Mainnet secara terbimbing dengan guardrail yang jelas.",
   },
 ];
 
-const integrationPhases = [
-  {
-    title: "Fase 1 — Materi dan checklist",
-    text: "Stellar dipakai sebagai jalur belajar kesiapan wallet/payment tanpa transaksi real.",
-  },
-  {
-    title: "Fase 2 — Address dan testnet reader",
-    text: "Pengguna belajar membaca public key, network, dan transaction hash di testnet.",
-  },
-  {
-    title: "Fase 3 — Wallet SDK practice",
-    text: "Integrasi Stellar Wallet SDK untuk latihan wallet flow yang lebih nyata namun tetap aman.",
-  },
-  {
-    title: "Fase 4 — Payment simulation",
-    text: "Simulasi payment, memo, asset, dan trustline untuk membangun confidence sebelum praktik.",
-  },
-  {
-    title: "Fase 5 — Soroban intro",
-    text: "Smart contract diperkenalkan sebagai bagian teknikal kemudian, bukan pintu masuk awal.",
-  },
+const graduationPath = [
+  "Belajar wallet safety dan network awareness.",
+  "Klaim testnet XLM melalui Friendbot.",
+  "Latihan memo, trustline, asset, dan payment simulation.",
+  "Selesaikan Stellar Payment Readiness.",
+  "Unlock guided Stellar Mainnet experience.",
+  "Catat pengalaman readiness ke Paspor Kesiapan.",
 ];
 
 export default function StellarReadinessPage() {
@@ -60,23 +46,23 @@ export default function StellarReadinessPage() {
               Stellar Readiness Track
             </p>
             <h1 className="mt-4 max-w-4xl text-3xl font-black tracking-tight md:text-5xl lg:text-6xl">
-              Jalur latihan aman sebelum wallet dan payment nyata.
+              Jalur latihan aman sebelum pengalaman mainnet.
             </h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
-              Stellar diposisikan sebagai safe practice layer: tempat pemula belajar wallet safety, memo, asset, trustline, payment, dan autentikasi wallet secara bertahap sebelum masuk ke transaksi nyata.
+              Stellar Testnet digunakan untuk latihan wallet dan payment readiness. Setelah pengguna menyelesaikan readiness track, Stellar Mainnet dapat diperkenalkan sebagai pengalaman financial access yang terbimbing.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/courses"
+                href="/docs/stellar-testnet-flow"
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-emerald-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
               >
-                Mulai dari Kursus
+                Baca Testnet Flow
               </Link>
               <Link
-                href="/docs/filecoin-stellar"
+                href="/docs/mainnet-graduation"
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40"
               >
-                Baca Strategi
+                Graduation Model
               </Link>
             </div>
           </div>
@@ -86,10 +72,10 @@ export default function StellarReadinessPage() {
               Prinsip
             </p>
             <h2 className="mt-2 text-3xl font-black">
-              Latihan dulu, transaksi kemudian.
+              Testnet dulu, mainnet kemudian.
             </h2>
             <p className="mt-3 text-sm leading-7 text-slate-300">
-              Karyra tidak mendorong pemula langsung mengirim aset. Pengguna membangun pemahaman dan kebiasaan aman terlebih dahulu.
+              Karyra tidak mendorong pemula langsung mengirim aset. Pengguna membangun pemahaman, rasa aman, dan readiness sebelum mainnet.
             </p>
           </div>
         </header>
@@ -110,23 +96,23 @@ export default function StellarReadinessPage() {
           <div className="grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
-                Roadmap Integrasi
+                Graduation Path
               </p>
               <h2 className="mt-2 text-2xl font-black md:text-4xl">
-                Dari literasi ke praktik testnet.
+                Dari latihan ke financial access.
               </h2>
               <p className="mt-3 text-sm leading-7 text-slate-400">
-                Jalur ini menjaga agar Stellar tidak muncul sebagai tempelan, tetapi sebagai latihan kesiapan finansial blockchain yang aman.
+                Jalur ini menjaga agar Stellar tidak muncul sebagai reward chain, tetapi sebagai latihan kesiapan finansial blockchain yang aman.
               </p>
             </div>
             <div className="grid gap-3">
-              {integrationPhases.map((phase) => (
+              {graduationPath.map((item, index) => (
                 <div
-                  key={phase.title}
+                  key={item}
                   className="rounded-2xl border border-white/10 bg-slate-950/60 p-4"
                 >
-                  <h3 className="font-black">{phase.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">{phase.text}</p>
+                  <p className="text-xs font-black text-sky-300">0{index + 1}</p>
+                  <p className="mt-2 text-sm font-bold leading-6 text-slate-200">{item}</p>
                 </div>
               ))}
             </div>

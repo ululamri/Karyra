@@ -7,49 +7,33 @@ const archiveFlow = [
   },
   {
     title: "Susun manifest",
-    text: "Bukti diringkas menjadi proof manifest berisi tipe bukti, waktu, sumber, checksum, dan status arsip.",
+    text: "Bukti diringkas menjadi proof manifest berisi tipe bukti, waktu, sumber, network, checksum, dan status arsip.",
   },
   {
-    title: "Arsipkan",
-    text: "Manifest disiapkan untuk diarsipkan melalui Filecoin Onchain Cloud menggunakan Synapse SDK pada tahap integrasi.",
+    title: "Uji di Calibration",
+    text: "Workflow upload, CID/PieceCID, retrieval, dan archive status diuji di Filecoin Calibration sebelum masuk mainnet.",
   },
   {
-    title: "Verifikasi",
-    text: "Paspor Kesiapan dapat menampilkan status arsip, checksum, PieceCID/CID, dan tautan verifikasi bukti.",
+    title: "Arsip mainnet",
+    text: "Saat rilis resmi, proof manifest penting dapat diarsipkan di Filecoin Mainnet sebagai official learning proof archive.",
   },
 ];
 
-const manifestFields = [
-  "proofId",
-  "learnerId",
-  "proofType",
-  "sourceType",
-  "sourceId",
-  "issuedAt",
-  "readinessScore",
-  "checksum",
-  "archiveStatus",
-  "pieceCid",
-  "provider",
+const networkPath = [
+  "Local proof manifest untuk demo dan review UX.",
+  "Filecoin Calibration untuk upload test dan retrieval test.",
+  "Mainnet readiness review untuk biaya, provider, dan lifecycle.",
+  "Filecoin Mainnet untuk arsip resmi setelah readiness completion.",
 ];
 
-const integrationPhases = [
-  {
-    title: "Fase 1 — Simulasi manifest",
-    text: "Karyra membuat struktur proof manifest dan status arsip tanpa upload real. Ini aman untuk demo grant dan review UX.",
-  },
-  {
-    title: "Fase 2 — Upload testnet",
-    text: "Integrasi Synapse SDK pada environment testnet/calibration untuk menguji upload, PieceCID, dan retrieval.",
-  },
-  {
-    title: "Fase 3 — Arsip paspor",
-    text: "Snapshot Paspor Kesiapan dan proof record tertentu diarsipkan sebagai bukti proses belajar dan partisipasi.",
-  },
-  {
-    title: "Fase 4 — Verifikasi publik",
-    text: "Pengguna dan reviewer dapat melihat metadata arsip, checksum, dan status verifikasi dari halaman proof.",
-  },
+const advancedCourseTopics = [
+  "CID dan content addressing",
+  "Decentralized storage",
+  "Storage Provider",
+  "Retrieval",
+  "Proof manifest",
+  "Calibration vs Mainnet",
+  "Membaca CID di Paspor Kesiapan",
 ];
 
 export default function FilecoinProofArchivePage() {
@@ -62,10 +46,10 @@ export default function FilecoinProofArchivePage() {
               Filecoin Proof Archive
             </p>
             <h1 className="mt-4 max-w-4xl text-3xl font-black tracking-tight md:text-5xl lg:text-6xl">
-              Lapisan arsip bukti untuk Paspor Kesiapan.
+              Dari latihan Calibration menuju arsip resmi mainnet.
             </h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
-              Filecoin diposisikan sebagai proof archive layer: tempat Karyra menyiapkan bukti belajar, partisipasi, dan snapshot paspor agar dapat diarsipkan, dibaca, dan diverifikasi secara lebih kuat.
+              Filecoin diposisikan sebagai proof archive layer. Calibration menjadi ruang uji alur arsip, sementara Filecoin Mainnet menjadi tujuan arsip resmi saat Karyra dirilis secara penuh.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Link
@@ -75,23 +59,23 @@ export default function FilecoinProofArchivePage() {
                 Lihat Paspor
               </Link>
               <Link
-                href="/docs/filecoin-stellar"
+                href="/docs/filecoin-architecture"
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40"
               >
-                Baca Strategi
+                Baca Arsitektur Filecoin
               </Link>
             </div>
           </div>
 
           <div className="rounded-[2rem] border border-violet-400/20 bg-violet-400/10 p-5 md:p-6">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-violet-300">
-              Narasi Grant
+              Advanced Course
             </p>
             <h2 className="mt-2 text-3xl font-black">
-              Bukan hanya belajar, tapi bukti proses yang bisa dijaga.
+              Filecoin masuk setelah fondasi blockchain kuat.
             </h2>
             <p className="mt-3 text-sm leading-7 text-slate-300">
-              Karyra menggunakan pendekatan manifest agar setiap bukti belajar dan partisipasi dapat disiapkan untuk arsip terdesentralisasi.
+              Filecoin cocok sebagai course lanjutan untuk membahas decentralized storage, CID, Storage Provider, retrieval, dan proof archive.
             </p>
           </div>
         </header>
@@ -112,41 +96,37 @@ export default function FilecoinProofArchivePage() {
         </section>
 
         <section className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-          <article className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 md:p-6">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
-              Proof Manifest
+          <article className="rounded-[2rem] border border-violet-400/20 bg-violet-400/10 p-5 md:p-6">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-violet-300">
+              Network Path
             </p>
             <h2 className="mt-2 text-2xl font-black">
-              Struktur bukti yang siap diarsipkan.
+              Local → Calibration → Mainnet
             </h2>
-            <p className="mt-3 text-sm leading-7 text-slate-400">
-              Manifest menjadi jembatan antara data belajar di Karyra dan arsip Filecoin. Pada MVP, manifest bisa dimulai sebagai JSON internal sebelum upload real diaktifkan.
-            </p>
-            <div className="mt-5 grid grid-cols-2 gap-2">
-              {manifestFields.map((field) => (
-                <code
-                  key={field}
-                  className="rounded-2xl border border-white/10 bg-slate-950/70 px-3 py-2 text-xs font-bold text-slate-300"
+            <div className="mt-5 grid gap-3">
+              {networkPath.map((item) => (
+                <p
+                  key={item}
+                  className="rounded-2xl bg-slate-950/60 p-4 text-sm font-bold leading-6 text-slate-200"
                 >
-                  {field}
-                </code>
+                  {item}
+                </p>
               ))}
             </div>
           </article>
 
           <article className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 md:p-6">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-sky-300">
-              Rencana Integrasi
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
+              Materi Advanced Filecoin
             </p>
-            <div className="mt-4 grid gap-3">
-              {integrationPhases.map((phase) => (
-                <div
-                  key={phase.title}
-                  className="rounded-2xl border border-white/10 bg-slate-950/60 p-4"
+            <div className="mt-5 grid gap-3">
+              {advancedCourseTopics.map((topic) => (
+                <p
+                  key={topic}
+                  className="rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm font-bold leading-6 text-slate-200"
                 >
-                  <h3 className="font-black">{phase.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">{phase.text}</p>
-                </div>
+                  {topic}
+                </p>
               ))}
             </div>
           </article>

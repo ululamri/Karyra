@@ -27,6 +27,29 @@ const storageOptions = [
   },
 ];
 
+const networkPath = [
+  {
+    title: "Local manifest",
+    text:
+      "Karyra membuat proof manifest, checksum, dan archive status dari proof record tanpa upload real.",
+  },
+  {
+    title: "Filecoin Calibration",
+    text:
+      "Calibration dipakai untuk menguji upload manifest, retrieval, CID/PieceCID, dan storage workflow dengan test FIL.",
+  },
+  {
+    title: "Mainnet readiness review",
+    text:
+      "Sebelum mainnet, Karyra mengevaluasi biaya, provider strategy, renewal policy, retrieval reliability, dan data lifecycle.",
+  },
+  {
+    title: "Filecoin Mainnet",
+    text:
+      "Saat rilis resmi, proof manifest dan snapshot Paspor Kesiapan yang penting dapat diarsipkan ke Filecoin Mainnet.",
+  },
+];
+
 const manifestFields = [
   "proofId",
   "learnerId",
@@ -37,6 +60,7 @@ const manifestFields = [
   "readinessScore",
   "manifestVersion",
   "checksum",
+  "network",
   "archiveTool",
   "archiveStatus",
   "cid",
@@ -45,32 +69,15 @@ const manifestFields = [
   "retrievalUrl",
 ];
 
-const storedObjects = [
-  "Proof manifest JSON",
-  "Snapshot Paspor Kesiapan",
-  "Bukti penyelesaian kursus",
-  "Bukti partisipasi workshop",
-  "Badge metadata",
-  "Readiness report",
-];
-
-const implementationPlan = [
-  {
-    title: "MVP sekarang",
-    text: "Generate manifest lokal, checksum, status arsip, dan placeholder CID/PieceCID untuk demo flow.",
-  },
-  {
-    title: "Pilot Filecoin",
-    text: "Integrasi Synapse SDK pada testnet/calibration untuk upload manifest dan retrieval test.",
-  },
-  {
-    title: "Production archive",
-    text: "Aktifkan storage policy, metadata versioning, lifecycle, dan verifikasi publik dari proof page.",
-  },
-  {
-    title: "Provider strategy",
-    text: "Evaluasi kebutuhan multi-provider, renewal policy, dan retrieval reliability sebelum claim permanen.",
-  },
+const advancedCourseTopics = [
+  "Apa itu CID dan content addressing",
+  "Apa itu decentralized storage",
+  "Apa itu Storage Provider",
+  "Apa itu retrieval",
+  "Apa itu proof manifest",
+  "Kenapa bukti belajar perlu diarsipkan",
+  "Cara membaca CID di Paspor Kesiapan",
+  "Perbedaan Calibration dan Mainnet",
 ];
 
 export default function FilecoinArchitecturePage() {
@@ -82,10 +89,10 @@ export default function FilecoinArchitecturePage() {
             Filecoin Storage Architecture
           </p>
           <h1 className="mt-4 max-w-4xl text-3xl font-black tracking-tight md:text-5xl">
-            Dari proof manifest ke arsip bukti yang dapat diverifikasi.
+            Dari Calibration menuju arsip resmi di Filecoin Mainnet.
           </h1>
           <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-base md:leading-8">
-            Proposal grant perlu menjelaskan tooling penyimpanan secara jelas. Karyra menempatkan Synapse SDK / Filecoin Onchain Cloud sebagai jalur utama, sambil tetap mencatat Lighthouse.storage, Web3.Storage, dan direct Storage Providers sebagai opsi arsitektur yang dapat dievaluasi.
+            Filecoin Calibration digunakan sebagai ruang uji proof archive. Saat rilis resmi, Filecoin Mainnet menjadi lapisan arsip untuk bukti belajar dan Paspor Kesiapan yang sudah memenuhi readiness requirement.
           </p>
         </header>
 
@@ -104,18 +111,52 @@ export default function FilecoinArchitecturePage() {
           ))}
         </section>
 
+        <section className="rounded-[2rem] border border-violet-400/20 bg-violet-400/10 p-5 md:p-7">
+          <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-violet-300">
+                Network Path
+              </p>
+              <h2 className="mt-2 text-2xl font-black md:text-4xl">
+                Local → Calibration → Mainnet
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-slate-300">
+                Ini menjaga agar proof archive aman untuk diuji, tetapi tetap punya jalur mainnet yang jelas untuk rilis resmi.
+              </p>
+            </div>
+            <div className="grid gap-3">
+              {networkPath.map((item, index) => (
+                <div
+                  key={item.title}
+                  className="rounded-2xl bg-slate-950/60 p-4"
+                >
+                  <p className="text-xs font-black text-violet-300">0{index + 1}</p>
+                  <h3 className="mt-2 font-black">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-400">{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
           <article className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 md:p-6">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
-              Objek yang disimpan
+              Advanced Filecoin Course
             </p>
-            <div className="mt-5 grid gap-3">
-              {storedObjects.map((item) => (
+            <h2 className="mt-2 text-2xl font-black">
+              Filecoin masuk ke jalur lanjutan.
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-slate-400">
+              Filecoin tidak harus menjadi pintu masuk awal pemula. Ia cocok menjadi advanced course setelah pengguna memahami blockchain, bukti, dan Paspor Kesiapan.
+            </p>
+            <div className="mt-5 grid gap-2">
+              {advancedCourseTopics.map((topic) => (
                 <p
-                  key={item}
-                  className="rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm font-bold text-slate-200"
+                  key={topic}
+                  className="rounded-2xl border border-white/10 bg-slate-950/60 p-3 text-sm font-bold text-slate-200"
                 >
-                  {item}
+                  {topic}
                 </p>
               ))}
             </div>
@@ -126,7 +167,7 @@ export default function FilecoinArchitecturePage() {
               Proof Manifest Schema
             </p>
             <p className="mt-3 text-sm leading-7 text-slate-300">
-              Manifest menjadi format portable antara database Karyra, Paspor Kesiapan, dan Filecoin archive layer.
+              Manifest menjadi format portable antara database Karyra, Paspor Kesiapan, Calibration testing, dan Filecoin Mainnet archive.
             </p>
             <div className="mt-5 grid grid-cols-2 gap-2 md:grid-cols-3">
               {manifestFields.map((field) => (
@@ -141,35 +182,10 @@ export default function FilecoinArchitecturePage() {
           </article>
         </section>
 
-        <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 md:p-7">
-          <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-sky-300">
-                Rencana Implementasi
-              </p>
-              <h2 className="mt-2 text-2xl font-black md:text-4xl">
-                Aman untuk MVP, jelas untuk reviewer.
-              </h2>
-            </div>
-            <div className="grid gap-3">
-              {implementationPlan.map((item, index) => (
-                <div
-                  key={item.title}
-                  className="rounded-2xl border border-white/10 bg-slate-950/60 p-4"
-                >
-                  <p className="text-xs font-black text-violet-300">0{index + 1}</p>
-                  <h3 className="mt-2 font-black">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">{item.text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         <section className="rounded-[2rem] border border-amber-400/20 bg-amber-400/10 p-5 md:p-6">
           <h2 className="text-2xl font-black">Catatan wording proposal</h2>
           <p className="mt-3 text-sm leading-7 text-slate-300">
-            Gunakan frasa “persistent / verifiable proof archive” sampai storage policy, renewal, retrieval, dan provider strategy benar-benar matang. Hindari klaim “permanen” jika belum ada mekanisme durability dan renewal yang jelas.
+            Gunakan frasa “Calibration testing for proof archive workflows” dan “Filecoin Mainnet for official learning proof archive after readiness completion”. Hindari klaim permanen tanpa menjelaskan renewal, retrieval, dan provider strategy.
           </p>
           <Link
             href="/filecoin-proof-archive"

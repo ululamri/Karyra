@@ -11,13 +11,13 @@ const layers = [
     title: "Filecoin Proof Archive",
     label: "Decentralized Storage / Proof Layer",
     text:
-      "Proof record, snapshot paspor, dan bukti partisipasi disusun sebagai proof manifest yang dapat diarsipkan, diberi checksum, dan dihubungkan ke CID/PieceCID.",
+      "Proof record, snapshot paspor, dan bukti partisipasi disusun sebagai proof manifest yang diuji di Calibration dan diarsipkan secara resmi di Filecoin Mainnet saat rilis.",
   },
   {
     title: "Stellar Readiness Track",
     label: "Micro-payment & Financial Access Layer",
     text:
-      "Stellar Testnet digunakan untuk latihan wallet, public key, memo, trustline, asset, payment simulation, dan readiness sebelum transaksi nyata.",
+      "Stellar Testnet digunakan untuk latihan wallet, public key, memo, trustline, asset, dan payment. Stellar Mainnet digunakan sebagai pengalaman financial access setelah readiness selesai.",
   },
 ];
 
@@ -25,8 +25,10 @@ const architectureFlow = [
   "Learner menyelesaikan kursus dan pelajaran blockchain-first.",
   "Karyra mencatat progres, XP, badge, workshop, dan readiness signal.",
   "Paspor Kesiapan merangkum Bukti Belajar, Bukti Partisipasi, dan Bukti Kesiapan.",
-  "Filecoin layer menyiapkan proof manifest, checksum, CID/PieceCID, dan archive status.",
-  "Stellar layer menyediakan latihan testnet untuk wallet dan micro-payment readiness.",
+  "Filecoin Calibration menguji proof manifest upload, checksum, CID/PieceCID, dan retrieval flow.",
+  "Stellar Testnet melatih wallet safety, trustline, memo, dan payment simulation.",
+  "Setelah readiness selesai, mainnet experience dibuka secara terbimbing.",
+  "Filecoin Mainnet menyimpan official learning proof archive, Stellar Mainnet memberi pengalaman financial access.",
   "Reviewer melihat alur demo, dokumen arsitektur, dan impact metrics dari satu tempat.",
 ];
 
@@ -34,7 +36,14 @@ const grantClaims = [
   "Karyra bukan sekadar platform edukasi, tetapi readiness infrastructure untuk komunitas lokal.",
   "Filecoin membuat bukti belajar tidak berhenti sebagai data internal aplikasi.",
   "Stellar memberi jalur praktik finansial blockchain yang aman sebelum transaksi nyata.",
-  "Kombinasi Filecoin + Stellar membuat Karyra berbeda dari platform kursus atau quest biasa.",
+  "Testnet-to-mainnet graduation membuat Karyra aman untuk pemula tetapi tetap realistis terhadap pengalaman blockchain sesungguhnya.",
+];
+
+const routes = [
+  { href: "/docs/mainnet-graduation", title: "Testnet-to-Mainnet Graduation" },
+  { href: "/docs/filecoin-architecture", title: "Filecoin Storage Architecture" },
+  { href: "/docs/stellar-testnet-flow", title: "Stellar Testnet Flow" },
+  { href: "/docs/impact-metrics", title: "Impact Metrics" },
 ];
 
 export default function GrantArchitecturePage() {
@@ -49,7 +58,7 @@ export default function GrantArchitecturePage() {
             Dual-Network Architecture Ecosystem.
           </h1>
           <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-base md:leading-8">
-            Karyra diposisikan sebagai jembatan hibrida: Filecoin untuk decentralized proof archive, Stellar untuk micro-payment dan financial access readiness, dan Karyra sebagai ruang pembelajaran lokal yang menghubungkan keduanya.
+            Karyra diposisikan sebagai jembatan hibrida: Filecoin untuk decentralized proof archive, Stellar untuk micro-payment dan financial access readiness, dan Karyra sebagai ruang pembelajaran lokal yang menghubungkan keduanya melalui model testnet-to-mainnet graduation.
           </p>
         </header>
 
@@ -75,7 +84,7 @@ export default function GrantArchitecturePage() {
                 Alur Arsitektur
               </p>
               <h2 className="mt-2 text-2xl font-black md:text-4xl">
-                Belajar → Bukti → Arsip → Latihan → Siap
+                Belajar → Latihan → Lulus → Mainnet → Terbukti
               </h2>
             </div>
             <div className="grid gap-3">
@@ -106,31 +115,17 @@ export default function GrantArchitecturePage() {
           </div>
         </section>
 
-        <section className="grid gap-3 md:grid-cols-2">
-          <Link
-            href="/docs/filecoin-architecture"
-            className="rounded-[2rem] border border-violet-400/20 bg-violet-400/10 p-5 transition hover:border-violet-300/50 md:p-6"
-          >
-            <p className="text-xs font-black uppercase tracking-wide text-violet-300">
-              Detail Filecoin
-            </p>
-            <h2 className="mt-2 text-2xl font-black">Storage Architecture</h2>
-            <p className="mt-3 text-sm leading-7 text-slate-300">
-              Tooling options, manifest, checksum, CID/PieceCID, dan rencana integrasi.
-            </p>
-          </Link>
-          <Link
-            href="/docs/stellar-testnet-flow"
-            className="rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-5 transition hover:border-sky-300/50 md:p-6"
-          >
-            <p className="text-xs font-black uppercase tracking-wide text-sky-300">
-              Detail Stellar
-            </p>
-            <h2 className="mt-2 text-2xl font-black">Testnet Practice Flow</h2>
-            <p className="mt-3 text-sm leading-7 text-slate-300">
-              Friendbot, testnet XLM, trustline, memo, dan payment simulation.
-            </p>
-          </Link>
+        <section className="grid gap-3 md:grid-cols-4">
+          {routes.map((route) => (
+            <Link
+              key={route.href}
+              href={route.href}
+              className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 transition hover:border-emerald-400/40"
+            >
+              <h2 className="text-lg font-black">{route.title}</h2>
+              <p className="mt-3 text-sm font-black text-emerald-300">Buka →</p>
+            </Link>
+          ))}
         </section>
       </section>
     </main>
