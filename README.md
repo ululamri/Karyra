@@ -1,143 +1,259 @@
 # Karyra
 
-**Karyra** is a mobile-first Web3 readiness platform for local communities. It helps beginners build practical confidence before entering Web3 through structured lessons, quests, workshop participation, readiness passports, and proof records.
+**Karyra** is a local blockchain readiness platform for beginners and local communities.
 
-Karyra is not positioned as a generic learn-and-earn product. It is designed as a **local Web3 readiness infrastructure** for beginners, community educators, workshop organizers, and grant reviewers.
+Karyra helps non-technical learners understand blockchain from simple, human foundations before they move into practical network readiness, decentralized proof archives, payment-readiness practice, and guided mainnet experience.
+
+```txt
+Belajar → Paham → Siap → Terbukti
+Learn → Understand → Ready → Proven
+```
+
+Karyra is not a generic learn-to-earn product, not a trading product, and not a grant-only showcase. It is being built as **local blockchain readiness infrastructure** for learners, community educators, workshop organizers, and grant reviewers.
 
 ---
 
 ## Core Positioning
 
-Karyra focuses on the **pre-transaction layer** of Web3 adoption:
+Karyra starts from **blockchain as the foundation of digital trust**.
 
-- safety literacy before asset usage
-- wallet confidence before real transactions
+Cryptocurrency, wallets, digital assets, Web3, decentralized storage, and payment networks are introduced gradually as parts of the broader blockchain ecosystem.
+
+Karyra focuses on the pre-transaction layer of adoption:
+
+- blockchain literacy before asset usage
+- safety awareness before direct network interaction
+- testnet practice before mainnet experience
 - proof of learning before deeper technical steps
 - proof of participation before community progression
-- readiness records before onchain activity
-- local/offline onboarding for non-technical communities
+- readiness records before real onchain activity
+- local and offline onboarding for beginner communities
 
-The current long-term stack direction is:
+---
+
+## Proof Model
+
+Karyra is organized around three proof pillars:
 
 ```txt
-Filecoin = Proof Archive / evidence preservation layer
-Stellar  = Financial Web3 Readiness / payment-readiness learning layer
+Proof-of-Learning
+Proof-of-Participation
+Proof-of-Readiness
 ```
+
+These proofs are reflected through course completion, learner progress, workshop participation, optional quest submissions, badge identity, readiness scores, proof records, and the Readiness Passport.
+
+---
+
+## Dual-Network Architecture
+
+Karyra uses a dual-network architecture direction:
+
+```txt
+Karyra   = Local Blockchain Readiness Platform
+Filecoin = Decentralized Proof Archive / Storage Layer
+Stellar  = Micro-payment & Financial Access Readiness Layer
+```
+
+### Filecoin Proof Archive
+
+Filecoin is positioned as Karyra's decentralized proof archive layer.
+
+Karyra prepares learning and participation evidence as proof manifests that can later be archived, retrieved, and verified through Filecoin-related tooling.
+
+Planned archive objects include:
+
+- proof manifest JSON
+- Readiness Passport snapshots
+- course completion proofs
+- workshop participation proofs
+- badge metadata
+- readiness reports
+- checksum and archive status metadata
+- CID / PieceCID references
+
+The intended path is:
+
+```txt
+Local proof manifest
+→ Filecoin Calibration testing
+→ mainnet-readiness review
+→ Filecoin Mainnet official proof archive
+```
+
+Potential Filecoin tooling paths documented in the project include Synapse SDK / Filecoin Onchain Cloud, Lighthouse.storage, Web3.Storage, and direct Storage Provider strategy for a later advanced stage.
+
+Filecoin is also planned as an **advanced course track** after learners understand blockchain, proof records, and Readiness Passport concepts.
+
+### Stellar Readiness Track
+
+Stellar is positioned as Karyra's financial access and micro-payment readiness layer.
+
+Stellar is not introduced as a speculative path. It is used to teach safe wallet and payment-readiness concepts.
+
+The learning path includes:
+
+- wallet safety
+- public account identity concepts
+- Stellar Testnet
+- Friendbot testnet XLM
+- memo awareness
+- trustline simulation
+- asset and issuer literacy
+- payment simulation
+- transaction hash reading
+- guided mainnet experience after readiness completion
+
+The intended Stellar path is:
+
+```txt
+Stellar Testnet practice
+→ Stellar Payment Readiness completion
+→ guided Stellar Mainnet experience
+→ readiness proof in Passport
+```
+
+---
+
+## Testnet-to-Mainnet Graduation Model
+
+Karyra does not bring beginners directly to mainnet.
+
+Instead, it follows a safety-first graduation model:
+
+```txt
+Learn concepts
+→ practice safely on testnet / calibration
+→ complete readiness track
+→ unlock guided mainnet experience
+→ record proof in Readiness Passport
+```
+
+This applies to both target networks:
+
+```txt
+Stellar Testnet       = interactive wallet and payment-readiness lessons
+Stellar Mainnet      = guided financial access experience after readiness completion
+Filecoin Calibration = proof archive workflow testing
+Filecoin Mainnet     = official learning proof archive after readiness completion
+```
+
+Mainnet is treated as a graduation step, not as the first door for beginners.
 
 ---
 
 ## Current MVP Highlights
 
-### Readiness Layer
-
-- Readiness Passport
-- Readiness score and level
-- Readiness timeline
-- Shareable passport summary placeholder
-- Badge identity
-- Proof-of-Learning
-- Proof-of-Participation
-- Proof-of-Readiness
-
-### Filecoin Proof Archive Demo
-
-- Admin proof archive page
-- Public proof verification page
-- Demo Filecoin CID generation
-- Archive manifest JSON
-- SHA-256 checksum
-- Archive status in Passport
-- Verification links from Passport and Impact pages
-
-### Stellar Readiness Track
-
-- Stellar Readiness stack page
-- Stellar Readiness course seed
-- Stellar-focused quests
-- Stellar Readiness badge
-- Interactive pre-transaction checklist
-- Quest filter for `stellar-readiness`
-- Dashboard submission status
-
 ### Learning Engine
 
-- Public course list
-- Course detail page
-- Lesson detail page
-- Quiz display
-- Enroll/start/complete flow
-- XP reward for completed lessons
-- Learner dashboard
+- public course catalog
+- course detail page
+- lesson reader/player
+- module and lesson ordering
+- blockchain-first course priority
+- lesson completion flow
+- learner dashboard
+- progress tracking
 
-### Quest & Reward
+### Readiness Passport
 
-- Public quest page
-- Quest submission form
-- Client-side validation and character counter
-- Admin submission review
-- Approve/reject submission flow
-- XP reward approval
-- RewardLedger tracking
-- Auto readiness sync after approval
+- readiness score and level
+- proof counts
+- badge identity
+- proof records
+- Filecoin Proof Archive visibility
+- Stellar Readiness visibility
+- passport demo flow
+- readiness documentation
 
-### Community Onboarding
+### Filecoin Layer
 
-- Public workshop page
-- Workshop registration
-- Cancel workshop registration
-- Capacity counter
-- Dashboard workshop registration display
-- Admin workshop management
+- Filecoin Proof Archive page
+- Filecoin Storage Architecture docs
+- proof manifest concept
+- checksum / CID / PieceCID narrative
+- Calibration-to-mainnet path
+- advanced Filecoin course direction
 
-### Transparency
+### Stellar Layer
 
-- Public status page
-- Public changelog
-- Public impact report
-- Grant reviewer guide
-- Platform metrics
-- Roadmap overview
-- Development transparency narrative
+- Stellar Readiness Track page
+- Stellar Testnet Flow docs
+- Friendbot / testnet XLM path
+- memo awareness
+- trustline simulation
+- payment readiness flow
+- guided mainnet unlock narrative
+
+### Community and Transparency
+
+- workshop registration
+- public documentation hub
+- demo flow
+- roadmap
+- changelog
+- status page
+- impact metrics docs
+- grant architecture docs
+- open source transparency docs
+- MIT License
 
 ---
 
 ## Main Routes
 
-### Public App
+### Core Learning
 
 ```txt
 /                                      Homepage
-/courses                               Public course list
+/courses                               Course catalog
 /courses/[slug]                        Course detail
-/lessons/[slug]                        Lesson detail
-/quests                                Quest page
-/quests?track=stellar-readiness        Stellar readiness quest filter
-/workshops                             Public workshop page
+/lessons                               Lesson library
+/lessons/[slug]                        Lesson reader
 /dashboard                             Demo learner dashboard
-/status                                Public project status
-/changelog                             Public changelog
-/impact                                Public impact report
-/reviewer-guide                        Grant reviewer guide
-```
-
-### Readiness & Proof
-
-```txt
 /passport                              Readiness Passport
-/passport/timeline                     Readiness Timeline
-/passport/share                        Shareable Passport Summary
-/proofs/[id]                           Public proof verification
+/passport/demo                         Passport demo explanation
 ```
 
 ### Filecoin + Stellar
 
 ```txt
-/admin/proofs                          Filecoin Proof Archive admin page
-/stacks/stellar-readiness              Stellar Readiness stack
-/stacks/stellar-readiness/checklist    Stellar pre-transaction checklist
+/filecoin-proof-archive                Filecoin Proof Archive layer
+/stacks/stellar-readiness              Stellar Readiness Track
+/docs/filecoin-stellar                 Filecoin + Stellar strategy
+/docs/filecoin-architecture            Filecoin storage architecture
+/docs/stellar-testnet-flow             Stellar testnet and readiness flow
+/docs/mainnet-graduation               Testnet-to-mainnet graduation model
 ```
 
-### Karyra Admin Console
+### Grant / Documentation
+
+```txt
+/docs                                  Documentation hub
+/docs/grant-architecture               Dual-network grant architecture
+/docs/impact-metrics                   Impact target documentation
+/docs/open-source                      Open source and transparency docs
+/docs/product-narrative                Product narrative
+/docs/readiness-passport               Readiness Passport docs
+/docs/grant-readiness                  Grant-readiness checklist
+/demo-flow                             Reviewer demo flow
+/proof-system                          Proof model overview
+```
+
+### Community / Transparency
+
+```txt
+/workshops                             Public workshop page
+/workshop-kit                          Workshop support material
+/status                                Public project status
+/changelog                             Public changelog
+/roadmap                               Public roadmap
+/about                                 About Karyra
+/faq                                   FAQ
+/terms                                 Terms and Conditions
+```
+
+### Admin / Internal Demo
 
 ```txt
 /admin                                 Admin console overview
@@ -150,87 +266,47 @@ Stellar  = Financial Web3 Readiness / payment-readiness learning layer
 /admin/proofs                          Proof archive monitor
 ```
 
----
-
-## Demo Accounts
-
-The current MVP uses demo identities to validate product flows.
-
-```txt
-Learner demo:
-username: demo or demo-learner depending on seed/demo flow
-
-Admin demo:
-username: admin
-```
-
-Full authentication and role-based access control are planned for later development.
+Admin and reviewer routes are intentionally not emphasized in public navigation. They remain accessible for demo, review, and internal testing.
 
 ---
 
-## Product Flow
-
-### Learner Flow
+## Recommended Reviewer Flow
 
 ```txt
-Learner
-→ enroll course
-→ start lesson
-→ complete lesson
-→ earn XP
-→ submit quest
-→ admin review
-→ reward approval
-→ readiness sync
-→ proof record
-→ readiness passport
+1. /
+2. /courses
+3. /lessons
+4. /dashboard
+5. /passport
+6. /filecoin-proof-archive
+7. /stacks/stellar-readiness
+8. /docs/mainnet-graduation
+9. /docs/grant-architecture
+10. /docs/filecoin-architecture
+11. /docs/stellar-testnet-flow
+12. /docs/impact-metrics
+13. /demo-flow
+14. /roadmap
+15. /changelog
 ```
 
-### Stellar Readiness Flow
+---
+
+## Impact Target Draft
+
+Karyra's current grant-facing impact target draft:
 
 ```txt
-Open Stellar Readiness
-→ study wallet/payment readiness modules
-→ complete checklist
-→ submit Stellar quest
-→ admin approval
-→ Proof-of-Readiness
-→ Passport + Timeline
+Within 3 months after grant funding:
+
+1,000 local learners complete Stellar Payment Readiness
+1,000 Filecoin Learning Passport CIDs are generated
+3 community workshops are conducted
+100 verified proof records are reviewed
+60% target completion rate for pilot cohorts
 ```
 
-### Filecoin Proof Flow
-
-```txt
-Proof record
-→ admin archive action
-→ archive manifest
-→ checksum
-→ demo Filecoin CID
-→ public proof verification
-```
-
-### Community Flow
-
-```txt
-Workshop published
-→ learner registers
-→ dashboard reflects registration
-→ impact/status metrics update
-→ participation can become a proof layer
-```
-
-### Admin Flow
-
-```txt
-Karyra Admin Console
-→ manage courses
-→ create lessons
-→ review quest submissions
-→ approve/reject rewards
-→ monitor readiness
-→ archive proofs
-→ review status/impact
-```
+These numbers are proposal targets, not current production claims.
 
 ---
 
@@ -242,18 +318,13 @@ Language: TypeScript
 Database: PostgreSQL
 ORM: Prisma 7.8.0
 Prisma Adapter: @prisma/adapter-pg
+Generated Prisma Client: src/generated/prisma
 Runtime: Node.js
-Styling: Tailwind CSS
-Architecture: VPS-first / self-hosted direction
-Localization: Internal ID/EN toggle
-Preview Mode: Auto / Mobile / Desktop
+Styling: Tailwind CSS v4
+Validation: Zod
+Deployment direction: VPS-first / self-hosted
+Process manager: PM2 / Node.js server
 ```
-
----
-
-## Database & ORM Notes
-
-Karyra uses PostgreSQL with Prisma 7.8.0.
 
 Important project decisions:
 
@@ -263,27 +334,29 @@ Generated client path: src/generated/prisma
 Module system: ESM
 Database: PostgreSQL
 Deployment direction: self-hosted VPS-first
+Canonical product copy: Bahasa Indonesia first
 ```
 
 ---
 
-## Environment Variables
+## Environment
 
-Create a `.env` file:
+Create a local `.env` file and configure at least:
 
-```env
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public"
-NODE_ENV="development"
-```
-
-If the PostgreSQL server requires SSL:
-
-```env
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public&sslmode=require"
-NODE_ENV="development"
+```txt
+DATABASE_URL
+NODE_ENV
 ```
 
 Never commit `.env`.
+
+Recommended database separation for deployment:
+
+```txt
+karyra_dev
+karyra_preview
+karyra_prod
+```
 
 ---
 
@@ -299,11 +372,17 @@ npm install
 
 ```bash
 npm run db:format
-npm run db:migrate -- --name init_karyra_core
 npm run db:generate
 npm run db:seed
 npm run db:seed:demo
+npm run db:seed:blockchain
 npm run db:smoke
+```
+
+For production deployments with existing migrations:
+
+```bash
+npx prisma migrate deploy
 ```
 
 ---
@@ -324,42 +403,43 @@ http://localhost:3000
 
 ## Verification
 
-Run route and structure audit:
+```bash
+npm run typecheck
+npm run build
+```
+
+If available:
 
 ```bash
 npm run app:audit
-```
-
-Run audit and database smoke test:
-
-```bash
 npm run app:verify
 ```
 
 ---
 
-## Reviewer Flow
+## Deployment Notes
 
-Recommended review path:
+The current deployment direction is VPS-first with Node.js and PM2.
 
-```txt
-1. /reviewer-guide
-2. /
-3. /status
-4. /impact
-5. /courses
-6. /courses/stellar-readiness-for-local-communities
-7. /stacks/stellar-readiness
-8. /stacks/stellar-readiness/checklist
-9. /quests?track=stellar-readiness
-10. /dashboard
-11. /passport
-12. /passport/timeline
-13. /passport/share
-14. /admin/submissions
-15. /admin/learners
-16. /admin/proofs
-17. /changelog
+Example deployment flow:
+
+```bash
+git pull origin main
+npm install
+npm run db:generate
+npx prisma migrate deploy
+npm run db:seed
+npm run db:seed:blockchain
+npm run build
+pm2 delete karyra || true
+pm2 start npm --name karyra -- start
+pm2 save
+```
+
+If the host requires binding to all interfaces:
+
+```bash
+next start -H 0.0.0.0 -p 3000
 ```
 
 ---
@@ -370,74 +450,77 @@ The current MVP intentionally keeps several areas simple:
 
 - full authentication is not enabled yet
 - role-based permission system is planned later
-- wallet integration is not connected to a live chain yet
+- some learner identity flows still use demo learner mode
 - quest verification is currently based on manual/admin review
-- Filecoin archive currently uses demo CIDs and manifest placeholders
-- Stellar track currently focuses on readiness education, not live payments
+- Filecoin archive integration is currently documented and demo-oriented, not yet full mainnet storage automation
+- Stellar readiness currently focuses on education and graduation design, not a full production wallet flow
 - workshop attendance/check-in can be expanded later
 - AI-assisted content generation is planned but not active yet
-- production deployment and public demo packaging are still in progress
+- production pilot metrics are targets, not current claims
 
 ---
 
 ## Roadmap Direction
 
-### Phase 1 — Core Foundation
+### Phase 1 — Core Learning Foundation
 
-- database foundation
-- Prisma schema
-- course and lesson model
-- quest and reward model
-- public learning pages
+- course and lesson engine
+- lesson completion
 - learner dashboard
-- admin console foundation
+- progress tracking
+- blockchain-first learning path
 
-### Phase 2 — Readiness & Proof Expansion
+### Phase 2 — Readiness & Proof System
 
 - Readiness Passport
-- Readiness Timeline
 - proof records
 - badge identity
-- admin learner readiness monitor
-- Filecoin Proof Archive demo
-- Stellar Readiness course, checklist, and quests
+- proof system overview
+- Filecoin Proof Archive visibility
+- Stellar Readiness Track visibility
 
-### Phase 3 — Community Onboarding
+### Phase 3 — Dual-Network Readiness
 
-- workshop registration improvements
-- workshop attendance/check-in
-- community dashboard
-- offline onboarding flow
-- local community reporting
+- Stellar Testnet practice flow
+- Friendbot / testnet XLM exercise
+- trustline and memo simulation
+- Filecoin Calibration proof archive testing
+- proof manifest upload testing
 
-### Phase 4 — Grant-Ready Pilot
+### Phase 4 — Guided Mainnet Experience
 
-- public deployment
-- demo video and screenshots
-- pilot workshop
-- impact report
-- grant application package
+- Stellar Mainnet guided financial access experience
+- Filecoin Mainnet official proof archive
+- passport proof verification
+- storage policy and renewal strategy
+
+### Phase 5 — Grant-Ready Pilot
+
+- pilot workshops
+- screenshot and demo package
+- impact reporting
+- proposal / pitch deck / whitepaper
 - public documentation polish
 
 ---
 
-## Project Direction
+## Product Direction
 
 Karyra is designed for:
 
-- Web3 beginners
+- blockchain beginners
 - local Indonesian communities
 - offline learning workshops
 - beginner-friendly wallet education
-- payment-readiness learning
-- quest-based learning
-- community onboarding
-- future chain-agnostic learning identity
+- Stellar payment-readiness learning
+- Filecoin proof archive literacy
+- local community onboarding
+- future chain-aware learning identity
 
-The project is being prepared as a grant-ready MVP with a strong focus on practical education, transparency, local impact, and readiness before transaction.
+Karyra's long-term vision is to become a community-based blockchain readiness and proof-of-learning ecosystem for local communities.
 
 ---
 
 ## License
 
-MVP development version. License to be finalized.
+This project is licensed under the MIT License. See [LICENSE](./LICENSE).
