@@ -5,7 +5,6 @@ import {
   normalizeLanguage,
   t,
 } from "../lib/i18n";
-import { LanguageToggle } from "./language-toggle";
 import { PreviewModeToggle } from "./preview-mode-toggle";
 import { SiteMenu } from "./site-menu";
 
@@ -14,10 +13,11 @@ type SiteHeaderProps = {
 };
 
 const publicLinks = [
-  { href: "/proof-system", label: "Product" },
-  { href: "/learner", label: "Learn" },
-  { href: "/passport", label: "Passport" },
-  { href: "/workshops", label: "Community" },
+  { href: "/", label: "Beranda" },
+  { href: "/courses", label: "Kursus" },
+  { href: "/lessons", label: "Pelajaran" },
+  { href: "/dashboard", label: "Dasbor" },
+  { href: "/passport", label: "Paspor" },
 ] as const;
 
 function getSafeLanguage(language?: Language | null): Language {
@@ -39,7 +39,7 @@ export function SiteHeader({ language }: SiteHeaderProps) {
               {t(safeLanguage, "appName")}
             </p>
             <p className="mt-1 hidden truncate text-xs text-slate-400 sm:block">
-              Local Web3 Readiness Platform
+              Ruang kesiapan blockchain lokal
             </p>
           </div>
         </Link>
@@ -61,12 +61,11 @@ export function SiteHeader({ language }: SiteHeaderProps) {
             href="/login"
             className="hidden min-h-10 items-center rounded-2xl bg-emerald-400 px-4 py-2 text-sm font-black text-slate-950 transition hover:bg-emerald-300 sm:inline-flex"
           >
-            Login
+            Masuk
           </Link>
           <div className="hidden md:block">
             <PreviewModeToggle language={safeLanguage} />
           </div>
-          <LanguageToggle language={safeLanguage} />
           <SiteMenu language={safeLanguage} />
         </div>
       </div>
