@@ -9,18 +9,11 @@ const docLinks = [
     badge: "Mainnet",
   },
   {
-    href: "/docs/grant-architecture",
-    title: "Grant Architecture",
-    description:
-      "Dual-Network Architecture Ecosystem: Karyra, Filecoin Proof Archive, dan Stellar Readiness Track.",
-    badge: "Arsitektur",
-  },
-  {
     href: "/docs/filecoin-stellar",
     title: "Strategi Filecoin + Stellar",
     description:
       "Peran Filecoin sebagai proof archive layer dan Stellar sebagai safe practice + financial access layer.",
-    badge: "Target",
+    badge: "Ecosystem",
   },
   {
     href: "/docs/filecoin-architecture",
@@ -37,20 +30,6 @@ const docLinks = [
     badge: "Stellar",
   },
   {
-    href: "/docs/impact-metrics",
-    title: "Impact Metrics",
-    description:
-      "Target 1.000 pengguna lokal, Stellar Payment Readiness, dan Filecoin Learning Passport CID.",
-    badge: "Impact",
-  },
-  {
-    href: "/docs/open-source",
-    title: "Open Source & Transparansi",
-    description:
-      "GitHub, roadmap, changelog, lisensi open source, dan checklist repository untuk reviewer.",
-    badge: "Open",
-  },
-  {
     href: "/docs/product-narrative",
     title: "Narasi Produk",
     description:
@@ -64,13 +43,6 @@ const docLinks = [
       "Cara Paspor Kesiapan membaca bukti belajar, partisipasi, readiness score, dan arsip bukti.",
     badge: "Paspor",
   },
-  {
-    href: "/docs/grant-readiness",
-    title: "Kesiapan Grant",
-    description:
-      "Checklist internal untuk melihat apa yang sudah kuat dan apa yang masih perlu dipoles sebelum apply.",
-    badge: "Grant",
-  },
 ];
 
 export default function DocsPage() {
@@ -82,10 +54,10 @@ export default function DocsPage() {
             Dokumentasi Karyra
           </p>
           <h1 className="mt-4 text-3xl font-black tracking-tight md:text-5xl">
-            Pusat penjelasan produk dan kesiapan grant.
+            Pusat penjelasan produk.
           </h1>
           <p className="mt-4 text-sm leading-7 text-slate-300 md:text-base md:leading-8">
-            Dokumentasi ini menjadi sumber utama untuk proposal, pitch deck, whitepaper, reviewer flow, dan pembaruan publik Karyra.
+            Dokumentasi ini menjelaskan arah produk, sistem bukti, Paspor Kesiapan, serta peran Filecoin dan Stellar di dalam pengalaman belajar Karyra.
           </p>
         </header>
 

@@ -9,7 +9,7 @@ Belajar → Paham → Siap → Terbukti
 Learn → Understand → Ready → Proven
 ```
 
-Karyra is not a generic learn-to-earn product, not a trading product, and not a grant-only showcase. It is being built as **local blockchain readiness infrastructure** for learners, community educators, workshop organizers, and grant reviewers.
+Karyra is not a generic learn-to-earn product and not a trading product. It is being built as **local blockchain readiness infrastructure** for learners, community educators, and workshop organizers.
 
 ---
 
@@ -55,24 +55,7 @@ Filecoin = Decentralized Proof Archive / Storage Layer
 Stellar  = Micro-payment & Financial Access Readiness Layer
 ```
 
-### Filecoin Proof Archive
-
-Filecoin is positioned as Karyra's decentralized proof archive layer.
-
-Karyra prepares learning and participation evidence as proof manifests that can later be archived, retrieved, and verified through Filecoin-related tooling.
-
-Planned archive objects include:
-
-- proof manifest JSON
-- Readiness Passport snapshots
-- course completion proofs
-- workshop participation proofs
-- badge metadata
-- readiness reports
-- checksum and archive status metadata
-- CID / PieceCID references
-
-The intended path is:
+Filecoin is positioned as Karyra's decentralized proof archive layer. Karyra prepares learning and participation evidence as proof manifests that can later be archived, retrieved, and verified through Filecoin-related tooling.
 
 ```txt
 Local proof manifest
@@ -81,30 +64,7 @@ Local proof manifest
 → Filecoin Mainnet official proof archive
 ```
 
-Potential Filecoin tooling paths documented in the project include Synapse SDK / Filecoin Onchain Cloud, Lighthouse.storage, Web3.Storage, and direct Storage Provider strategy for a later advanced stage.
-
-Filecoin is also planned as an **advanced course track** after learners understand blockchain, proof records, and Readiness Passport concepts.
-
-### Stellar Readiness Track
-
-Stellar is positioned as Karyra's financial access and micro-payment readiness layer.
-
-Stellar is not introduced as a speculative path. It is used to teach safe wallet and payment-readiness concepts.
-
-The learning path includes:
-
-- wallet safety
-- public account identity concepts
-- Stellar Testnet
-- Friendbot testnet XLM
-- memo awareness
-- trustline simulation
-- asset and issuer literacy
-- payment simulation
-- transaction hash reading
-- guided mainnet experience after readiness completion
-
-The intended Stellar path is:
+Stellar is positioned as Karyra's financial access and micro-payment readiness layer. It is used to teach safe wallet and payment-readiness concepts, not speculation.
 
 ```txt
 Stellar Testnet practice
@@ -119,23 +79,12 @@ Stellar Testnet practice
 
 Karyra does not bring beginners directly to mainnet.
 
-Instead, it follows a safety-first graduation model:
-
 ```txt
 Learn concepts
 → practice safely on testnet / calibration
 → complete readiness track
 → unlock guided mainnet experience
 → record proof in Readiness Passport
-```
-
-This applies to both target networks:
-
-```txt
-Stellar Testnet       = interactive wallet and payment-readiness lessons
-Stellar Mainnet      = guided financial access experience after readiness completion
-Filecoin Calibration = proof archive workflow testing
-Filecoin Mainnet     = official learning proof archive after readiness completion
 ```
 
 Mainnet is treated as a graduation step, not as the first door for beginners.
@@ -166,24 +115,14 @@ Mainnet is treated as a graduation step, not as the first door for beginners.
 - passport demo flow
 - readiness documentation
 
-### Filecoin Layer
+### Filecoin + Stellar
 
 - Filecoin Proof Archive page
-- Filecoin Storage Architecture docs
-- proof manifest concept
-- checksum / CID / PieceCID narrative
-- Calibration-to-mainnet path
-- advanced Filecoin course direction
-
-### Stellar Layer
-
 - Stellar Readiness Track page
-- Stellar Testnet Flow docs
-- Friendbot / testnet XLM path
-- memo awareness
-- trustline simulation
-- payment readiness flow
-- guided mainnet unlock narrative
+- Filecoin + Stellar product documentation
+- Testnet-to-mainnet graduation documentation
+- Filecoin Storage Architecture documentation
+- Stellar Testnet Flow documentation
 
 ### Community and Transparency
 
@@ -193,9 +132,6 @@ Mainnet is treated as a graduation step, not as the first door for beginners.
 - roadmap
 - changelog
 - status page
-- impact metrics docs
-- grant architecture docs
-- open source transparency docs
 - MIT License
 
 ---
@@ -226,17 +162,13 @@ Mainnet is treated as a graduation step, not as the first door for beginners.
 /docs/mainnet-graduation               Testnet-to-mainnet graduation model
 ```
 
-### Grant / Documentation
+### Documentation
 
 ```txt
 /docs                                  Documentation hub
-/docs/grant-architecture               Dual-network grant architecture
-/docs/impact-metrics                   Impact target documentation
-/docs/open-source                      Open source and transparency docs
 /docs/product-narrative                Product narrative
 /docs/readiness-passport               Readiness Passport docs
-/docs/grant-readiness                  Grant-readiness checklist
-/demo-flow                             Reviewer demo flow
+/demo-flow                             Demo flow
 /proof-system                          Proof model overview
 ```
 
@@ -253,45 +185,15 @@ Mainnet is treated as a graduation step, not as the first door for beginners.
 /terms                                 Terms and Conditions
 ```
 
-### Admin / Internal Demo
-
-```txt
-/admin                                 Admin console overview
-/admin/courses                         Manage courses
-/admin/courses/new                     Create new course
-/admin/submissions                     Review quest submissions
-/admin/workshops                       Manage workshops
-/admin/workshops/new                   Create new workshop
-/admin/learners                        Learner readiness monitor
-/admin/proofs                          Proof archive monitor
-```
-
-Admin and reviewer routes are intentionally not emphasized in public navigation. They remain accessible for demo, review, and internal testing.
-
 ---
 
-## Recommended Reviewer Flow
+## Screenshots
 
-```txt
-1. /
-2. /courses
-3. /lessons
-4. /dashboard
-5. /passport
-6. /filecoin-proof-archive
-7. /stacks/stellar-readiness
-8. /docs/mainnet-graduation
-9. /docs/grant-architecture
-10. /docs/filecoin-architecture
-11. /docs/stellar-testnet-flow
-12. /docs/impact-metrics
-13. /demo-flow
-14. /roadmap
-15. /changelog
-```
+A few representative views from the current public demo:
 
----
+### Homepage
 
+<<<<<<< HEAD
 ## Screenshots
 
 A few representative views from the current public demo:
@@ -317,20 +219,23 @@ More desktop and mobile screenshots are available in `public/karyra_screenshots/
 ---
 
 ## Impact Target Draft
+=======
+![Karyra homepage desktop](public/karyra_screenshots/beranda-desktop.png)
 
-Karyra's current grant-facing impact target draft:
 
-```txt
-Within 3 months after grant funding:
+### Course Catalog
 
-1,000 local learners complete Stellar Payment Readiness
-1,000 Filecoin Learning Passport CIDs are generated
-3 community workshops are conducted
-100 verified proof records are reviewed
-60% target completion rate for pilot cohorts
-```
+![Karyra course catalog desktop](public/karyra_screenshots/courses-desktop.png)
 
-These numbers are proposal targets, not current production claims.
+### Readiness Passport
+
+![Karyra readiness passport desktop](public/karyra_screenshots/passport-desktop.png)
+
+### Documentation Hub
+
+![Karyra documentation hub desktop](public/karyra_screenshots/docs-desktop.png)
+
+More desktop and mobile screenshots are available in `public/karyra_screenshots/`.
 
 ---
 
@@ -480,7 +385,6 @@ The current MVP intentionally keeps several areas simple:
 - Stellar readiness currently focuses on education and graduation design, not a full production wallet flow
 - workshop attendance/check-in can be expanded later
 - AI-assisted content generation is planned but not active yet
-- production pilot metrics are targets, not current claims
 
 ---
 
@@ -518,12 +422,11 @@ The current MVP intentionally keeps several areas simple:
 - passport proof verification
 - storage policy and renewal strategy
 
-### Phase 5 — Grant-Ready Pilot
+### Phase 5 — Public Pilot
 
 - pilot workshops
 - screenshot and demo package
 - impact reporting
-- proposal / pitch deck / whitepaper
 - public documentation polish
 
 ---
