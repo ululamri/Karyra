@@ -1,10 +1,10 @@
 import Link from "next/link";
 
-function HomeIcon() {
+function LearnIcon() {
   return (
     <svg aria-hidden="true" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4.75 10.75 12 4.75l7.25 6v7.5A1.75 1.75 0 0 1 17.5 20h-11a1.75 1.75 0 0 1-1.75-1.75v-7.5Z" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9.25 20v-5.25h5.5V20" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4.75 6.5A2.5 2.5 0 0 1 7.25 4H20v14.75H7.25A2.5 2.5 0 0 0 4.75 21V6.5Z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 8.25h7.5M8.25 12h5.5M8.25 15.75h4" />
     </svg>
   );
 }
@@ -45,7 +45,7 @@ function PassportIcon() {
 }
 
 const items = [
-  { href: "/", label: "Beranda", icon: <HomeIcon /> },
+  { href: "/learner", label: "Belajar", icon: <LearnIcon /> },
   { href: "/courses", label: "Kursus", icon: <CourseIcon /> },
   { href: "/lessons", label: "Pelajaran", icon: <LessonIcon /> },
   { href: "/dashboard", label: "Dasbor", icon: <DashboardIcon /> },

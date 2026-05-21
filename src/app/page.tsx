@@ -52,7 +52,7 @@ export default function HomePage() {
             </p>
 
             <h1 className="mt-5 max-w-4xl text-4xl font-black tracking-tight text-white md:text-6xl lg:text-7xl">
-              Belajar blockchain tanpa harus langsung merasa teknis.
+              Belajar blockchain dari hal yang paling manusiawi.
             </h1>
 
             <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300 md:text-lg md:leading-8">
@@ -61,16 +61,16 @@ export default function HomePage() {
 
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/courses"
+                href="/learner"
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-emerald-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
               >
-                Mulai dari Kursus
+                Masuk ke Ruang Belajar
               </Link>
               <Link
-                href="/dashboard"
+                href="/courses"
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40 hover:bg-white/10"
               >
-                Lihat Dasbor Belajar
+                Lihat Kursus
               </Link>
             </div>
 

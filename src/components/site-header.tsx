@@ -14,6 +14,7 @@ type SiteHeaderProps = {
 
 const publicLinks = [
   { href: "/", label: "Beranda" },
+  { href: "/learner", label: "Belajar" },
   { href: "/courses", label: "Kursus" },
   { href: "/lessons", label: "Pelajaran" },
   { href: "/dashboard", label: "Dasbor" },
@@ -73,10 +74,10 @@ export function SiteHeader({ language }: SiteHeaderProps) {
               Masuk
             </Link>
             <Link
-              href="/register"
+              href="/learner"
               className="inline-flex min-h-10 items-center rounded-2xl bg-emerald-400 px-4 py-2 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
             >
-              Daftar
+              Mulai Belajar
             </Link>
           </div>
 

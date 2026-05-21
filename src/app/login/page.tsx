@@ -6,10 +6,10 @@ export default function LoginPage() {
       <section className="mx-auto grid min-h-[86vh] w-full max-w-6xl gap-8 px-4 py-8 pb-24 md:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
         <div className="hidden lg:block">
           <p className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
-            Karyra
+            Karyra — Ruang Belajar
           </p>
           <h1 className="mt-5 max-w-xl text-5xl font-black tracking-tight">
-            Masuk ke ruang belajar kesiapan blockchain.
+            Masuk ke ruang belajar blockchain lokal.
           </h1>
           <p className="mt-5 max-w-xl text-base leading-8 text-slate-300">
             Lanjutkan kursus, baca pelajaran berikutnya, pantau progres, dan bangun Paspor Kesiapan secara bertahap.
@@ -18,14 +18,14 @@ export default function LoginPage() {
 
         <div className="mx-auto w-full max-w-md rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/30 md:p-7">
           <div className="text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-3xl bg-emerald-400 text-2xl font-black text-slate-950">
-              K
+            <div className="mx-auto flex h-14 w-14 items-center justify-center overflow-hidden rounded-3xl border border-emerald-400/20 bg-white">
+              <img src="/brand/karyra-icon.svg" alt="Logo Karyra" className="h-10 w-10" />
             </div>
             <h1 className="mt-5 text-2xl font-black md:text-3xl">
-              Masuk ke Karyra
+              Karyra — Masuk ke ruang belajar
             </h1>
             <p className="mt-2 text-sm leading-6 text-slate-400">
-              Gunakan akun belajar kamu, atau lanjut sebagai demo learner untuk melihat alur produk.
+              Gunakan akun belajar kamu, atau lanjut sebagai Demo Learner untuk melihat alur belajar MVP.
             </p>
           </div>
 
@@ -51,7 +51,7 @@ export default function LoginPage() {
             </label>
 
             <Link
-              href="/dashboard"
+              href="/learner"
               className="flex min-h-12 items-center justify-center rounded-2xl bg-emerald-400 px-5 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
             >
               Masuk
@@ -65,7 +65,7 @@ export default function LoginPage() {
           </div>
 
           <Link
-            href="/dashboard"
+            href="/learner"
             className="flex min-h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-black text-white transition hover:border-emerald-400/40 hover:bg-white/10"
           >
             Lanjut sebagai Demo Learner
@@ -79,7 +79,7 @@ export default function LoginPage() {
           </p>
 
           <p className="mt-4 text-center text-xs leading-5 text-slate-500">
-            Pada fase demo, tombol masuk membawa pengguna ke dasbor tanpa mengirim password ke URL.
+            Pada fase MVP, tombol masuk membawa pengguna ke ruang belajar demo tanpa mengirim password ke URL.
           </p>
         </div>
       </section>
