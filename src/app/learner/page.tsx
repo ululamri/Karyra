@@ -1,46 +1,47 @@
 import Link from "next/link";
 import {
-  formatLearningStatus,
   getLearnerProgressOverview,
   getLearningStatusTone,
 } from "@/lib/learning";
-import { getServerLanguage } from "@/lib/i18n-server";
+
+function statusLabel(value: string) {
+  switch (value) {
+    case "COMPLETED":
+      return "Selesai";
+    case "IN_PROGRESS":
+      return "Berjalan";
+    case "NOT_STARTED":
+      return "Belum mulai";
+    default:
+      return value.replaceAll("_", " ").toLowerCase();
+  }
+}
 
 const focusCards = [
   {
     href: "/courses",
-    label: "Course & Lesson Engine",
-    titleId: "Belajar lewat course dan lesson.",
-    titleEn: "Learn through courses and lessons.",
-    textId:
-      "Course dan lesson adalah jalur utama Karyra. Mulai dari konsep dasar, baca lesson pendek, lalu lanjutkan progress secara bertahap.",
-    textEn:
-      "Courses and lessons are Karyra's main path. Start from fundamentals, read short lessons, then continue progress step by step.",
+    label: "Kursus",
+    title: "Mulai dari jalur belajar yang terarah.",
+    text:
+      "Kursus menjadi peta utama agar pemula tidak melompat langsung ke istilah teknis tanpa konteks.",
   },
   {
     href: "/lessons",
-    label: "Lesson Library",
-    titleId: "Lanjutkan pelajaran berikutnya.",
-    titleEn: "Continue the next lesson.",
-    textId:
-      "Lesson Library membantu learner melihat seluruh pelajaran yang tersedia tanpa harus menebak URL atau urutan course.",
-    textEn:
-      "The Lesson Library helps learners see every available lesson without guessing URLs or course order.",
+    label: "Pelajaran",
+    title: "Baca materi pendek secara bertahap.",
+    text:
+      "Pelajaran membantu pengguna memahami satu konsep kecil sebelum bergerak ke bagian berikutnya.",
   },
   {
     href: "/passport",
-    label: "Readiness Passport",
-    titleId: "Lihat bukti progres belajar.",
-    titleEn: "See learning progress proof.",
-    textId:
-      "Passport menjadi ringkasan perjalanan belajar, badge, proof record, dan kesiapan yang terus berkembang.",
-    textEn:
-      "The Passport summarizes learning journey, badges, proof records, and growing readiness.",
+    label: "Paspor",
+    title: "Lihat bukti progres dan kesiapan.",
+    text:
+      "Paspor merangkum bukti belajar, partisipasi, badge, dan kesiapan yang terus berkembang.",
   },
 ];
 
 export default async function LearnerPage() {
-  const language = await getServerLanguage();
   const {
     learner,
     courses,
@@ -58,19 +59,15 @@ export default async function LearnerPage() {
         <header className="grid gap-6 lg:grid-cols-[1.08fr_0.72fr] lg:items-end">
           <div>
             <p className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
-              {language === "id" ? "Ruang Belajar" : "Learning Space"}
+              Ruang Belajar
             </p>
 
             <h1 className="mt-4 max-w-4xl text-3xl font-black tracking-tight md:text-5xl lg:text-6xl">
-              {language === "id"
-                ? "Lanjutkan belajar, bukan sekadar mengejar reward."
-                : "Continue learning, not just chasing rewards."}
+              Lanjutkan belajar dari fondasi blockchain.
             </h1>
 
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
-              {language === "id"
-                ? "Karyra menempatkan course dan lesson sebagai inti pengalaman. Quest dan reward hanyalah pelengkap untuk memperkuat kebiasaan belajar dan readiness."
-                : "Karyra puts courses and lessons at the center of the experience. Quests and rewards are only supporting layers to strengthen learning habits and readiness."}
+              Karyra menempatkan kursus dan pelajaran sebagai inti. Quest, XP, dan reward tetap bisa hadir sebagai latihan tambahan, bukan wajah utama produk.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -79,7 +76,7 @@ export default async function LearnerPage() {
                   href={`/lessons/${continueLesson.slug}`}
                   className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-emerald-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
                 >
-                  {language === "id" ? "Lanjutkan Lesson" : "Continue Lesson"}
+                  Lanjutkan Pelajaran
                 </Link>
               ) : null}
 
@@ -87,15 +84,13 @@ export default async function LearnerPage() {
                 href="/courses"
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40"
               >
-                {language === "id" ? "Lihat Course" : "View Courses"}
+                Lihat Kursus
               </Link>
             </div>
           </div>
 
           <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-5 md:p-6">
-            <p className="text-sm text-emerald-300">
-              {language === "id" ? "Progress Belajar" : "Learning Progress"}
-            </p>
+            <p className="text-sm text-emerald-300">Progres Belajar</p>
             <p className="mt-2 text-4xl font-black">
               {overallProgress.progressPct}%
             </p>
@@ -106,8 +101,8 @@ export default async function LearnerPage() {
               />
             </div>
             <p className="mt-3 text-sm leading-6 text-slate-300">
-              {overallProgress.completedLessons}/{overallProgress.totalLessons} lesson selesai.
-              {activeCourse ? ` Active course: ${activeCourse.title}.` : ""}
+              {overallProgress.completedLessons}/{overallProgress.totalLessons} pelajaran selesai.
+              {activeCourse ? ` Kursus aktif: ${activeCourse.title}.` : ""}
             </p>
           </div>
         </header>
@@ -118,19 +113,19 @@ export default async function LearnerPage() {
             <p className="mt-1 truncate text-lg font-black">{learner.displayName}</p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-            <p className="text-xs text-slate-400">Courses</p>
+            <p className="text-xs text-slate-400">Kursus</p>
             <p className="mt-1 text-2xl font-black">{courses.length}</p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-            <p className="text-xs text-slate-400">Completed</p>
+            <p className="text-xs text-slate-400">Selesai</p>
             <p className="mt-1 text-2xl font-black">{completedCourses}</p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-            <p className="text-xs text-slate-400">Lessons</p>
+            <p className="text-xs text-slate-400">Pelajaran</p>
             <p className="mt-1 text-2xl font-black">{lessons.length}</p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-            <p className="text-xs text-slate-400">Minutes</p>
+            <p className="text-xs text-slate-400">Menit</p>
             <p className="mt-1 text-2xl font-black">{totalMinutes}</p>
           </div>
         </section>
@@ -140,13 +135,13 @@ export default async function LearnerPage() {
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
                 <p className="text-xs font-black uppercase tracking-wide text-emerald-300">
-                  {language === "id" ? "Lanjutkan dari sini" : "Continue from here"}
+                  Lanjutkan dari sini
                 </p>
                 <h2 className="mt-2 text-2xl font-black">
                   {continueLesson.title}
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  {continueLesson.courseTitle} · Module {continueLesson.moduleOrder} · {continueLesson.estimatedMinutes} min
+                  {continueLesson.courseTitle} · Modul {continueLesson.moduleOrder} · {continueLesson.estimatedMinutes} menit
                 </p>
               </div>
 
@@ -154,7 +149,7 @@ export default async function LearnerPage() {
                 href={`/lessons/${continueLesson.slug}`}
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-emerald-400 px-5 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
               >
-                {language === "id" ? "Buka Lesson" : "Open Lesson"}
+                Buka Pelajaran
               </Link>
             </div>
           </section>
@@ -170,12 +165,8 @@ export default async function LearnerPage() {
               <p className="text-xs font-black uppercase tracking-wide text-emerald-300">
                 {card.label}
               </p>
-              <h2 className="mt-3 text-xl font-black">
-                {language === "id" ? card.titleId : card.titleEn}
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-slate-400">
-                {language === "id" ? card.textId : card.textEn}
-              </p>
+              <h2 className="mt-3 text-xl font-black">{card.title}</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-400">{card.text}</p>
             </Link>
           ))}
         </section>
@@ -193,16 +184,12 @@ export default async function LearnerPage() {
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-xs font-black uppercase tracking-wide text-emerald-300">
-                      Course
+                      Kursus
                     </p>
                     <h2 className="mt-2 text-xl font-black">{course.title}</h2>
                   </div>
-                  <span
-                    className={`rounded-full border px-3 py-1 text-[11px] font-black ${getLearningStatusTone(
-                      status,
-                    )}`}
-                  >
-                    {formatLearningStatus(status)}
+                  <span className={`rounded-full border px-3 py-1 text-[11px] font-black ${getLearningStatusTone(status)}`}>
+                    {statusLabel(status)}
                   </span>
                 </div>
 
@@ -220,7 +207,7 @@ export default async function LearnerPage() {
                 </div>
 
                 <p className="mt-2 text-xs text-slate-500">
-                  {course.progress.completedLessons}/{course.progress.totalLessons} lesson · {course.progress.progressPct}% complete
+                  {course.progress.completedLessons}/{course.progress.totalLessons} pelajaran · {course.progress.progressPct}% selesai
                 </p>
               </Link>
             );

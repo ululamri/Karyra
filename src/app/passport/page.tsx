@@ -1,24 +1,29 @@
 import Link from "next/link";
 import { getOrCreateDemoLearner, getReadinessPassport } from "@/lib/readiness";
-import { getServerLanguage } from "@/lib/i18n-server";
 
 function formatLevel(level?: string) {
-  if (!level) return "Beginner";
-
-  return level
-    .replaceAll("_", " ")
-    .toLowerCase()
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+  switch (level) {
+    case "COMMUNITY_READY":
+      return "Siap Komunitas";
+    case "READY":
+      return "Siap";
+    case "LEARNING":
+      return "Sedang Belajar";
+    case "BEGINNER":
+      return "Pemula";
+    default:
+      return "Pemula";
+  }
 }
 
 function proofTypeLabel(type: string) {
   switch (type) {
     case "LEARNING":
-      return "Proof-of-Learning";
+      return "Bukti Belajar";
     case "PARTICIPATION":
-      return "Proof-of-Participation";
+      return "Bukti Partisipasi";
     case "READINESS":
-      return "Proof-of-Readiness";
+      return "Bukti Kesiapan";
     default:
       return type;
   }
@@ -37,34 +42,20 @@ function proofTone(type: string) {
   }
 }
 
-function levelDescription(language: "id" | "en", level?: string) {
-  if (language === "id") {
-    switch (level) {
-      case "COMMUNITY_READY":
-        return "Siap berpartisipasi aktif dalam onboarding komunitas dan membantu pemula lain mulai dengan aman.";
-      case "READY":
-        return "Memiliki sinyal kesiapan yang kuat sebelum masuk ke praktik Web3 yang lebih serius.";
-      case "LEARNING":
-        return "Sedang membangun literasi dasar melalui belajar, quest, dan partisipasi komunitas.";
-      default:
-        return "Memulai perjalanan readiness melalui pembelajaran non-teknikal dan safety-first.";
-    }
-  }
-
+function levelDescription(level?: string) {
   switch (level) {
     case "COMMUNITY_READY":
-      return "Ready to participate actively in community onboarding and help others start safely.";
+      return "Siap berpartisipasi aktif dalam aktivitas komunitas dan membantu pemula lain belajar dengan lebih aman.";
     case "READY":
-      return "Has strong readiness signals before entering more serious Web3 practice.";
+      return "Memiliki sinyal kesiapan yang kuat sebelum masuk ke praktik blockchain, cryptocurrency, atau Web3 yang lebih serius.";
     case "LEARNING":
-      return "Building basic literacy through learning, quests, and community participation.";
+      return "Sedang membangun literasi dasar melalui kursus, pelajaran, latihan, dan aktivitas komunitas.";
     default:
-      return "Starting a readiness journey through non-technical, safety-first learning.";
+      return "Memulai perjalanan kesiapan melalui pembelajaran non-teknikal dulu, teknikal kemudian.";
   }
 }
 
 export default async function PassportPage() {
-  const language = await getServerLanguage();
   const learner = await getOrCreateDemoLearner();
   const passport = await getReadinessPassport(learner.id);
   const profile = passport.readinessProfile;
@@ -93,19 +84,15 @@ export default async function PassportPage() {
         <header className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div>
             <p className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
-              Readiness Passport
+              Paspor Kesiapan
             </p>
 
             <h1 className="mt-4 max-w-4xl text-3xl font-black tracking-tight md:text-5xl lg:text-6xl">
-              {language === "id"
-                ? "Hasil akhir dari perjalanan belajar Karyra."
-                : "The outcome of the Karyra learning journey."}
+              Bukti proses belajar dan kesiapan pengguna.
             </h1>
 
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
-              {language === "id"
-                ? "Passport ini merangkum proof, badge, XP, workshop, dan readiness score agar learner punya bukti proses sebelum masuk ke praktik Web3 nyata."
-                : "This passport summarizes proofs, badges, XP, workshops, and readiness score so learners have process evidence before entering real Web3 practice."}
+              Paspor merangkum bukti belajar, bukti partisipasi, badge, XP, workshop, dan readiness score agar pengguna punya gambaran proses sebelum masuk ke praktik blockchain, cryptocurrency, dan Web3 yang lebih nyata.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -113,13 +100,13 @@ export default async function PassportPage() {
                 href="/passport/timeline"
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-emerald-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
               >
-                Timeline
+                Lihat Timeline
               </Link>
               <Link
                 href="/passport/share"
                 className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40"
               >
-                {language === "id" ? "Bagikan Ringkasan" : "Share Summary"}
+                Bagikan Ringkasan
               </Link>
             </div>
           </div>
@@ -137,7 +124,7 @@ export default async function PassportPage() {
               />
             </div>
             <p className="mt-3 text-sm leading-6 text-slate-300">
-              {levelDescription(language, readinessLevel)}
+              {levelDescription(readinessLevel)}
             </p>
           </div>
         </header>
@@ -148,23 +135,19 @@ export default async function PassportPage() {
             <p className="mt-1 text-2xl font-black">{profile?.totalXp ?? 0}</p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-            <p className="text-xs text-slate-400">
-              {language === "id" ? "Course selesai" : "Courses"}
-            </p>
+            <p className="text-xs text-slate-400">Kursus selesai</p>
             <p className="mt-1 text-2xl font-black">
               {profile?.completedCourses ?? 0}
             </p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-            <p className="text-xs text-slate-400">
-              {language === "id" ? "Quest disetujui" : "Approved quests"}
-            </p>
+            <p className="text-xs text-slate-400">Quest disetujui</p>
             <p className="mt-1 text-2xl font-black">
               {profile?.approvedQuests ?? 0}
             </p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-            <p className="text-xs text-slate-400">Workshops</p>
+            <p className="text-xs text-slate-400">Workshop</p>
             <p className="mt-1 text-2xl font-black">
               {profile?.workshopsJoined ?? 0}
             </p>
@@ -174,25 +157,25 @@ export default async function PassportPage() {
         <section className="grid gap-3 md:grid-cols-4">
           <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
             <p className="text-xs font-black uppercase tracking-wide text-emerald-300">
-              Proof-of-Learning
+              Bukti Belajar
             </p>
             <p className="mt-2 text-2xl font-black">{proofCounts.learning}</p>
           </div>
           <div className="rounded-2xl border border-sky-400/20 bg-sky-400/10 p-4">
             <p className="text-xs font-black uppercase tracking-wide text-sky-300">
-              Proof-of-Participation
+              Bukti Partisipasi
             </p>
             <p className="mt-2 text-2xl font-black">{proofCounts.participation}</p>
           </div>
           <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4">
             <p className="text-xs font-black uppercase tracking-wide text-amber-300">
-              Proof-of-Readiness
+              Bukti Kesiapan
             </p>
             <p className="mt-2 text-2xl font-black">{proofCounts.readiness}</p>
           </div>
           <div className="rounded-2xl border border-violet-400/20 bg-violet-400/10 p-4">
             <p className="text-xs font-black uppercase tracking-wide text-violet-300">
-              Filecoin Archive
+              Arsip Filecoin
             </p>
             <p className="mt-2 text-2xl font-black">{proofCounts.archived}</p>
           </div>
@@ -203,10 +186,10 @@ export default async function PassportPage() {
             <div className="flex items-end justify-between gap-3">
               <div>
                 <p className="text-xs font-black uppercase tracking-wide text-emerald-300">
-                  {language === "id" ? "Badge" : "Badges"}
+                  Badge
                 </p>
                 <h2 className="mt-1 text-2xl font-black">
-                  {language === "id" ? "Identitas yang didapat" : "Earned identity"}
+                  Identitas yang didapat
                 </h2>
               </div>
               <p className="text-sm text-slate-500">{passport.badges.length}</p>
@@ -215,7 +198,7 @@ export default async function PassportPage() {
             <div className="mt-5 grid gap-3">
               {passport.badges.length === 0 ? (
                 <p className="rounded-2xl border border-dashed border-white/10 p-4 text-sm text-slate-400">
-                  {language === "id" ? "Belum ada badge." : "No badges yet."}
+                  Belum ada badge.
                 </p>
               ) : (
                 passport.badges.map((userBadge) => (
@@ -246,10 +229,10 @@ export default async function PassportPage() {
             <div className="flex items-end justify-between gap-3">
               <div>
                 <p className="text-xs font-black uppercase tracking-wide text-emerald-300">
-                  Proof Records
+                  Catatan Bukti
                 </p>
                 <h2 className="mt-1 text-2xl font-black">
-                  {language === "id" ? "Bukti perjalanan learner" : "Learner evidence"}
+                  Bukti perjalanan learner
                 </h2>
               </div>
               <p className="text-sm text-slate-500">
@@ -260,9 +243,7 @@ export default async function PassportPage() {
             <div className="mt-5 grid gap-3">
               {passport.proofRecords.length === 0 ? (
                 <p className="rounded-2xl border border-dashed border-white/10 p-4 text-sm text-slate-400">
-                  {language === "id"
-                    ? "Belum ada proof record."
-                    : "No proof records yet."}
+                  Belum ada catatan bukti.
                 </p>
               ) : (
                 passport.proofRecords.map((proof) => (
@@ -272,11 +253,7 @@ export default async function PassportPage() {
                   >
                     <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                       <div>
-                        <p
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-black ${proofTone(
-                            proof.type,
-                          )}`}
-                        >
+                        <p className={`inline-flex rounded-full px-3 py-1 text-xs font-black ${proofTone(proof.type)}`}>
                           {proofTypeLabel(proof.type)}
                         </p>
                         <h3 className="mt-3 font-black">{proof.title}</h3>
@@ -293,15 +270,13 @@ export default async function PassportPage() {
 
                     <div className="mt-3 flex flex-wrap gap-2">
                       <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-slate-400">
-                        {proof.archivedToFilecoin
-                          ? "Archived"
-                          : "Not archived"}
+                        {proof.archivedToFilecoin ? "Diarsipkan" : "Belum diarsipkan"}
                       </span>
                       <Link
                         href={`/proofs/${proof.id}`}
                         className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-black text-emerald-300"
                       >
-                        Verify
+                        Verifikasi
                       </Link>
                     </div>
                   </article>

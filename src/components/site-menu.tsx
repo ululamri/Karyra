@@ -56,7 +56,7 @@ export function SiteMenu({ language = fallbackLanguage }: SiteMenuProps) {
       {isOpen ? (
         <div
           id="site-menu-panel"
-          className="absolute right-0 z-50 mt-3 w-[min(92vw,380px)] rounded-3xl border border-white/10 bg-slate-950/96 p-4 shadow-2xl shadow-black/50 backdrop-blur"
+          className="absolute right-0 z-50 mt-3 w-[min(92vw,400px)] rounded-3xl border border-white/10 bg-slate-950/96 p-4 shadow-2xl shadow-black/50 backdrop-blur"
         >
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -64,28 +64,43 @@ export function SiteMenu({ language = fallbackLanguage }: SiteMenuProps) {
                 Karyra
               </p>
               <h2 className="mt-1 text-lg font-bold text-white">
-                {safeLanguage === "id" ? "Navigasi produk" : "Product navigation"}
+                Navigasi belajar
               </h2>
               <p className="mt-1 text-xs leading-5 text-slate-400">
-                {safeLanguage === "id"
-                  ? "Public menu hanya berisi area produk. Admin dan review tools disimpan sebagai internal."
-                  : "The public menu only shows product areas. Admin and review tools stay internal."}
+                Pilih area utama Karyra: kursus, pelajaran, dasbor, paspor, dan aktivitas komunitas.
               </p>
             </div>
             <button
               type="button"
               onClick={() => setIsOpen(false)}
               className="rounded-full border border-white/10 px-3 py-1 text-sm font-bold text-slate-300 transition hover:border-emerald-400/40 hover:text-emerald-200"
-              aria-label="Close menu"
+              aria-label="Tutup menu"
             >
               ×
             </button>
           </div>
 
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:hidden">
+            <Link
+              href="/login"
+              onClick={() => setIsOpen(false)}
+              className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-black text-white transition hover:border-emerald-400/40"
+            >
+              Masuk
+            </Link>
+            <Link
+              href="/register"
+              onClick={() => setIsOpen(false)}
+              className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-emerald-400 px-4 py-2 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
+            >
+              Daftar
+            </Link>
+          </div>
+
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder={safeLanguage === "id" ? "Cari proof, workshop, passport..." : "Search proof, workshop, passport..."}
+            placeholder="Cari kursus, pelajaran, paspor..."
             className="mt-4 w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-emerald-400"
           />
 
@@ -116,7 +131,7 @@ export function SiteMenu({ language = fallbackLanguage }: SiteMenuProps) {
                 ))
               ) : (
                 <p className="rounded-2xl border border-white/10 bg-white/5 p-3 text-sm text-slate-400">
-                  {safeLanguage === "id" ? "Tidak ada hasil." : "No results."}
+                  Tidak ada hasil.
                 </p>
               )}
             </div>
@@ -124,7 +139,7 @@ export function SiteMenu({ language = fallbackLanguage }: SiteMenuProps) {
             <div className="mt-4 grid gap-4">
               <div>
                 <p className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-500">
-                  Main product
+                  Jalur utama
                 </p>
                 <div className="grid gap-2">
                   {primaryNavigationLinks.map((link) => (
@@ -143,7 +158,7 @@ export function SiteMenu({ language = fallbackLanguage }: SiteMenuProps) {
 
               <div>
                 <p className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-500">
-                  Sections
+                  Area tambahan
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   {navigationSections.map((section) => (

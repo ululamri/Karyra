@@ -57,15 +57,25 @@ export function SiteHeader({ language }: SiteHeaderProps) {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
-            href="/login"
-            className="hidden min-h-10 items-center rounded-2xl bg-emerald-400 px-4 py-2 text-sm font-black text-slate-950 transition hover:bg-emerald-300 sm:inline-flex"
-          >
-            Masuk
-          </Link>
           <div className="hidden md:block">
             <PreviewModeToggle language={safeLanguage} />
           </div>
+
+          <div className="hidden items-center gap-2 sm:flex">
+            <Link
+              href="/login"
+              className="inline-flex min-h-10 items-center rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-black text-white transition hover:border-emerald-400/40 hover:bg-white/10"
+            >
+              Masuk
+            </Link>
+            <Link
+              href="/register"
+              className="inline-flex min-h-10 items-center rounded-2xl bg-emerald-400 px-4 py-2 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
+            >
+              Daftar
+            </Link>
+          </div>
+
           <SiteMenu language={safeLanguage} />
         </div>
       </div>
