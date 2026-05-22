@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
 import { MetricCard } from "@/components/ui/compact-card";
+import { requireAdminAction } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import {
   buildArchivedProofMetadata,
@@ -37,6 +38,8 @@ function getProofBadge(type: string) {
 
 async function archiveProof(formData: FormData) {
   "use server";
+
+  await requireAdminAction();
 
   const proofId = formData.get("proofId");
 

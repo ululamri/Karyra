@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { logoutAdminAction } from "../admin-login/actions";
 import { AdminConsoleNav } from "../../components/admin-console-nav";
+import { requireAdminPage } from "../../lib/admin-auth";
 import { getServerLanguage } from "../../lib/i18n-server";
 
 export default async function AdminConsoleLayout({
@@ -7,6 +9,8 @@ export default async function AdminConsoleLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await requireAdminPage();
+
   const language = await getServerLanguage();
 
   return (
@@ -18,7 +22,9 @@ export default async function AdminConsoleLayout({
               Karyra Admin Console
             </p>
             <h1 className="mt-1 text-xl font-black tracking-tight md:text-2xl">
-              {language === "id" ? "Pusat kendali konten, learner, proof, dan komunitas." : "Control center for content, learners, proofs, and community."}
+              {language === "id"
+                ? "Pusat kendali konten, learner, proof, dan komunitas."
+                : "Control center for content, learners, proofs, and community."}
             </h1>
           </div>
 
@@ -41,6 +47,14 @@ export default async function AdminConsoleLayout({
             >
               {language === "id" ? "Lihat App" : "View App"}
             </Link>
+            <form action={logoutAdminAction}>
+              <button
+                type="submit"
+                className="inline-flex min-h-10 items-center justify-center rounded-2xl border border-rose-400/20 bg-rose-400/10 px-4 py-2 text-sm font-black text-rose-200 transition hover:bg-rose-400/20"
+              >
+                Logout
+              </button>
+            </form>
           </div>
         </div>
       </div>

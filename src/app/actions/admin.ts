@@ -2,7 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { prisma } from "../../lib/prisma";
+import { requireAdminAction } from "@/lib/admin-auth";
+import { prisma } from "@/lib/prisma";
 import { syncReadinessProfile } from "@/lib/readiness";
 
 function getFormString(formData: FormData, key: string) {
@@ -54,12 +55,14 @@ async function runWithDatabaseRetry<T>(
 }
 
 function createSlug(value: string) {
-  return value
+  const slug = value
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, "")
     .trim()
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
+
+  return slug || `item-${Math.floor(Date.now() / 1000)}`;
 }
 
 async function getAdminUser() {
@@ -80,6 +83,8 @@ async function getAdminUser() {
 }
 
 export async function createCourseWithLessonAction(formData: FormData) {
+  await requireAdminAction();
+
   const title = getFormString(formData, "title");
   const subtitle = getFormString(formData, "subtitle");
   const description = getFormString(formData, "description");
@@ -87,7 +92,6 @@ export async function createCourseWithLessonAction(formData: FormData) {
   const status = getFormString(formData, "status");
   const lessonTitle = getFormString(formData, "lessonTitle");
   const lessonContent = getFormString(formData, "lessonContent");
-  
 
   if (!title) {
     throw new Error("Course title is required.");
@@ -139,46 +143,47 @@ export async function createCourseWithLessonAction(formData: FormData) {
 
     const courseModule = await tx.courseModule.create({
       data: {
-       courseId: course.id,
-       order: 1,
-       title: "Module 1",
-       description: "Module awal untuk course ini.",
-         },
-      });
+        courseId: course.id,
+        order: 1,
+        title: "Module 1",
+        description: "Module awal untuk course ini.",
+      },
+    });
 
-      await tx.lesson.create({
+    await tx.lesson.create({
       data: {
-      moduleId: courseModule.id,
-      creatorId: admin.id,
-      slug: lessonSlug,
-      order: 1,
-      title: lessonTitle,
-      type: "ARTICLE",
-      status: status === "PUBLISHED" ? "PUBLISHED" : "DRAFT",
-      estimatedMinutes: 5,
-      xpReward: 20,
-      isRequired: true,
-      publishedAt: status === "PUBLISHED" ? new Date() : null,
-      content: {
-      blocks: [
-        {
-          type: "heading",
-          text: lessonTitle,
+        moduleId: courseModule.id,
+        creatorId: admin.id,
+        slug: lessonSlug,
+        order: 1,
+        title: lessonTitle,
+        type: "ARTICLE",
+        status: status === "PUBLISHED" ? "PUBLISHED" : "DRAFT",
+        estimatedMinutes: 5,
+        xpReward: 20,
+        isRequired: true,
+        publishedAt: status === "PUBLISHED" ? new Date() : null,
+        content: {
+          blocks: [
+            {
+              type: "heading",
+              text: lessonTitle,
+            },
+            {
+              type: "paragraph",
+              text: lessonContent,
+            },
+          ],
         },
-        {
-          type: "paragraph",
-          text: lessonContent,
+        resources: {
+          links: [],
         },
-      ],
-    },
-    resources: {
-      links: [],
-     },
-     },
-   });
- });
+      },
+    });
+  });
 
   revalidatePath("/admin");
+  revalidatePath("/admin/courses");
   revalidatePath("/courses");
   revalidatePath(`/courses/${courseSlug}`);
 
@@ -186,6 +191,8 @@ export async function createCourseWithLessonAction(formData: FormData) {
 }
 
 export async function publishCourseAction(formData: FormData) {
+  await requireAdminAction();
+
   const courseSlug = getFormString(formData, "courseSlug");
 
   if (!courseSlug) {
@@ -199,12 +206,6 @@ export async function publishCourseAction(formData: FormData) {
     data: {
       status: "PUBLISHED",
       publishedAt: new Date(),
-      modules: {
-        updateMany: {
-          where: {},
-          data: {},
-        },
-      },
     },
   });
 
@@ -223,11 +224,14 @@ export async function publishCourseAction(formData: FormData) {
   });
 
   revalidatePath("/admin");
+  revalidatePath("/admin/courses");
   revalidatePath("/courses");
   revalidatePath(`/courses/${courseSlug}`);
 }
 
 export async function archiveCourseAction(formData: FormData) {
+  await requireAdminAction();
+
   const courseSlug = getFormString(formData, "courseSlug");
 
   if (!courseSlug) {
@@ -257,10 +261,13 @@ export async function archiveCourseAction(formData: FormData) {
   });
 
   revalidatePath("/admin");
+  revalidatePath("/admin/courses");
   revalidatePath("/courses");
 }
 
 export async function approveQuestSubmissionAction(formData: FormData) {
+  await requireAdminAction();
+
   const submissionId = getFormString(formData, "submissionId");
   const reviewNote = getFormString(formData, "reviewNote");
 
@@ -299,6 +306,11 @@ export async function approveQuestSubmissionAction(formData: FormData) {
 
   if (!submission) {
     throw new Error("Submission not found.");
+  }
+
+  if (submission.status === "APPROVED") {
+    revalidatePath("/admin/submissions");
+    return;
   }
 
   await runWithDatabaseRetry(async () => {
@@ -382,6 +394,8 @@ export async function approveQuestSubmissionAction(formData: FormData) {
 }
 
 export async function rejectQuestSubmissionAction(formData: FormData) {
+  await requireAdminAction();
+
   const submissionId = getFormString(formData, "submissionId");
   const reviewNote = getFormString(formData, "reviewNote");
 
@@ -412,6 +426,8 @@ export async function rejectQuestSubmissionAction(formData: FormData) {
 }
 
 export async function createWorkshopAction(formData: FormData) {
+  await requireAdminAction();
+
   const title = getFormString(formData, "title");
   const description = getFormString(formData, "description");
   const city = getFormString(formData, "city");
@@ -484,6 +500,8 @@ export async function createWorkshopAction(formData: FormData) {
 }
 
 export async function openWorkshopAction(formData: FormData) {
+  await requireAdminAction();
+
   const workshopSlug = getFormString(formData, "workshopSlug");
 
   if (!workshopSlug) {
@@ -506,6 +524,8 @@ export async function openWorkshopAction(formData: FormData) {
 }
 
 export async function closeWorkshopAction(formData: FormData) {
+  await requireAdminAction();
+
   const workshopSlug = getFormString(formData, "workshopSlug");
 
   if (!workshopSlug) {
@@ -528,6 +548,8 @@ export async function closeWorkshopAction(formData: FormData) {
 }
 
 export async function completeWorkshopAction(formData: FormData) {
+  await requireAdminAction();
+
   const workshopSlug = getFormString(formData, "workshopSlug");
 
   if (!workshopSlug) {
@@ -550,6 +572,8 @@ export async function completeWorkshopAction(formData: FormData) {
 }
 
 export async function cancelWorkshopAction(formData: FormData) {
+  await requireAdminAction();
+
   const workshopSlug = getFormString(formData, "workshopSlug");
 
   if (!workshopSlug) {
