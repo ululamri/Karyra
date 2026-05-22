@@ -14,6 +14,7 @@ type NavItem = {
   labelEn: string;
   descriptionId?: string;
   descriptionEn?: string;
+  badge?: string;
 };
 
 type NavGroup = {
@@ -24,47 +25,75 @@ type NavGroup = {
 
 const navGroups: NavGroup[] = [
   {
-    titleId: "Konten",
-    titleEn: "Content",
+    titleId: "Overview",
+    titleEn: "Overview",
     items: [
       {
         href: "/admin",
-        labelId: "Overview",
-        labelEn: "Overview",
-        descriptionId: "Ringkasan console",
-        descriptionEn: "Console summary",
+        labelId: "Command Center",
+        labelEn: "Command Center",
+        descriptionId: "Ringkasan CMS dan health produk",
+        descriptionEn: "CMS and product health summary",
       },
+      {
+        href: "/admin/health",
+        labelId: "System Health",
+        labelEn: "System Health",
+        descriptionId: "Database, proof, readiness, dan status sistem",
+        descriptionEn: "Database, proof, readiness, and system status",
+      },
+    ],
+  },
+  {
+    titleId: "Content",
+    titleEn: "Content",
+    items: [
       {
         href: "/admin/courses",
         labelId: "Courses",
         labelEn: "Courses",
-        descriptionId: "Kelola course & lesson",
-        descriptionEn: "Manage courses & lessons",
+        descriptionId: "Kelola course, module, lesson",
+        descriptionEn: "Manage courses, modules, lessons",
       },
       {
         href: "/admin/courses/new",
-        labelId: "Buat Course",
+        labelId: "Create Course",
         labelEn: "Create Course",
-        descriptionId: "Tambah konten belajar",
-        descriptionEn: "Add learning content",
+        descriptionId: "Buat course baru",
+        descriptionEn: "Create new course",
+        badge: "New",
       },
     ],
   },
   {
-    titleId: "Quest & Reward",
-    titleEn: "Quest & Reward",
+    titleId: "Learning Ops",
+    titleEn: "Learning Ops",
     items: [
       {
         href: "/admin/submissions",
-        labelId: "Review Submission",
-        labelEn: "Review Submissions",
-        descriptionId: "Approve quest & XP",
-        descriptionEn: "Approve quests & XP",
+        labelId: "Submissions",
+        labelEn: "Submissions",
+        descriptionId: "Review quest dan reward XP",
+        descriptionEn: "Review quests and XP rewards",
+      },
+      {
+        href: "/admin/learners",
+        labelId: "Learners",
+        labelEn: "Learners",
+        descriptionId: "Pantau profile dan passport",
+        descriptionEn: "Monitor profiles and passports",
+      },
+      {
+        href: "/admin/proofs",
+        labelId: "Proof Records",
+        labelEn: "Proof Records",
+        descriptionId: "Learning, participation, readiness proof",
+        descriptionEn: "Learning, participation, readiness proof",
       },
     ],
   },
   {
-    titleId: "Komunitas",
+    titleId: "Community",
     titleEn: "Community",
     items: [
       {
@@ -76,58 +105,45 @@ const navGroups: NavGroup[] = [
       },
       {
         href: "/admin/workshops/new",
-        labelId: "Buat Workshop",
+        labelId: "Create Workshop",
         labelEn: "Create Workshop",
         descriptionId: "Tambah event komunitas",
         descriptionEn: "Add community event",
-      },
-      {
-        href: "/workshops",
-        labelId: "Public Workshops",
-        labelEn: "Public Workshops",
-        descriptionId: "Halaman publik",
-        descriptionEn: "Public page",
+        badge: "New",
       },
     ],
   },
   {
-    titleId: "Transparansi",
-    titleEn: "Transparency",
+    titleId: "Public Review",
+    titleEn: "Public Review",
     items: [
       {
         href: "/status",
-        labelId: "Project Status",
-        labelEn: "Project Status",
-        descriptionId: "Metrik publik",
-        descriptionEn: "Public metrics",
+        labelId: "Public Status",
+        labelEn: "Public Status",
+        descriptionId: "Metrik dan reviewer route",
+        descriptionEn: "Metrics and reviewer route",
       },
       {
-        href: "/changelog",
-        labelId: "Changelog",
-        labelEn: "Changelog",
-        descriptionId: "Riwayat update",
-        descriptionEn: "Update history",
+        href: "/roadmap",
+        labelId: "Roadmap",
+        labelEn: "Roadmap",
+        descriptionId: "Arah produk publik",
+        descriptionEn: "Public product direction",
       },
       {
-        href: "/dashboard",
-        labelId: "Learner Dashboard",
-        labelEn: "Learner Dashboard",
-        descriptionId: "Preview learner",
-        descriptionEn: "Learner preview",
+        href: "/stacks/stellar-readiness",
+        labelId: "Stellar Readiness",
+        labelEn: "Stellar Readiness",
+        descriptionId: "Wallet readiness dan mainnet path",
+        descriptionEn: "Wallet readiness and mainnet path",
       },
       {
-        href: "/impact",
-        labelId: "Impact Report",
-        labelEn: "Impact Report",
-        descriptionId: "Bukti dampak grant",
-        descriptionEn: "Grant impact proof",
-      },
-      {
-        href: "/reviewer-guide",
-        labelId: "Reviewer Guide",
-        labelEn: "Reviewer Guide",
-        descriptionId: "Panduan reviewer grant",
-        descriptionEn: "Grant reviewer guide",
+        href: "/filecoin-proof-archive",
+        labelId: "Filecoin Archive",
+        labelEn: "Filecoin Archive",
+        descriptionId: "Proof archive direction",
+        descriptionEn: "Proof archive direction",
       },
     ],
   },
@@ -141,56 +157,30 @@ function isActivePath(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function groupHasActivePath(pathname: string, group: NavGroup) {
-  return group.items.some((item) => isActivePath(pathname, item.href));
-}
-
-function ChevronIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-4 w-4 transition group-open:rotate-180"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden="true"
-    >
-      <path d="m6 9 6 6 6-6" />
-    </svg>
-  );
-}
-
 export function AdminConsoleNav({ language }: AdminConsoleNavProps) {
   const pathname = usePathname();
 
   return (
-    <nav className="grid gap-3">
+    <nav className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-3 shadow-2xl shadow-black/10">
       <div className="rounded-3xl border border-emerald-400/20 bg-emerald-400/10 p-4">
-        <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">
-          Console
+        <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
+          Admin CMS
         </p>
         <p className="mt-2 text-sm leading-6 text-slate-300">
           {language === "id"
-            ? "Pilih modul yang ingin dikelola."
-            : "Choose a module to manage."}
+            ? "Panel internal untuk mengelola produk MVP dengan rapi."
+            : "Internal panel to manage the MVP product cleanly."}
         </p>
       </div>
 
-      {navGroups.map((group) => {
-        const hasActive = groupHasActivePath(pathname, group);
+      <div className="mt-3 grid gap-3">
+        {navGroups.map((group) => (
+          <section key={group.titleEn} className="rounded-3xl border border-white/10 bg-slate-950/60 p-3">
+            <p className="px-2 pb-2 text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">
+              {language === "id" ? group.titleId : group.titleEn}
+            </p>
 
-        return (
-          <details
-            key={group.titleEn}
-            open={hasActive}
-            className="group rounded-3xl border border-white/10 bg-white/5 p-3"
-          >
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-3 py-3 font-bold text-white">
-              <span>{language === "id" ? group.titleId : group.titleEn}</span>
-              <ChevronIcon />
-            </summary>
-
-            <div className="mt-2 grid gap-2">
+            <div className="grid gap-1.5">
               {group.items.map((item) => {
                 const active = isActivePath(pathname, item.href);
 
@@ -199,35 +189,48 @@ export function AdminConsoleNav({ language }: AdminConsoleNavProps) {
                     key={item.href}
                     href={item.href}
                     className={[
-                      "rounded-2xl p-4 transition",
+                      "group rounded-2xl p-3.5 transition",
                       active
-                        ? "bg-emerald-400 text-slate-950"
-                        : "bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white",
+                        ? "bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-950/30"
+                        : "bg-white/[0.03] text-slate-300 hover:bg-white/[0.07] hover:text-white",
                     ].join(" ")}
                   >
-                    <p className="font-bold">
-                      {language === "id" ? item.labelId : item.labelEn}
-                    </p>
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="text-sm font-black">
+                          {language === "id" ? item.labelId : item.labelEn}
+                        </p>
 
-                    {item.descriptionId || item.descriptionEn ? (
-                      <p
-                        className={[
-                          "mt-1 text-xs leading-5",
-                          active ? "text-slate-800" : "text-slate-500",
-                        ].join(" ")}
-                      >
-                        {language === "id"
-                          ? item.descriptionId
-                          : item.descriptionEn}
-                      </p>
-                    ) : null}
+                        {item.descriptionId || item.descriptionEn ? (
+                          <p
+                            className={[
+                              "mt-1 text-xs leading-5",
+                              active ? "text-slate-800" : "text-slate-500 group-hover:text-slate-400",
+                            ].join(" ")}
+                          >
+                            {language === "id" ? item.descriptionId : item.descriptionEn}
+                          </p>
+                        ) : null}
+                      </div>
+
+                      {item.badge ? (
+                        <span
+                          className={[
+                            "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-wide",
+                            active ? "bg-slate-950/10 text-slate-800" : "bg-emerald-400/10 text-emerald-300",
+                          ].join(" ")}
+                        >
+                          {item.badge}
+                        </span>
+                      ) : null}
+                    </div>
                   </Link>
                 );
               })}
             </div>
-          </details>
-        );
-      })}
+          </section>
+        ))}
+      </div>
     </nav>
   );
 }

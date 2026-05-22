@@ -10,40 +10,47 @@ export default async function AdminConsoleLayout({
   const language = await getServerLanguage();
 
   return (
-    <div className="min-h-screen bg-slate-950 px-5 py-8 text-white md:px-8 md:py-10">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-6 rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-5 md:p-6">
-          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-300">
-                Super Admin Demo
-              </p>
-              <h1 className="mt-2 text-2xl font-bold md:text-4xl">
-                Karyra Admin Console
-              </h1>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300 md:text-base">
-                {language === "id"
-                  ? "Satu panel untuk mengelola course, lesson, quest, submission, workshop, reward, dan transparency layer Karyra."
-                  : "One console to manage courses, lessons, quests, submissions, workshops, rewards, and Karyra transparency layer."}
-              </p>
-            </div>
+    <div className="min-h-screen bg-slate-950 text-white">
+      <div className="border-b border-white/10 bg-slate-950/95 px-4 py-4 backdrop-blur md:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
+              Karyra Admin Console
+            </p>
+            <h1 className="mt-1 text-xl font-black tracking-tight md:text-2xl">
+              {language === "id" ? "Pusat kendali konten, learner, proof, dan komunitas." : "Control center for content, learners, proofs, and community."}
+            </h1>
+          </div>
 
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/status"
+              className="inline-flex min-h-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-emerald-400/40"
+            >
+              Status
+            </Link>
+            <Link
+              href="/roadmap"
+              className="inline-flex min-h-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-emerald-400/40"
+            >
+              Roadmap
+            </Link>
             <Link
               href="/"
-              className="rounded-2xl border border-white/15 px-5 py-3 text-center font-bold text-white"
+              className="inline-flex min-h-10 items-center justify-center rounded-2xl bg-emerald-400 px-4 py-2 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
             >
               {language === "id" ? "Lihat App" : "View App"}
             </Link>
           </div>
         </div>
+      </div>
 
-        <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
-          <aside className="h-fit lg:sticky lg:top-28">
-            <AdminConsoleNav language={language} />
-          </aside>
+      <div className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-6 pb-24 md:px-8 md:py-8 lg:grid-cols-[292px_1fr]">
+        <aside className="h-fit lg:sticky lg:top-6">
+          <AdminConsoleNav language={language} />
+        </aside>
 
-          <div className="min-w-0">{children}</div>
-        </div>
+        <main className="min-w-0">{children}</main>
       </div>
     </div>
   );
