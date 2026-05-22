@@ -92,9 +92,9 @@ const roadmapPhases: Array<{
     titleId: "Filecoin + Stellar Readiness",
     titleEn: "Filecoin + Stellar Readiness",
     descriptionId:
-      "Memperjelas Filecoin sebagai proof archive direction dan Stellar sebagai jalur kesiapan finansial blockchain.",
+      "Memperjelas Filecoin sebagai proof archive direction dan Stellar sebagai wallet integration + mainnet-readiness track.",
     descriptionEn:
-      "Clarify Filecoin as the proof archive direction and Stellar as the blockchain financial readiness track.",
+      "Clarify Filecoin as proof archive direction and Stellar as wallet integration + mainnet-readiness track.",
     status: "IN_PROGRESS",
     items: [
       {
@@ -107,15 +107,15 @@ const roadmapPhases: Array<{
       {
         titleId: "Stellar Readiness Track",
         titleEn: "Stellar Readiness Track",
-        descriptionId: "Wallet safety, memo awareness, testnet practice, checklist, dan payment readiness.",
-        descriptionEn: "Wallet safety, memo awareness, testnet practice, checklist, and payment readiness.",
+        descriptionId: "Wallet safety, connect prep, testnet practice, checklist, dan payment readiness.",
+        descriptionEn: "Wallet safety, connect prep, testnet practice, checklist, and payment readiness.",
         status: "IN_PROGRESS",
       },
       {
-        titleId: "Guided Mainnet Experience",
-        titleEn: "Guided Mainnet Experience",
-        descriptionId: "Mainnet diperlakukan sebagai tahap kelulusan terbimbing, bukan pintu pertama pemula.",
-        descriptionEn: "Mainnet is treated as a guided graduation step, not the first door for beginners.",
+        titleId: "Guided Mainnet Graduation",
+        titleEn: "Guided Mainnet Graduation",
+        descriptionId: "Mainnet diperlakukan sebagai tahap kelulusan terbimbing, kecil, dan opt-in; bukan pintu pertama pemula.",
+        descriptionEn: "Mainnet is treated as a guided, small-value, opt-in graduation step; not the first door for beginners.",
         status: "NEXT",
       },
     ],
@@ -138,21 +138,30 @@ const roadmapPhases: Array<{
         status: "NEXT",
       },
       {
+        titleId: "Local Pilot Notes",
+        titleEn: "Local Pilot Notes",
+        descriptionId: "Mencatat jumlah peserta, pertanyaan umum, kebingungan learner, feedback, dan bukti aktivitas komunitas.",
+        descriptionEn: "Track participants, common questions, learner confusion, feedback, and community activity evidence.",
+        status: "NEXT",
+      },
+      {
         titleId: "Impact Reporting",
         titleEn: "Impact Reporting",
         descriptionId: "Melaporkan learning, quest, workshop, proof, dan readiness tanpa mencampur dokumen internal.",
         descriptionEn: "Report learning, quests, workshops, proofs, and readiness without mixing internal docs.",
         status: "PLANNED",
       },
-      {
-        titleId: "Production Hardening",
-        titleEn: "Production Hardening",
-        descriptionId: "Autentikasi produksi, role permission, audit data, dan integrasi infrastruktur lebih nyata.",
-        descriptionEn: "Production auth, role permissions, data audit, and stronger infrastructure integration.",
-        status: "PLANNED",
-      },
     ],
   },
+];
+
+const reviewerRoute = [
+  { label: "Start", href: "/", text: "Public homepage and product positioning." },
+  { label: "Learn", href: "/courses", text: "Course and lesson engine." },
+  { label: "Dashboard", href: "/dashboard", text: "Learner activity space." },
+  { label: "Passport", href: "/passport", text: "Proof and readiness identity." },
+  { label: "Stellar", href: "/stacks/stellar-readiness", text: "Wallet readiness and mainnet graduation path." },
+  { label: "Filecoin", href: "/filecoin-proof-archive", text: "Proof archive direction." },
 ];
 
 function statusLabel(status: RoadmapStatus, language: "id" | "en") {
@@ -215,13 +224,13 @@ export default async function RoadmapPage() {
             </p>
             <h1 className="mt-4 max-w-4xl text-3xl font-black tracking-tight md:text-5xl lg:text-6xl">
               {language === "id"
-                ? "Roadmap pengembangan produk Karyra."
-                : "Karyra product development roadmap."}
+                ? "Roadmap produk dan jalur review Karyra."
+                : "Karyra product roadmap and reviewer path."}
             </h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
               {language === "id"
-                ? "Roadmap ini menunjukkan apa yang sudah dikirim, sedang berjalan, dan akan dibangun berikutnya sebagai produk public MVP. Dokumen grant tetap dipisahkan dari repo publik."
-                : "This roadmap shows what has shipped, what is in progress, and what comes next for the public MVP. Grant documents remain separate from the public repo."}
+                ? "Roadmap ini menunjukkan apa yang sudah dikirim, sedang berjalan, dan akan dibangun berikutnya sebagai produk public MVP. Halaman ini juga menyediakan jalur singkat bagi reviewer untuk mengecek bukti produk."
+                : "This roadmap shows what has shipped, what is in progress, and what comes next for the public MVP. It also provides a short route for reviewers to check product proof."}
             </p>
           </div>
 
@@ -231,6 +240,12 @@ export default async function RoadmapPage() {
               className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-emerald-400 px-5 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
             >
               Status Produk
+            </Link>
+            <Link
+              href="/stacks/stellar-readiness"
+              className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-sky-400/30 bg-sky-400/10 px-5 py-3 text-sm font-black text-sky-200 transition hover:bg-sky-400/20"
+            >
+              Stellar Readiness
             </Link>
             <Link
               href="/changelog"
@@ -261,6 +276,30 @@ export default async function RoadmapPage() {
               </p>
             </div>
           ))}
+        </section>
+
+        <section className="rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-5 md:p-7">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-sky-300">
+            Reviewer Route
+          </p>
+          <h2 className="mt-2 text-2xl font-black md:text-4xl">
+            Jalur cepat untuk melihat bukti produk.
+          </h2>
+          <div className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {reviewerRoute.map((route, index) => (
+              <Link
+                key={route.href}
+                href={route.href}
+                className="rounded-3xl border border-white/10 bg-slate-950/50 p-5 transition hover:border-sky-400/40"
+              >
+                <p className="text-xs font-black uppercase tracking-wide text-sky-300">
+                  0{index + 1} — {route.label}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-300">{route.text}</p>
+                <p className="mt-4 text-sm font-black text-white">Buka →</p>
+              </Link>
+            ))}
+          </div>
         </section>
 
         <section className="grid gap-5">
@@ -326,12 +365,12 @@ export default async function RoadmapPage() {
 
         <section className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-5 md:p-7">
           <h2 className="text-2xl font-black md:text-3xl">
-            {language === "id" ? "Arah setelah Public MVP" : "Direction after the Public MVP"}
+            {language === "id" ? "Arah sambil menunggu grant" : "Direction while grants are under review"}
           </h2>
           <p className="mt-4 max-w-4xl text-sm leading-7 text-slate-300 md:text-base">
             {language === "id"
-              ? "Karyra berikutnya akan fokus pada pilot workshop lokal, bukti partisipasi yang lebih kuat, integrasi archive nyata, dan production hardening tanpa mengubah arah utama: non-teknikal dulu, teknikal kemudian."
-              : "Karyra will next focus on local workshop pilots, stronger participation proofs, real archive integration, and production hardening while preserving the main direction: simple understanding first, technical depth later."}
+              ? "Karyra akan fokus pada stabilitas public MVP, reviewer clarity, pilot komunitas kecil, dan feedback loop. Perubahan besar seperti integrasi wallet penuh atau upload archive nyata tetap diposisikan sebagai milestone berikutnya."
+              : "Karyra will focus on public MVP stability, reviewer clarity, small community pilots, and feedback loops. Major changes such as full wallet integration or real archive upload remain positioned as next milestones."}
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
@@ -340,6 +379,12 @@ export default async function RoadmapPage() {
               className="rounded-2xl bg-emerald-400 px-5 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
             >
               Workshop
+            </Link>
+            <Link
+              href="/status"
+              className="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-black text-white transition hover:border-emerald-400/40"
+            >
+              Status
             </Link>
             <Link
               href="/docs/filecoin-stellar"

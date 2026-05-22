@@ -2,6 +2,45 @@ import Link from "next/link";
 import { prisma } from "../../lib/prisma";
 import { getServerLanguage } from "../../lib/i18n-server";
 
+const reviewerRoutes = [
+  {
+    title: "Core learning flow",
+    href: "/courses",
+    text: "Reviewer bisa melihat course, lesson, dan public learning journey.",
+    tone: "border-emerald-400/20 bg-emerald-400/10 text-emerald-300",
+  },
+  {
+    title: "Dashboard activity",
+    href: "/dashboard",
+    text: "Dashboard menunjukkan ruang aktivitas learner setelah masuk ke produk.",
+    tone: "border-sky-400/20 bg-sky-400/10 text-sky-300",
+  },
+  {
+    title: "Readiness Passport",
+    href: "/passport",
+    text: "Paspor merangkum bukti belajar, partisipasi, readiness score, badge, dan proof record.",
+    tone: "border-amber-400/20 bg-amber-400/10 text-amber-300",
+  },
+  {
+    title: "Stellar readiness",
+    href: "/stacks/stellar-readiness",
+    text: "Jalur Stellar menunjukkan wallet readiness, connect prep, checklist, dan mainnet graduation.",
+    tone: "border-sky-400/20 bg-sky-400/10 text-sky-300",
+  },
+  {
+    title: "Filecoin proof archive",
+    href: "/filecoin-proof-archive",
+    text: "Arah Filecoin menampilkan proof archive layer untuk learning, participation, dan readiness evidence.",
+    tone: "border-violet-400/20 bg-violet-400/10 text-violet-300",
+  },
+  {
+    title: "Local workshop bridge",
+    href: "/workshops",
+    text: "Workshop menghubungkan pembelajaran online dengan bukti partisipasi komunitas lokal.",
+    tone: "border-emerald-400/20 bg-emerald-400/10 text-emerald-300",
+  },
+];
+
 export default async function StatusPage() {
   const language = await getServerLanguage();
 
@@ -89,8 +128,8 @@ export default async function StatusPage() {
     },
     {
       title: "Stellar",
-      status: "Readiness track",
-      text: "Stellar dipakai sebagai jalur latihan kesiapan finansial blockchain secara aman dan bertahap.",
+      status: "Mainnet readiness",
+      text: "Stellar dipakai sebagai wallet integration dan jalur readiness-to-mainnet secara aman dan bertahap.",
     },
   ];
 
@@ -104,29 +143,29 @@ export default async function StatusPage() {
             </p>
             <h1 className="mt-4 max-w-4xl text-3xl font-black tracking-tight md:text-5xl lg:text-6xl">
               {language === "id"
-                ? "Karyra Public MVP sedang aktif dan terus dipoles."
-                : "Karyra Public MVP is active and continuously polished."}
+                ? "Karyra Public MVP sedang aktif dan siap direview."
+                : "Karyra Public MVP is active and reviewer-ready."}
             </h1>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-lg md:leading-8">
-              Halaman ini menampilkan status produk, metrik internal MVP, dan area yang sudah terlihat secara publik. Angka di sini membantu membaca progres produk tanpa mencampurnya dengan dokumen grant internal.
+              Halaman ini menampilkan status produk, metrik internal MVP, reviewer route, dan area yang sudah terlihat secara publik. Angka di sini membantu membaca progres produk tanpa mencampurnya dengan dokumen grant internal.
             </p>
 
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link href="/learner" className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-emerald-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300">
                 Ruang Belajar
               </Link>
               <Link href="/roadmap" className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40">
                 Roadmap
               </Link>
-              <Link href="/changelog" className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40">
-                Changelog
+              <Link href="/stacks/stellar-readiness" className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-sky-400/30 bg-sky-400/10 px-6 py-3 text-sm font-black text-sky-200 transition hover:bg-sky-400/20">
+                Stellar Readiness
               </Link>
             </div>
           </div>
 
           <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-5 md:p-6">
             <p className="text-sm font-bold text-emerald-300">Current Status</p>
-            <h2 className="mt-2 text-3xl font-black">Public MVP</h2>
+            <h2 className="mt-2 text-3xl font-black">Public MVP + Reviewer Proof</h2>
             <p className="mt-3 text-sm leading-7 text-slate-300">
               Learning flow, Dashboard, Passport, Quest/Reward, Workshop, Filecoin direction, dan Stellar readiness sudah tampil sebagai satu ekosistem produk.
             </p>
@@ -143,6 +182,31 @@ export default async function StatusPage() {
         </section>
 
         <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 md:p-7">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
+            What reviewers can test
+          </p>
+          <h2 className="mt-2 text-2xl font-black md:text-4xl">
+            Jalur review singkat untuk melihat Karyra sebagai produk aktif.
+          </h2>
+          <p className="mt-3 max-w-4xl text-sm leading-7 text-slate-400">
+            Reviewer dapat membuka rute berikut untuk melihat Karyra bukan hanya proposal, tetapi public MVP dengan learning engine, proof layer, community bridge, Filecoin archive direction, dan Stellar mainnet-readiness proof.
+          </p>
+          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {reviewerRoutes.map((route) => (
+              <Link
+                key={route.href}
+                href={route.href}
+                className={`rounded-3xl border p-5 transition hover:scale-[1.01] ${route.tone}`}
+              >
+                <h3 className="text-xl font-black text-white">{route.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-200">{route.text}</p>
+                <p className="mt-4 text-sm font-black text-white">Buka →</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 md:p-7">
           <p className="text-xs font-black uppercase tracking-[0.18em] text-sky-300">
             Product Health
           </p>
@@ -152,7 +216,7 @@ export default async function StatusPage() {
           <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {productHealth.map((item) => (
               <article key={item.title} className="rounded-3xl border border-white/10 bg-slate-950/60 p-5">
-                <p className="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-black text-emerald-300 w-fit">
+                <p className="w-fit rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-black text-emerald-300">
                   {item.status}
                 </p>
                 <h3 className="mt-4 text-xl font-black">{item.title}</h3>
@@ -177,9 +241,9 @@ export default async function StatusPage() {
             <p className="text-xs font-black uppercase tracking-[0.18em] text-sky-300">
               Stellar
             </p>
-            <h2 className="mt-2 text-2xl font-black">Payment Readiness Track</h2>
+            <h2 className="mt-2 text-2xl font-black">Mainnet Readiness Track</h2>
             <p className="mt-3 text-sm leading-7 text-slate-300">
-              {stellarQuestCount} quest Stellar readiness tersedia sebagai latihan aman sebelum pengalaman finansial blockchain yang lebih serius.
+              {stellarQuestCount} quest Stellar readiness tersedia sebagai latihan aman sebelum wallet connection dan pengalaman mainnet kecil yang opt-in.
             </p>
           </Link>
         </section>
