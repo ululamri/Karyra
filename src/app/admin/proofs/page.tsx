@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
+import { MetricCard } from "@/components/ui/compact-card";
 import { prisma } from "@/lib/prisma";
 import {
   buildArchivedProofMetadata,
@@ -24,13 +25,13 @@ function proofTypeLabel(type: string) {
 function getProofBadge(type: string) {
   switch (type) {
     case "LEARNING":
-      return "border-sky-500/30 bg-sky-500/10 text-sky-300";
+      return "border-sky-400/30 bg-sky-400/10 text-sky-300";
     case "PARTICIPATION":
-      return "border-violet-500/30 bg-violet-500/10 text-violet-300";
+      return "border-violet-400/30 bg-violet-400/10 text-violet-300";
     case "READINESS":
-      return "border-emerald-500/30 bg-emerald-500/10 text-emerald-300";
+      return "border-emerald-400/30 bg-emerald-400/10 text-emerald-300";
     default:
-      return "border-zinc-700 bg-zinc-800 text-zinc-300";
+      return "border-white/10 bg-white/5 text-slate-300";
   }
 }
 
@@ -69,7 +70,8 @@ async function archiveProof(formData: FormData) {
 
   if (!proof.archivedToFilecoin || !proof.filecoinCid || !existingManifest) {
     const manifest = buildProofArchiveManifest(proof);
-    const filecoinCid = proof.filecoinCid ?? generateDemoFilecoinCid(proof.id, manifest.checksum.digest);
+    const filecoinCid =
+      proof.filecoinCid ?? generateDemoFilecoinCid(proof.id, manifest.checksum.digest);
 
     await prisma.proofRecord.update({
       where: {
@@ -116,234 +118,211 @@ export default async function AdminProofsPage() {
   const totalProofs = proofRecords.length;
   const archivedProofs = proofRecords.filter((proof) => proof.archivedToFilecoin).length;
   const pendingProofs = totalProofs - archivedProofs;
-  const manifestProofs = proofRecords.filter((proof) => getArchiveManifestFromMetadata(proof.metadata)).length;
+  const manifestProofs = proofRecords.filter((proof) =>
+    getArchiveManifestFromMetadata(proof.metadata),
+  ).length;
   const learningProofs = proofRecords.filter((proof) => proof.type === "LEARNING").length;
-  const participationProofs = proofRecords.filter((proof) => proof.type === "PARTICIPATION").length;
+  const participationProofs = proofRecords.filter(
+    (proof) => proof.type === "PARTICIPATION",
+  ).length;
   const readinessProofs = proofRecords.filter((proof) => proof.type === "READINESS").length;
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-zinc-50">
-      <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 md:px-6 md:py-12">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div className="grid gap-6">
+      <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 md:p-7">
+        <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
           <div>
-            <p className="text-sm font-medium text-emerald-400">Karyra Admin Console</p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight md:text-5xl">
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-violet-300">
+              Proof Archive Operations
+            </p>
+            <h1 className="mt-3 text-3xl font-black tracking-tight md:text-5xl">
               Filecoin Proof Archive
             </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-zinc-400 md:text-base">
-              Kelola proof record dari learner dan simulasikan pengarsipan ke Filecoin. Sekarang setiap archive menyimpan manifest JSON terstruktur di metadata sebagai dasar integrasi Filecoin/IPFS asli nanti.
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
+              Kelola proof record dari learner dan simulasikan pengarsipan ke Filecoin. Setiap archive menyimpan manifest JSON terstruktur di metadata sebagai dasar integrasi Filecoin/IPFS asli nanti.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href="/admin"
-              className="rounded-2xl border border-zinc-800 px-4 py-3 text-sm font-medium text-zinc-200 transition hover:border-emerald-500 hover:text-emerald-300"
-            >
-              Admin Home
-            </Link>
-
+          <div className="flex flex-wrap gap-2">
             <Link
               href="/admin/learners"
-              className="rounded-2xl border border-zinc-800 px-4 py-3 text-sm font-medium text-zinc-200 transition hover:border-emerald-500 hover:text-emerald-300"
+              className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-bold text-white transition hover:border-emerald-400/40"
             >
               Learner Readiness
             </Link>
-
             <Link
               href="/passport"
-              className="rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-300"
+              className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-emerald-400 px-5 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
             >
               View Passport
             </Link>
           </div>
         </div>
+      </section>
 
-        <section className="grid gap-4 md:grid-cols-5">
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
-            <p className="text-sm text-zinc-400">Total Proofs</p>
-            <p className="mt-2 text-3xl font-bold">{totalProofs}</p>
-          </div>
+      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <MetricCard label="Total Proofs" value={totalProofs} />
+        <MetricCard label="Archived" value={archivedProofs} />
+        <MetricCard label="Manifests" value={manifestProofs} />
+        <MetricCard label="Pending" value={pendingProofs} />
+        <MetricCard label="Learning" value={learningProofs} />
+        <MetricCard label="Participation" value={participationProofs} />
+        <MetricCard label="Readiness" value={readinessProofs} />
+        <MetricCard label="Archive Rate" value={`${totalProofs ? Math.round((archivedProofs / totalProofs) * 100) : 0}%`} />
+      </section>
 
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
-            <p className="text-sm text-zinc-400">Archived</p>
-            <p className="mt-2 text-3xl font-bold text-emerald-300">{archivedProofs}</p>
-          </div>
+      <section className="rounded-[2rem] border border-sky-400/20 bg-sky-400/10 p-5 md:p-6">
+        <p className="text-xs font-black uppercase tracking-[0.18em] text-sky-300">
+          Archive Manifest v0.1
+        </p>
+        <h2 className="mt-2 text-2xl font-black">
+          Proof archive punya struktur data yang bisa diverifikasi.
+        </h2>
+        <p className="mt-3 max-w-4xl text-sm leading-7 text-slate-300">
+          Saat admin menekan Archive, Karyra membuat manifest berisi proof, learner, readiness snapshot, checksum SHA-256, dan expected Filecoin/IPFS flow. CID masih demo, tetapi struktur ini siap menjadi dasar upload manifest asli ke Filecoin/IPFS nanti.
+        </p>
+      </section>
 
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
-            <p className="text-sm text-zinc-400">Manifests</p>
-            <p className="mt-2 text-3xl font-bold text-sky-300">{manifestProofs}</p>
-          </div>
-
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
-            <p className="text-sm text-zinc-400">Pending</p>
-            <p className="mt-2 text-3xl font-bold text-amber-300">{pendingProofs}</p>
-          </div>
-
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
-            <p className="text-sm text-zinc-400">Archive Layer</p>
-            <p className="mt-2 text-3xl font-bold">Demo</p>
-          </div>
-        </section>
-
-        <section className="grid gap-4 md:grid-cols-3">
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
-            <p className="text-sm text-zinc-400">Proof-of-Learning</p>
-            <p className="mt-2 text-3xl font-bold">{learningProofs}</p>
-          </div>
-
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
-            <p className="text-sm text-zinc-400">Proof-of-Participation</p>
-            <p className="mt-2 text-3xl font-bold">{participationProofs}</p>
-          </div>
-
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-5">
-            <p className="text-sm text-zinc-400">Proof-of-Readiness</p>
-            <p className="mt-2 text-3xl font-bold">{readinessProofs}</p>
-          </div>
-        </section>
-
-        <section className="rounded-3xl border border-sky-500/20 bg-sky-500/10 p-5 md:p-6">
-          <p className="text-sm font-medium text-sky-300">Archive Manifest v0.1</p>
-          <h2 className="mt-2 text-2xl font-bold">Proof archive kini punya struktur data yang bisa diverifikasi.</h2>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-300">
-            Saat admin menekan Archive, Karyra membuat manifest berisi proof, learner, readiness snapshot, checksum SHA-256, dan expected Filecoin/IPFS flow. CID masih demo, tetapi struktur ini siap menjadi dasar upload manifest asli ke Filecoin/IPFS nanti.
-          </p>
-        </section>
-
-        <section className="overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900/70">
-          <div className="border-b border-zinc-800 p-5">
-            <h2 className="text-xl font-semibold">Proof Records</h2>
-            <p className="mt-2 text-sm text-zinc-400">
+      <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 md:p-7">
+        <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">
+              Proof Table
+            </p>
+            <h2 className="mt-2 text-2xl font-black">Proof Records</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
               Setiap proof dapat diarsipkan ke demo Filecoin layer. Setelah diarsipkan, CID dan manifest digest akan tampil di halaman proof verification.
             </p>
           </div>
+          <p className="text-sm text-slate-500">{totalProofs} proof records</p>
+        </div>
 
-          {proofRecords.length === 0 ? (
-            <div className="p-6 text-sm text-zinc-400">
-              Belum ada proof record. Selesaikan course, approve quest, atau tandai kehadiran workshop terlebih dahulu agar proof muncul di sini.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[1180px] text-left text-sm">
-                <thead className="border-b border-zinc-800 bg-zinc-950/60 text-xs uppercase tracking-wide text-zinc-500">
-                  <tr>
-                    <th className="px-5 py-4">Proof</th>
-                    <th className="px-5 py-4">Learner</th>
-                    <th className="px-5 py-4">Type</th>
-                    <th className="px-5 py-4">Source</th>
-                    <th className="px-5 py-4">XP</th>
-                    <th className="px-5 py-4">Issued</th>
-                    <th className="px-5 py-4">Filecoin Status</th>
-                    <th className="px-5 py-4">Manifest</th>
-                    <th className="px-5 py-4">Action</th>
-                  </tr>
-                </thead>
+        {proofRecords.length === 0 ? (
+          <div className="mt-6 rounded-3xl border border-dashed border-white/10 p-6 text-sm text-slate-400">
+            Belum ada proof record. Selesaikan course, approve quest, atau tandai kehadiran workshop terlebih dahulu agar proof muncul di sini.
+          </div>
+        ) : (
+          <div className="mt-6 overflow-x-auto rounded-3xl border border-white/10">
+            <table className="w-full min-w-[1180px] text-left text-sm">
+              <thead className="border-b border-white/10 bg-slate-950/80 text-xs uppercase tracking-wide text-slate-500">
+                <tr>
+                  <th className="px-5 py-4">Proof</th>
+                  <th className="px-5 py-4">Learner</th>
+                  <th className="px-5 py-4">Type</th>
+                  <th className="px-5 py-4">Source</th>
+                  <th className="px-5 py-4">XP</th>
+                  <th className="px-5 py-4">Issued</th>
+                  <th className="px-5 py-4">Filecoin Status</th>
+                  <th className="px-5 py-4">Manifest</th>
+                  <th className="px-5 py-4">Action</th>
+                </tr>
+              </thead>
 
-                <tbody className="divide-y divide-zinc-800">
-                  {proofRecords.map((proof) => {
-                    const manifest = getArchiveManifestFromMetadata(proof.metadata);
+              <tbody className="divide-y divide-white/10 bg-slate-950/40">
+                {proofRecords.map((proof) => {
+                  const manifest = getArchiveManifestFromMetadata(proof.metadata);
 
-                    return (
-                      <tr key={proof.id} className="hover:bg-zinc-950/40">
-                        <td className="px-5 py-4">
+                  return (
+                    <tr key={proof.id} className="transition hover:bg-white/[0.03]">
+                      <td className="px-5 py-4">
+                        <div>
+                          <p className="font-black text-white">{proof.title}</p>
+                          {proof.description ? (
+                            <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">
+                              {proof.description}
+                            </p>
+                          ) : null}
+                        </div>
+                      </td>
+
+                      <td className="px-5 py-4">
+                        <div>
+                          <p className="font-black text-white">{proof.user.displayName}</p>
+                          <p className="mt-1 text-xs text-slate-500">
+                            @{proof.user.username}
+                            {proof.user.city ? ` · ${proof.user.city}` : ""}
+                          </p>
+                        </div>
+                      </td>
+
+                      <td className="px-5 py-4">
+                        <span className={`rounded-full border px-3 py-1 text-xs font-black ${getProofBadge(proof.type)}`}>
+                          {proofTypeLabel(proof.type)}
+                        </span>
+                      </td>
+
+                      <td className="px-5 py-4 text-slate-300">{proof.source ?? "manual"}</td>
+                      <td className="px-5 py-4 font-black text-emerald-300">{proof.xpValue}</td>
+                      <td className="px-5 py-4 text-slate-400">
+                        {new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(proof.issuedAt)}
+                      </td>
+
+                      <td className="px-5 py-4">
+                        {proof.archivedToFilecoin ? (
                           <div>
-                            <p className="font-medium text-zinc-100">{proof.title}</p>
-                            {proof.description ? (
-                              <p className="mt-1 line-clamp-2 text-xs leading-5 text-zinc-500">
-                                {proof.description}
+                            <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-black text-emerald-300">
+                              Archived
+                            </span>
+                            {proof.filecoinCid ? (
+                              <p className="mt-2 max-w-[240px] truncate font-mono text-xs text-slate-500">
+                                {proof.filecoinCid}
                               </p>
                             ) : null}
                           </div>
-                        </td>
+                        ) : (
+                          <span className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-black text-amber-300">
+                            Pending
+                          </span>
+                        )}
+                      </td>
 
-                        <td className="px-5 py-4">
+                      <td className="px-5 py-4">
+                        {manifest ? (
                           <div>
-                            <p className="font-medium text-zinc-100">{proof.user.displayName}</p>
-                            <p className="mt-1 text-xs text-zinc-500">
-                              @{proof.user.username}
-                              {proof.user.city ? ` · ${proof.user.city}` : ""}
+                            <span className="rounded-full border border-sky-400/30 bg-sky-400/10 px-3 py-1 text-xs font-black text-sky-300">
+                              Manifest v0.1
+                            </span>
+                            <p className="mt-2 max-w-[220px] truncate font-mono text-xs text-slate-500">
+                              {manifest.checksum.digest}
                             </p>
                           </div>
-                        </td>
+                        ) : (
+                          <span className="text-xs text-slate-500">Not generated</span>
+                        )}
+                      </td>
 
-                        <td className="px-5 py-4">
-                          <span className={`rounded-full border px-3 py-1 text-xs font-medium ${getProofBadge(proof.type)}`}>
-                            {proofTypeLabel(proof.type)}
-                          </span>
-                        </td>
+                      <td className="px-5 py-4">
+                        <div className="flex flex-col gap-2">
+                          <Link
+                            href={`/proofs/${proof.id}`}
+                            className="text-sm font-black text-emerald-300 hover:text-emerald-200"
+                          >
+                            Open Proof
+                          </Link>
 
-                        <td className="px-5 py-4 text-zinc-300">{proof.source ?? "manual"}</td>
-                        <td className="px-5 py-4 font-semibold">{proof.xpValue}</td>
-                        <td className="px-5 py-4 text-zinc-400">
-                          {new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(proof.issuedAt)}
-                        </td>
-
-                        <td className="px-5 py-4">
-                          {proof.archivedToFilecoin ? (
-                            <div>
-                              <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
-                                Archived
-                              </span>
-                              {proof.filecoinCid ? (
-                                <p className="mt-2 max-w-[240px] truncate text-xs text-zinc-500">{proof.filecoinCid}</p>
-                              ) : null}
-                            </div>
+                          {proof.archivedToFilecoin && manifest ? (
+                            <span className="text-sm text-slate-500">Already archived</span>
                           ) : (
-                            <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-300">
-                              Pending
-                            </span>
+                            <form action={archiveProof}>
+                              <input type="hidden" name="proofId" value={proof.id} />
+                              <button
+                                type="submit"
+                                className="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-black text-slate-950 transition hover:bg-emerald-300"
+                              >
+                                Archive
+                              </button>
+                            </form>
                           )}
-                        </td>
-
-                        <td className="px-5 py-4">
-                          {manifest ? (
-                            <div>
-                              <span className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-xs font-medium text-sky-300">
-                                Manifest v0.1
-                              </span>
-                              <p className="mt-2 max-w-[220px] truncate font-mono text-xs text-zinc-500">
-                                {manifest.checksum.digest}
-                              </p>
-                            </div>
-                          ) : (
-                            <span className="text-xs text-zinc-500">Not generated</span>
-                          )}
-                        </td>
-
-                        <td className="px-5 py-4">
-                          <div className="flex flex-col gap-2">
-                            <Link
-                              href={`/proofs/${proof.id}`}
-                              className="text-sm font-medium text-emerald-300 hover:text-emerald-200"
-                            >
-                              Open Proof
-                            </Link>
-
-                            {proof.archivedToFilecoin && manifest ? (
-                              <span className="text-sm text-zinc-500">Already archived</span>
-                            ) : (
-                              <form action={archiveProof}>
-                                <input type="hidden" name="proofId" value={proof.id} />
-                                <button
-                                  type="submit"
-                                  className="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-bold text-zinc-950 transition hover:bg-emerald-300"
-                                >
-                                  Archive
-                                </button>
-                              </form>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </section>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
-    </main>
+    </div>
   );
 }
